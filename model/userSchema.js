@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 
 const userSchema = new mongoose.Schema({
-    name:{
+    username:{
         type:String,
         required:[true,'Please enter your name']
     },
@@ -21,7 +21,30 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:[true,'Please enter password'],
         minlength:[6,'Minimum length is 6 characters']
+    },
+    address: {
+        type: [{
+          saveas:{type:String},
+          fullname:{type:String},
+          adname:{type:String},
+          street: { type: String},
+          pincode:{type:Number},
+          city: { type: String },
+          state:{type:String},
+          country:{type:String},
+          phonenumber:{type:Number}
+        }]},
+    isAdmin:{
+        type:Boolean,
+        default:false,
+        required:true,
+    },
+    status:{
+        type:Boolean,
+        default:false,
+        required:true
     }
 })
 
-module.exports= mongoose.model("Users",userSchema);
+const usersModel= mongoose.model("Users",userSchema);
+module.exports =usersModel;

@@ -1,0 +1,77 @@
+<hr class="my-5" />
+
+              <!-- Hoverable Table rows -->
+              
+              <div class="card mx-4">
+                <h5 class="card-header">Product List</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Price</th>
+                        <th>Image</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      {{#each obj}}
+                      <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{this.name}}</strong></td>
+                        <td>{{this.category}}</td>
+                        <td>
+                          {{this.stock}}
+                        </td>
+                        <td>{{this.price}}</td>
+                        <td>
+                          <img src="/admin/assets/img/avatars/5.png"  alt="Avatar" class="square-sqaure" />
+                          
+                        </td>
+                        <td>{{this.description}}</td>
+                        <td>
+                          {{#if this.status}}
+                          <p>Listed</p>
+                          {{else}}
+                          <p>Unisted</p>
+                          </td>
+                          {{/if}}
+                        <td>
+                          <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                              <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item" href="/admin/unlistproduct/{{this._id}}"
+                                ></i>
+                                {{#if this.status}}
+                                  <p>Unlist</p>
+                                  {{else}}
+                                  <p>List</p>
+                                  </td>
+                                  {{/if}}
+                                  </a
+                                >
+                                <a class="dropdown-item" href="/admin/updateproduct/{{this._id}}"
+                                ><i class="bx bx-edit-alt me-1"></i> Edit</a
+                                >
+                              <a class="dropdown-item" href="/admin/deleteproduct/{{this._id}}"
+                                ><i class="bx bx-trash me-1"></i> Delete</a
+                              >
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!--/ Hoverable Table rows -->
+
+              <hr class="my-5" />
+
+ 

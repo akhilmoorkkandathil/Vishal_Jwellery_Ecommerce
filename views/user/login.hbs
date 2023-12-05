@@ -1,17 +1,5 @@
 <!DOCTYPE html>
 
-<!-- =========================================================
-* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
-==============================================================
-
-* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
-* Created by: ThemeSelection
-* License: You must have a valid license purchased in order to legally use the theme for your project.
-* Copyright ThemeSelection (https://themeselection.com)
-
-=========================================================
- -->
-<!-- beautify ignore:start -->
 <html
   lang="en"
   class="light-style customizer-hide"
@@ -27,7 +15,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Login Basic - Pages | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+    <title>Vishal</title>
 
     <meta name="description" content="" />
 
@@ -138,18 +126,7 @@
               <h4 class="mb-2">Welcome to Vishal! 👋</h4>
               <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
-                <div class="mb-3">
-                  <label for="email" class="form-label">Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="email"
-                    name="name"
-                    placeholder="Enter your name"
-                    autofocus
-                  />
-                </div>
+              <form id="formAuthentication" class="mb-3">
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
                   <input
@@ -161,22 +138,10 @@
                     autofocus
                   />
                 </div>
-                <div class="mb-3">
-                  <label for="email" class="form-label">Phone</label>
-                  <input
-                    type="tel"
-                    class="form-control"
-                    id="email"
-                    name="phone"
-                    placeholder="Enter your phone number"
-                    autofocus
-                  />
-                </div>
-                
                 <div class="mb-3 form-password-toggle">
                   <div class="d-flex justify-content-between">
                     <label class="form-label" for="password">Password</label>
-                    <a href="auth-forgot-password-basic.html">
+                    <a href="/forgot">
                       <small>Forgot Password?</small>
                     </a>
                   </div>
@@ -192,20 +157,21 @@
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
                 </div>
-                {{!-- <div class="mb-3">
+                <div class="mb-3">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="remember-me" />
                     <label class="form-check-label" for="remember-me"> Remember Me </label>
                   </div>
-                </div> --}}
+                </div>
+                 {{!-- action="/login" method="POST --}}
                 <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                  <button class="btn btn-primary d-grid w-100" type="submit" >Sign in</button>
                 </div>
               </form>
 
               <p class="text-center">
                 <span>New on our platform?</span>
-                <a href="auth-register-basic.html">
+                <a href="/register">
                   <span>Create an account</span>
                 </a>
               </p>
@@ -217,8 +183,6 @@
     </div>
 
     <!-- / Content -->
-
-    
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->

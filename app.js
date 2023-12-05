@@ -8,6 +8,8 @@ var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
 const hbs = require('express-handlebars')
 const connectDb = require('./config/connectDb')
+const session = require('express-session')
+const multer= require('multer')
 
 var app = express();
 
@@ -23,6 +25,11 @@ app.engine('hbs', hbs.engine({
   
 }))
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -31,6 +38,7 @@ app.use(cookieParser());
 
 connectDb();
 
+app.use(express.static(__dirname + '/public'));
 app.use('/admin',express.static(path.join(__dirname, 'public/adminAssets')));
 app.use('/',express.static(path.join(__dirname, 'public/userAssets')));
 
@@ -53,5 +61,17 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.use('/uploads',express.static('uploads'))
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'uploads/')
+    },
+    filename:(req,file,cb)=>{
+        cb(null,file.originalname)
+    }
+})
+
+const upload =multer({storage:storage})
 
 module.exports = app;
