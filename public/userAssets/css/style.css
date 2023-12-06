@@ -30,6 +30,28 @@ a {
   a.more {
     font-weight: 600; }
 
+
+
+    
+  .subheader {
+      background-color: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+      padding: 5px 0;
+      overflow-x: auto; /* Enable horizontal scrolling if needed */
+  }
+
+  .subheader ul {
+      white-space: nowrap; /* Ensure list items stay in a single line */
+      padding-left: 0;
+      margin: 0;
+  }
+
+  .subheader ul li {
+      display: inline-block;
+      margin-right: 20px; /* Adjust as needed */
+  }
+
+
 .custom-navbar {
   background: #3b5d50 !important;
   padding-top: 20px;

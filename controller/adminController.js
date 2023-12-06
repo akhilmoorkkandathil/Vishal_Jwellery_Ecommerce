@@ -1,3 +1,4 @@
+const userModel=require("../model/userSchema")
 const AdminModel = require('../model/adminSchema')
 const categoryModel=require('../model/categorySchema')
 
@@ -133,20 +134,57 @@ const coupen = async (req,res)=>{
 
 const logOut = (req,res)=>{
     console.log("okay");
+    req.session.isadAuth = false;
     req.session.destroy(err => {
       if (err) {
         console.error('Error destroying session:', err);
         res.status(500).send('Error destroying session');
       } else {
-        res.redirect('login')// Redirect to the login page or any other appropriate page after logout
+       res.redirect("/")
       }
     });
   }
 
 
-const customers = async(req,res)=>{
-    await res.render('./admin/customerList',{Admin:true})
+const userList = async(req,res)=>{
+  try {
+    const users = await userModel.find();
+    // console.log(users);
+    let obj=[]
+        let maps =users.map((item)=>{
+            let test={
+                "_id":item._id,
+                "username":item.username,
+                "email":item.email,
+                "phone":item.phone,
+                "status":item.status,
+            }
+            obj.push(test)
+        })
+        console.log(obj);
+    res.render("./admin/customerList", { users: obj,Admin:true });
+} catch (error) {
+  console.log(error);
+  res.send(error);
 }
+}
+
+
+///delete user
+const deleteUser = async (req, res) => {
+  try {
+    console.log("=====================1");
+    const id = req.params.id;
+    await userModel.deleteOne({ _id: id });
+    res.redirect("/admin/customers");
+  } catch (error) {
+    console.log("=====================1");
+    console.log(error);
+    res.send(error);
+  }
+};
+
+
 const orders = async(req,res)=>{
     await res.render('./admin/orderList',{Admin:true})
 }
@@ -164,6 +202,7 @@ const loginAdmin = async (req, res) => {
     }
 
     try {
+      console.log("================================");
         const admin = await AdminModel.findOne({ email });
         console.log(admin);
         if (!admin) {
@@ -172,12 +211,13 @@ const loginAdmin = async (req, res) => {
         if (!password) {
             return res.status(400).json({ message: "Invalid password" });
         }
-        req.session.admin = admin;
+        req.session.isadAuth = true;
 
         res.render('./admin/dashboard', { message: 'Login successful',Admin:true});
     } catch (error) {
+      console.log("================================");
         return res.status(500).json({ message: "Internal server error" });
     }
 };
 
-module.exports = {loginAdmin,dashboard,adminLogin,addCoupen,coupen,customers,products,orders,addCategory,catList,unlistCategory,deletingCategory}
+module.exports = {loginAdmin,dashboard,adminLogin,addCoupen,coupen,userList,deleteUser,products,orders,addCategory,catList,unlistCategory,deletingCategory,logOut}

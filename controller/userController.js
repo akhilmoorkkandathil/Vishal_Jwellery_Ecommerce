@@ -35,7 +35,7 @@ const home = async(req,res)=>{
             obj.push(test)
         })
 
-    await res.render('./user/home',{products:obj})
+    await res.render('./user/home')
 }
 
 //@desc Login page
@@ -54,7 +54,7 @@ const register = async(req,res)=>{
 
 const verifyPage =async (req, res) => {
     try {
-        res.render("./user/otpVerification",{Single:true});
+        res.render("./user/otpVerification");
     } catch {
       res.status(200).send("error occured");
     }
@@ -96,24 +96,38 @@ const registerUser = async (req, res) => {
         const isPhoneValid = phoneValid(phone);
         const ispasswordValid = passwordValid(password);
         const iscpasswordValid = confirmpasswordValid(cpassword, password);
-    
+
+        const numberExist = await userModel.findOne({ phone: phone });
         const emailExist = await userModel.findOne({ email: email });
-        if (emailExist) {
-          res.render("./users/register", { emailerror: "E-mail already exits" });
-        } else if (!isusernameValid) {
-          res.render("./users/register", { nameerror: "Enter a valid Name" });
+
+        if (!isusernameValid) {
+          console.log("===========================1");
+          req.flash("error", "Enter a valid Name");
+          return res.redirect('/register')
         } else if (!isEmailValid) {
-          res.render("./users/register", { emailerror: "Enter a valid E-mail" });
+          console.log("===========================2");
+          req.flash("error", "Enter a valid E-mail");
+          return res.redirect('/register')
         } else if (!isPhoneValid) {
-          res.render("./users/register", { phoneerror: "Enter a valid Phone Number" });
+          console.log("===========================3");
+          req.flash("error", "Enter a valid Phone Number");
+          return res.redirect('/register')
         } else if (!ispasswordValid) {
-          res.render("./users/register", {
-            passworderror: "Password should contain one(A,a,2)",
-          });
+          console.log("===========================4");
+          req.flash("error", "Password should contain one (A, a, 2)");
+          return res.redirect('/register')
         } else if (!iscpasswordValid) {
-          res.render("./users/register", {
-            cpassworderror: "Password and Confirm password should be match",
-          });
+          console.log("===========================5");
+          req.flash("error", "Password and Confirm password should match");
+          return res.redirect('/register')
+        } else if (numberExist) {
+          console.log("===========================6");
+          req.flash("error", "This number already have an account");
+          return res.redirect('/register')
+        } else if (emailExist) {
+          console.log("===========================6");
+          req.flash("error", "This email already have an account");
+          return res.redirect('/register')
         } else {
           const hashedpassword = await bcrypt.hash(password, 10);
           const user = new userModel({
@@ -146,8 +160,8 @@ const registerUser = async (req, res) => {
           await otpModel.updateOne(filter, update, options);
           await sendOTP(phone, otp);
           res.redirect("/verifyotp");
-        }
-        }catch (err) {
+        } 
+      }catch (err) {
         console.error("Error:", err);
         res.send("error");
       }
@@ -196,48 +210,43 @@ const verifyotp = async (req, res) => {
 //@router Post /login
 //@access public
 const loginUser = async (req, res) => {
+  console.log("==========================1");
     const { email, password } = req.body;
     if (!email || !password) {
-        return res.status(400).json({ message: "Email and password are required" });
+        req.flash("error", "Enter Email & Password");
+        return res.redirect('/login')
     }
 
     try {
-        const user = await User.findOne({ email });
+        const user = await userModel.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: "Invalid credentials" });
+            req.flash("error", "Invalid username or Password");
+            return res.redirect('/login')
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            console.log("password");
-            return res.status(400).json({ message: "Invalid credentials" });
+          req.flash("error", "Invalid username or Password");
+          return res.redirect('/login')
         }
 
-        // Log in the user (for example, set a session or generate a token)
-        // For demonstration, setting a session variable "loggedInUser"
         req.session.user = user;
-
-        let products = [{
-            "name":"chair",
-            "category":"Dining",
-            "description":"Good chair for sittiing in ding hall and sitout",
-            "price":"4500",
-            "image":"https://themewagon.github.io/furni/images/post-1.jpg"
-          },{
-            "name":"Sofa",
-            "category":"Dining",
-            "description":"Good chair for sittiing in ding hall and sitout",
-            "price":"4500",
-            "image":"https://themewagon.github.io/furni/images/post-2.jpg"
-          },{
-            "name":"Interior",
-            "category":"Bedroom",
-            "description":"Good chair for sittiing in ding hall and sitout",
-            "price":"4500",
-            "image":"https://themewagon.github.io/furni/images/post-3.jpg"
-          }]
-
-        res.render('./user/home', { message: 'Login successful', userData: { _id: user.id, email: user.email },products});
+        const products = await productModel.find({status:true})
+        // let obj=[]
+        //     let maps =products.map((iteam)=>{
+        //         let test={
+        //             "_id":iteam._id,
+        //             "name":iteam.name,
+        //             "price":iteam.price,
+        //             "category":iteam.category,
+        //             "stock":iteam.stock,
+        //             "status":iteam.status,
+        //             "description":iteam.description
+        //         }
+        //         obj.push(test)
+        //     })
+            console.log("==========================2");
+        await res.render('./user/home',{products})
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }

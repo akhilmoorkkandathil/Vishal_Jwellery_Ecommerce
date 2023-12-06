@@ -28,9 +28,11 @@
                         </td>
                         <td>{{this.price}}</td>
                         <td>
-                          <img src="/admin/assets/img/avatars/5.png"  alt="Avatar" class="square-sqaure" />
                           
+                            <img style="border-radius: 0%; width: 100px;height: 100px;" src="/{{this.images.[0]}}">
+                         
                         </td>
+
                         <td>{{this.description}}</td>
                         <td>
                           {{#if this.status}}
@@ -45,20 +47,19 @@
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="/admin/unlistproduct/{{this._id}}"
-                                ></i>
-                                {{#if this.status}}
-                                  <p>Unlist</p>
-                                  {{else}}
-                                  <p>List</p>
-                                  </td>
-                                  {{/if}}
-                                  </a
-                                >
-                                <a class="dropdown-item" href="/admin/updateproduct/{{this._id}}"
+                              <a class="dropdown-item" href="javascript:void(0);"
                                 ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                                >
-                              <a class="dropdown-item" href="/admin/deleteproduct/{{this._id}}"
+                              >
+                              {{#if this.status}}
+                              <a class="dropdown-item" href="/admin/unlistproduct/{{this._id}}"
+                                ><i class="bx bx-edit-alt me-1"></i>Unlist </a
+                              >
+                              {{else}}
+                               <a class="dropdown-item" href="/admin/unlistproduct/{{this._id}}"
+                                ><i class="bx bx-edit-alt me-1"></i>List </a
+                              >
+                              {{/if}}
+                              <a class="dropdown-item" href="/admin/deleteproduct/{{this._id}}" 
                                 ><i class="bx bx-trash me-1"></i> Delete</a
                               >
                             </div>

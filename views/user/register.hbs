@@ -139,6 +139,15 @@
               <p class="mb-4">Make your app management easy and fun!</p>
 
               <form id="formAuthentication" class="mb-3" action="/otppage" method="POST">
+                 <div class="mb-3">
+                  
+                  {{#if messages.error}}
+                      <div class="alert alert-danger" role="alert">
+                        <div class="alter text-danger text-center">{{messages.error}}</div>
+                      </div>
+                  {{/if}}
+                  
+                 </div>
                 <div class="mb-3">
                   <label for="username" class="form-label">Username</label>
                   <input
@@ -149,23 +158,17 @@
                     placeholder="Enter your username"
                     autofocus
                   />
-                  {{#if locals.nameerror}}
-                      <div class="alter text-danger text-start">{{locals.nameerror}}</div>
-                  {{/if}}
+          
                 </div>
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
                   <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" />
-                  {{#if locals.phoneerror}}
-                      <div class="alter text-danger text-start">{{locals.emailerror}}</div>
-                  {{/if}}
+                  
                 </div>
                 <div class="mb-3">
                   <label for="email" class="form-label">phone</label>
                   <input type="tel" class="form-control" id="email" name="phone" placeholder="Enter your phone number" />
-                  {{#if locals.phoneerror}}
-                      <div class="alter text-danger text-start">{{locals.phoneerror}}</div>
-                  {{/if}}
+                  
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <label class="form-label" for="password">Password</label>
@@ -179,9 +182,7 @@
                       aria-describedby="password"
                     />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                    {{#if locals.passworderror}}
-                      <div class="alter text-danger text-start">{{locals.passworderror}}</div>
-                  {{/if}}
+                    
                   </div>
                 </div>
                 <div class="mb-3 form-password-toggle">
@@ -196,8 +197,8 @@
                       aria-describedby="password"
                     />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                    {{#if locals.cpassworderror}}
-                      <div class="alter text-danger text-start">{{locals.cpassworderror}}</div>
+                    {{#if cpassworderror}}
+                      <div class="alter text-danger text-start">{{cpassworderror}}</div>
                   {{/if}}
                   </div>
                 </div>

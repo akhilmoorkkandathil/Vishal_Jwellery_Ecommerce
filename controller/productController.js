@@ -1,29 +1,48 @@
 const fs=require('fs')
 const path=require('path')
 const productModel = require('../model/productSchema')
+const categoryModel=require('../model/categorySchema')
 const { log } = require('console')
 //const categoryModel = require('../model/category_model')
 
 
 const addProduct = async(req,res)=>{
-   
-    await res.render('./admin/addProduct',{Admin:true})
+  try {
+    // Assuming productModel.find() returns an array of objects
+    const categories = await categoryModel.find({})
+     console.log(categories);
+    let obj=[]
+    let maps =categories.map((item)=>{
+        let test={
+            "_id":item._id,
+            "name":item.name,
+        }
+        obj.push(test)
+    })
+    await res.render('./admin/addProduct',{obj,Admin:true})
+} catch (err) {
+    console.log(err);
+    res.send("Error Occurred");
+}
+    
 }
 
 
 const productAdded = async (req, res) => {
     try {
-        console.log(req.file);
+        console.log(req.files);
+        console.log("===========================1");
         const { product, category,price,stock, description} = req.body
         const newproduct = new productModel({
             name: product,
             category: category,
             price: price,
             stock:stock,
-            //image: req.files.map(file => file.path),
+            images: req.files.map(file => file.path),
             description: description
         })
-        //console.log(newproduct);
+        console.log("===========================2");
+        console.log(newproduct);
         await newproduct.save()
         res.redirect('/admin/products')
         //console.log('okay aanu');
@@ -38,17 +57,17 @@ const productList = async (req, res) => {
     try {
         // Assuming productModel.find() returns an array of objects
         const products = await productModel.find()
-        //console.log(products);
+         console.log(products);
         let obj=[]
-        let maps =products.map((iteam)=>{
+        let maps =products.map((item)=>{
             let test={
-                "_id":iteam._id,
-                "name":iteam.name,
-                "price":iteam.price,
-                "category":iteam.category,
-                "stock":iteam.stock,
-                "status":iteam.status,
-                "description":iteam.description
+                "_id":item._id,
+                "name":item.name,
+                "price":item.price,
+                "category":item.category,
+                "stock":item.stock,
+                "status":item.status,
+                "description":item.description
             }
             obj.push(test)
         })
@@ -83,11 +102,9 @@ const unlistProduct = async (req, res) => {
   // product deleting
   const deleteProduct = async (req, res) => {
     try {
-        console.log("okay");
       const id = req.params.id;
-      const product = await productModel.deleteOne({ _id: id });
+      await productModel.deleteOne({ _id: id });
       res.redirect("/admin/products");
-      console.log("okay deleted");
     } catch (error) {
       console.log(error);
       res.send(error);

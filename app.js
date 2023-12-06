@@ -10,6 +10,7 @@ const hbs = require('express-handlebars')
 const connectDb = require('./config/connectDb')
 const session = require('express-session')
 const multer= require('multer')
+const flash = require('express-flash')
 
 var app = express();
 
@@ -28,13 +29,17 @@ app.engine('hbs', hbs.engine({
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie:{
+    maxAge:60000
+  }
 }));
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(flash())
 
 connectDb();
 
@@ -63,6 +68,7 @@ app.use(function(err, req, res, next) {
 });
 
 app.use('/uploads',express.static('uploads'))
+
 const storage=multer.diskStorage({
     destination:(req,file,cb)=>{
         cb(null,'uploads/')
@@ -73,5 +79,9 @@ const storage=multer.diskStorage({
 })
 
 const upload =multer({storage:storage})
+
+app.post('/your-upload-route', upload.array('files'), (req, res) => {
+  console.log(req.files);
+});
 
 module.exports = app;
