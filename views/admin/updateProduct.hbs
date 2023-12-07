@@ -1,7 +1,7 @@
 <div class="col-xl my-5 mx-4">
                   <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                      <h5 class="mb-0">Add Product</h5>
+                      <h5 class="mb-0">Update Product</h5>
                       
                     </div>
                     <div class="card-body">
@@ -17,8 +17,10 @@
                               class="form-control"
                               id="basic-icon-default-fullname"
                               name="product"
+                              placeholder="{{product.name}}"
                               aria-label="John Doe"
                               aria-describedby="basic-icon-default-fullname2"
+                              value="{{ product.name }}"
                             />
                           </div>
                         </div>
@@ -35,6 +37,7 @@
                               name="category"
                               aria-label="ACME Inc."
                               aria-describedby="basic-icon-default-company2"
+                              value="{{ this.category }}"
                             />
                           </div>
                         </div>
@@ -49,6 +52,7 @@
                               name="price"
                               aria-label="john.doe"
                               aria-describedby="basic-icon-default-email2"
+                              value="{{ product.price }}"
                             />
                           </div>
                         </div>
@@ -64,6 +68,7 @@
                               class="form-control phone-mask"
                               name="stock"
                               aria-describedby="basic-icon-default-phone2"
+                              value="{{ product.stock }}"
                             />
                           </div>
                         </div>
@@ -78,6 +83,7 @@
                               class="form-control"
                               name="description"
                               aria-describedby="basic-icon-default-message2"
+                              value="{{ product.description }}"
                             ></textarea>
                           </div>
                         </div>
@@ -87,7 +93,7 @@
                             <input type="file" name="images" />
                           </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                       </form>
                     </div>
                   </div>

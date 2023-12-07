@@ -26,9 +26,9 @@
                         
                         <td>
                           {{#if this.status}}
-                          <p>Blocked</p>
-                          {{else}}
                           <p>Active</p>
+                          {{else}}
+                          <p>Blocked</p>
                           </td>
                           {{/if}}
                         <td>
@@ -39,11 +39,11 @@
                             <div class="dropdown-menu">
                               {{#if this.status}}
                               <a class="dropdown-item" href="/admin/blockuser/{{this._id}}"
-                                ><i class="bx bx-edit-alt me-1"></i>Unblock </a
+                                ><i class="bx bx-edit-alt me-1"></i>Block </a
                               >
                               {{else}}
                                <a class="dropdown-item" href="/admin/blockuser/{{this._id}}"
-                                ><i class="bx bx-edit-alt me-1"></i>Block </a
+                                ><i class="bx bx-edit-alt me-1"></i>Unblock </a
                               >
                               {{/if}}
                               <a class="dropdown-item" href="/admin/deleteuser/{{this._id}}" 

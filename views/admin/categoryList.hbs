@@ -20,7 +20,8 @@
                         <td>1</td>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{this.name}}</strong></td>
                         <td>{{this.description}}</td>
-                        <td>{{#if this.status}}
+                        <td>
+                          {{#if this.status}}
                           <p>Listed</p>
                           {{else}}
                           <p>Unisted</p>
@@ -32,13 +33,13 @@
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="/changestatus/{{this._id}}"
+                              <a class="dropdown-item" href="/admin/catstatus/{{this._id}}"
                                 ><i class="bx bx-edit-alt me-1"></i> Change status</a
                               >
-                              <a class="dropdown-item" href="/editcategory/{{this._id}}"
+                              <a class="dropdown-item" href="/admin/editcategory/{{this._id}}"
                                 ><i class="bx bx-edit-alt me-1"></i> Update category</a
                               >
-                              <a class="dropdown-item" href="/deletecategory/{{this._id}}"
+                              <a class="dropdown-item" href="/admin/deletecategory/{{this._id}}"
                                 ><i class="bx bx-trash me-1"></i> Delete</a
                               >
                             </div>

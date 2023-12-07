@@ -21,6 +21,7 @@ router.get('/addproduct',Session.adisAuth,productController.addProduct);
 router.post('/addproduct',Session.adisAuth,upload.array('images'),productController.productAdded)
 router.get('/unlistproduct/:id',Session.adisAuth,productController.unlistProduct)
 router.get('/deleteproduct/:id',Session.adisAuth,productController.deleteProduct)
+router.get('/editproduct/:id',Session.adisAuth,productController.editProduct)
 
 //coupen routers
 router.get('/coupens',Session.adisAuth,adminController.coupen);
@@ -30,14 +31,15 @@ router.get('/addcoupen',Session.adisAuth,adminController.addCoupen);
 //category routers
 router.get('/categories',Session.adisAuth,productController.categories);
 router.get('/addcategory',Session.adisAuth,productController.addCategory)
-router.get('/category',Session.adisAuth,adminController.catList)
-router.post('/addcategory',Session.adisAuth,adminController.addCategory)
-router.get('/changestatus/:id',Session.adisAuth,adminController.unlistCategory)
-router.get('/deletecategory/:id',Session.adisAuth,adminController.deletingCategory)
+router.get('/categorylist',Session.adisAuth,productController.catList)
+router.post('/addcategory',Session.adisAuth,productController.addedCategory)
+router.get('/catstatus/:id',Session.adisAuth,productController.unlistCategory)
+router.get('/deletecategory/:id',Session.adisAuth,productController.deletingCategory)
 
 //user routers
 router.get('/customers',Session.adisAuth,adminController.userList);
 router.get('/deleteuser/:id',adminController.deleteUser)
+router.get('/blockuser/:id',adminController.blockUser)
 
 //order routers
 router.get('/orders',Session.adisAuth,adminController.orders);

@@ -54,7 +54,7 @@ const register = async(req,res)=>{
 
 const verifyPage =async (req, res) => {
     try {
-        res.render("./user/otpVerification");
+        res.render("./user/otpVerification",{Single:true});
     } catch {
       res.status(200).send("error occured");
     }
@@ -65,13 +65,14 @@ const generateotp = () => {
     return Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit OTP
 };
 
+
 //send otp
 const sendOTP = async (phoneNumber, otp) => {
     try {
         const message = await twilioClient.messages.create({
             body: `Your OTP for verification is: ${otp}`,
             from: '+1 912 228 4094',
-            to: "+91 8590948623"
+            to: "+91 "+phoneNumber
         });
         console.log("sended"+message.sid); // Log the message SID upon successful sending
     } catch (error) {
@@ -135,6 +136,7 @@ const registerUser = async (req, res) => {
             email: email,
             phone: phone,
             password: hashedpassword,
+            status:true
           });
            req.session.user = user;
            req.session.signup = true;
@@ -218,7 +220,7 @@ const loginUser = async (req, res) => {
     }
 
     try {
-        const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ email:email,status:true });
         if (!user) {
             req.flash("error", "Invalid username or Password");
             return res.redirect('/login')
@@ -232,21 +234,21 @@ const loginUser = async (req, res) => {
 
         req.session.user = user;
         const products = await productModel.find({status:true})
-        // let obj=[]
-        //     let maps =products.map((iteam)=>{
-        //         let test={
-        //             "_id":iteam._id,
-        //             "name":iteam.name,
-        //             "price":iteam.price,
-        //             "category":iteam.category,
-        //             "stock":iteam.stock,
-        //             "status":iteam.status,
-        //             "description":iteam.description
-        //         }
-        //         obj.push(test)
-        //     })
+        let obj=[]
+            let maps =products.map((iteam)=>{
+                let test={
+                    "_id":iteam._id,
+                    "name":iteam.name,
+                    "price":iteam.price,
+                    "category":iteam.category,
+                    "stock":iteam.stock,
+                    "status":iteam.status,
+                    "description":iteam.description
+                }
+                obj.push(test)
+            })
             console.log("==========================2");
-        await res.render('./user/home',{products})
+        await res.render('./user/home',{products:obj})
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }
