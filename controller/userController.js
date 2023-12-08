@@ -1,6 +1,7 @@
 
 const userModel = require('../model/userSchema')
 const productModel=require('../model/productSchema')
+const categoryModel=require('../model/categorySchema')
 const otpModel = require("../model/userOtpModel");
 const bcrypt = require('bcrypt')
 const session = require('express-session')
@@ -34,8 +35,17 @@ const home = async(req,res)=>{
             }
             obj.push(test)
         })
+        const categories = await categoryModel.find({status:true})
+          let arr=[]
+          let map =categories.map((cat)=>{
+            let val={
+              name:cat.name
+            }
+            arr.push(val)
+          })
+          
 
-    await res.render('./user/home')
+    await res.render('./user/home',{products:obj,categories:arr})
 }
 
 //@desc Login page
@@ -247,12 +257,61 @@ const loginUser = async (req, res) => {
                 }
                 obj.push(test)
             })
-            console.log("==========================2");
-        await res.render('./user/home',{products:obj})
+
+          console.log("==========================2");
+          const categories = await categoryModel.find({status:true})
+          let arr=[]
+          let map =categories.map((cat)=>{
+            let val={
+              name:cat.name
+            }
+            arr.push(val)
+          })
+          req.session.isAuth = true;
+        await res.render('./user/home',{products:obj,categories:arr})
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
 
+const shopProduct = async (req,res)=>{
+  const products = await productModel.find({status:true})
+        let obj=[]
+            let maps =products.map((iteam)=>{
+                let test={
+                    "_id":iteam._id,
+                    "name":iteam.name,
+                    "price":iteam.price,
+                    "category":iteam.category,
+                    "stock":iteam.stock,
+                    "status":iteam.status,
+                    "description":iteam.description
+                }
+                obj.push(test)
+            })
+    await res.render('./user/shop',{products:obj})
+}
+const cartProducts =async (req,res)=>{
+  await res.render('./user/cart')
+}
+const productPage =async (req,res)=>{
+  const products = await productModel.find({status:true}).limit(1)
+        let obj=[]
+            let maps =products.map((iteam)=>{
+                let test={
+                    "_id":iteam._id,
+                    "name":iteam.name,
+                    "price":iteam.price,
+                    "category":iteam.category,
+                    "stock":iteam.stock,
+                    "status":iteam.status,
+                    "description":iteam.description
+                }
+                obj.push(test)
+            })
+  await res.render('./user/productPage',{product:obj})
+}
 
-module.exports = {registerUser,loginUser,home,login,register,verifyotp,verifyPage}
+
+
+module.exports = {registerUser,loginUser,home,login,register,verifyotp,verifyPage,shopProduct,cartProducts,productPage}

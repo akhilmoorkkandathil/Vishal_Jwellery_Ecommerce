@@ -37,7 +37,7 @@ const productAdded = async (req, res) => {
             category: category,
             price: price,
             stock:stock,
-            images: req.files.map(file => file.path+".png"),
+            images: req.files.map(file => file.filename),
             description: description
         })
         console.log("===========================2");
@@ -64,6 +64,7 @@ const productList = async (req, res) => {
                 "name":item.name,
                 "price":item.price,
                 "category":item.category,
+                "images":item.images,
                 "stock":item.stock,
                 "status":item.status,
                 "description":item.description
@@ -117,21 +118,9 @@ const editProduct = async (req, res) => {
       const id = req.params.id;
       const product = await productModel.findById(id);
       console.log(product);
-      // let obj=[]
-      // let maps =product.map((item)=>{
-      //     let test={
-      //         "_id":item._id,
-      //         "name":item.name,
-      //         "price":item.price,
-      //         "category":item.category,
-      //         "stock":item.stock,
-      //         "status":item.status,
-      //         "description":item.description
-      //     }
-      //     obj.push(test)
-      // }
-
-      res.render("./admin/updateProduct", { product,Admin:true });
+      let obj=[]
+      obj.push(product)
+      res.render("./admin/updateProduct", { product:obj,Admin:true });
       console.log("=======================123567");
     } catch (error) {
       console.log(error);

@@ -5,7 +5,7 @@ const Session= require("../middlewares/isAadAuth")
 const router = express.Router();
 
 const multer=require('multer')
-const upload=multer({dest:'uploads/'})
+const upload=multer({dest:'public/adminAssets/uploads/'})
 
 
 router.get('/',adminController.adminLogin);

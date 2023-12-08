@@ -31,7 +31,88 @@ a {
     font-weight: 600; }
 
 
+/* Start */
 
+.product-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 5px; /* Rounded corners for the image */
+}
+
+.button-container {
+  text-align: left; /* Center-align the buttons */
+  margin-bottom: 20px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-left: 70px;
+  border-radius: 20px; /* Rounded corners for the buttons */
+}
+
+.add-to-cart {
+  background-color: #4caf50;
+  color: white;
+}
+
+.buy-now {
+  background-color: #f44336;
+  color: white;
+}
+
+.product-details {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  margin-top: 100px;
+}
+
+.product-details h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.product-description {
+  font-size: 16px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.product-price {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.coupon-offers ul {
+  list-style-type: none;
+  padding: 0;
+  text-align: left;
+}
+
+.coupon-offers ul li {
+  margin-bottom: 5px;
+}
+  /* ended */
+
+    .product-actions {
+      display: flex;
+      justify-content: space-between; /* Adjusts space between buttons */
+      align-items: center; /* Vertically centers buttons */
+      margin-top: 10px; /* Adjust as needed */
+  }
+  
+  .product-actions button {
+      flex: 1; /* Distributes available space equally */
+      width: auto; /* Allows buttons to adjust their width based on content */
+      font-size: 12px; /* Adjusts font size */
+      margin-right: 10px; /* Adjusts space between buttons */
+      margin-left: 10px;
+  }
+  
     
   .subheader {
       background-color: #f8f9fa;

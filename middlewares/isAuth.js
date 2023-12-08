@@ -9,7 +9,7 @@ const loged=(req,res,next)=>{
 }
 
 
-const logedtohome=(req,res,next)=>{
+const logedToHome=(req,res,next)=>{
     if(req.session.isAuth)
     {
         next()
@@ -43,7 +43,7 @@ const signforgot=(req,res,next)=>{
 
 module.exports={
     loged,
-    logedtohome,
+    logedToHome,
     forgot,
     signforgot,
     

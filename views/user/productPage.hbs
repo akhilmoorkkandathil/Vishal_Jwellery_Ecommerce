@@ -1,0 +1,53 @@
+<section>
+    <!-- Start Hero Section -->
+			<div class="hero">
+				<div class="container">
+					<div class="row justify-content-between">
+						<div class="col-lg-5">
+							<div class="intro-excerpt">
+								<h1>Product Details</span></h1>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		<!-- End Hero Section -->
+       <body>
+    <div class="container">
+        <div class="row">
+            {{#each product}}
+            <div class="col-lg-6">
+                <img class="product-image" src="images/product-3.png" alt="Product Image">
+        
+                <div class="button-container">
+                    <button class="add-to-cart">Add to Cart</button>
+                    <button class="buy-now">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="product-details">
+                    <h2>{{this.name}}</h2>
+                    
+                    <p class="product-description">
+                        {{this.description}}
+                    </p>
+                    
+                    <p class="product-price">Price: {{this.price}}</p>
+                    
+                    <div class="coupon-offers">
+                        <h4>Available Coupons</h4>
+                        <ul>
+                            <li>Coupen 1: 10% off</li>
+                            <li>Coupen 2: Free shipping</li>
+                            <!-- Add more offers if needed -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</body>
+</section>
