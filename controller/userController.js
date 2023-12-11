@@ -23,15 +23,16 @@ const {
 const home = async(req,res)=>{
     const products = await productModel.find()
     let obj=[]
-        let maps =products.map((iteam)=>{
+        let maps =products.map((item)=>{
             let test={
-                "_id":iteam._id,
-                "name":iteam.name,
-                "price":iteam.price,
-                "category":iteam.category,
-                "stock":iteam.stock,
-                "status":iteam.status,
-                "description":iteam.description
+                "_id":item._id,
+                "name":item.name,
+                "price":item.price,
+                "category":item.category,
+                "images":item.images,
+                "stock":item.stock,
+                "status":item.status,
+                "description":item.description
             }
             obj.push(test)
         })
@@ -55,12 +56,14 @@ const login = async(req,res)=>{
     await res.render('./user/login',{Single:true})
 }
 
+
 //@desc Register page
 //@router Get /register
 //@acess public
 const register = async(req,res)=>{
     res.render('./user/register',{Single:true})
-  }
+}
+
 
 const verifyPage =async (req, res) => {
     try {
@@ -69,6 +72,7 @@ const verifyPage =async (req, res) => {
       res.status(200).send("error occured");
     }
   };
+
 
 //generate otp
 const generateotp = () => {
@@ -90,6 +94,7 @@ const sendOTP = async (phoneNumber, otp) => {
         throw new Error("Failed to send OTP");
     }
 };
+
 
 //@desc signup a user
 //@router Post /register
@@ -218,6 +223,7 @@ const verifyotp = async (req, res) => {
     }
   };
 
+
 //@desc login a user
 //@router Post /login
 //@access public
@@ -243,17 +249,18 @@ const loginUser = async (req, res) => {
         }
 
         req.session.user = user;
-        const products = await productModel.find({status:true})
+        const products = await productModel.find({status:true,category:"Dining"}).limit(4)
         let obj=[]
-            let maps =products.map((iteam)=>{
+            let maps =products.map((item)=>{
                 let test={
-                    "_id":iteam._id,
-                    "name":iteam.name,
-                    "price":iteam.price,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
+                    "_id":item._id,
+                    "name":item.name,
+                    "price":item.price,
+                    "category":item.category,
+                    "images":item.images,
+                    "stock":item.stock,
+                    "status":item.status,
+                    "description":item.description
                 }
                 obj.push(test)
             })
@@ -274,6 +281,8 @@ const loginUser = async (req, res) => {
     }
 };
 
+
+
 const shopProduct = async (req,res)=>{
   const products = await productModel.find({status:true})
         let obj=[]
@@ -282,6 +291,7 @@ const shopProduct = async (req,res)=>{
                     "_id":iteam._id,
                     "name":iteam.name,
                     "price":iteam.price,
+                    "images":iteam.images,
                     "category":iteam.category,
                     "stock":iteam.stock,
                     "status":iteam.status,
@@ -289,29 +299,39 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-    await res.render('./user/shop',{products:obj})
+            console.log(obj);
+    await res.render('./user/shop',{products:obj}).limit(4)
 }
+
+
 const cartProducts =async (req,res)=>{
   await res.render('./user/cart')
 }
+
+
 const productPage =async (req,res)=>{
-  const products = await productModel.find({status:true}).limit(1)
+  const id = req.params.id;
+  console.log("============okay==============");
+  console.log(id);
+  const products = await productModel.find({ _id:id })
+  console.log(products);
         let obj=[]
-            let maps =products.map((iteam)=>{
+            let maps =products.map((item)=>{
                 let test={
-                    "_id":iteam._id,
-                    "name":iteam.name,
-                    "price":iteam.price,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
+                    "_id":item._id,
+                    "name":item.name,
+                    "price":item.price,
+                    "category":item.category,
+                    "images":item.images,
+                    "stock":item.stock,
+                    "status":item.status,
+                    "description":item.description
                 }
                 obj.push(test)
             })
-  await res.render('./user/productPage',{product:obj})
+            console.log(obj);
+  await res.render('./user/productPage',{products:obj})
 }
-
 
 
 module.exports = {registerUser,loginUser,home,login,register,verifyotp,verifyPage,shopProduct,cartProducts,productPage}

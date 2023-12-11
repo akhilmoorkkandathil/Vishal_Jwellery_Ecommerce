@@ -13,27 +13,28 @@
 				</div>
 			</div>
 		<!-- End Hero Section -->
-<div class="untree_co-section product-section before-footer-section">
-    <div class="container">
-        <div class="row">
-            {{#each products}}
-            <!-- Start Column 1 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a href="productpage" class="product-link">
-                    <div class="product-item">
-                        <img src="images/product-3.png" class="img-fluid product-thumbnail">
-                        <h3 class="product-title">{{this.name}}</h3>
-                        <strong class="product-price">${{this.price}}</strong>
-                        <div class="product-actions">
-                            <button class="btn btn-primary btn-sm add-to-cart">Cart</button>
-                            <button class="btn btn-secondary btn-sm add-to-watchlist">Buy Now</button>
-                        </div>
+            <div class="untree_co-section product-section before-footer-section">
+                <div class="container">
+                    <div class="row">
+                        {{#each products}}
+                        <!-- Start Column 1 -->
+                        <div class="col-12 col-md-4 col-lg-3 mb-5">
+                            <div class="product-item">
+                                <a href="/{{this._id}}">
+                                    <img src="/adminAssets/uploads/{{this.images.[0]}}" class="img-fluid product-thumbnail">
+                                    <h3 class="product-title">{{this.name}}</h3>
+                                    <strong class="product-price">${{this.price}}</strong>
+                                    <div class="product-actions">
+                                        <button class="btn btn-primary btn-sm add-to-cart">Cart</button>
+                                        <button class="btn btn-secondary btn-sm add-to-watchlist">Buy Now</button>
+                                    </div>
+                                </a>
+                            </div>
+                        </div> 
+                        <!-- End Column 1 -->
+                        {{/each}}
                     </div>
-                </a>
-            </div> 
-            <!-- End Column 1 -->
-            {{/each}}
-        </div>
-    </div>
-</div>
+                </div>
+            </div>
+
 </section>

@@ -17,10 +17,10 @@ router.post('/login',userController.loginUser)
 router.get('/verifyotp',userController.verifyPage)
 router.post('/verifyotp',userController.verifyotp)
 
-router.get('/shop',userSession.logedToHome ,userController.shopProduct)
-router.get('/cart',userSession.logedToHome ,userController.cartProducts)
+router.get('/shop',userController.shopProduct)
+router.get('/cart',userController.cartProducts)
 
-router.get('/productpage',userSession.logedToHome ,userController.productPage)
+router.get('/:id',userController.productPage)
 
 
 module.exports = router;

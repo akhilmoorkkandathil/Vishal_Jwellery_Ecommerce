@@ -111,22 +111,55 @@ const unlistProduct = async (req, res) => {
     }
   };
 
-// product update page 
-const editProduct = async (req, res) => {
+  const editProduct = async (req, res) => {
     try {
-      console.log("=======================123");
       const id = req.params.id;
       const product = await productModel.findById(id);
-      console.log(product);
-      let obj=[]
-      obj.push(product)
-      res.render("./admin/updateProduct", { product:obj,Admin:true });
-      console.log("=======================123567");
+      let products=[product]
+      let arr=[]
+        let maps =products.map((item)=>{
+            let test={
+                "_id":item._id,
+                "name":item.name,
+                "price":item.price,
+                "category":item.category,
+                "images":item.images,
+                "stock":item.stock,
+                "status":item.status,
+                "description":item.description
+            }
+            arr.push(test)
+        })
+      
+      console.log(products);
+      console.log(arr);
+      
+      res.render("./admin/updateProduct", { product:arr, Admin: true });
     } catch (error) {
       console.log(error);
       res.send(error);
     }
   };
+  
+
+  // updating the  product
+const updateProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { productName, stock, productprice, description ,category} = req.body;
+    const product = await productModel.findOne({ _id: id });
+    product.name = productName;
+    product.price = productprice;
+    product.stock = stock;
+    product.category= category;
+    product.description = description;
+    await product.save();
+    res.redirect("/admin/product");
+  } catch (error) {
+    console.log(error);
+    res.send("Error Occured");
+  }
+};
   
   
 
@@ -266,4 +299,4 @@ const updatecategory = async (req, res) => {
 };
 
 
-module.exports ={addProduct,productList,categories,addCategory,productAdded,unlistProduct,deleteProduct,editProduct,addedCategory,catList,unlistCategory,deletingCategory,updatecat,updatecategory}
+module.exports ={addProduct,productList,categories,addCategory,productAdded,unlistProduct,deleteProduct,editProduct,addedCategory,catList,unlistCategory,deletingCategory,updatecat,updatecategory,updateProduct}

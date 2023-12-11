@@ -57,6 +57,6 @@
 
 // let word = "akskandkj"
 // console.log(word.slice(0,5));
-let a=[1,2,3,4,5]
-a.splice(1,2)
-console.log(a);
+// let a=[5,1,3,2,3,0,4,5]
+// a.sort((a,b)=>(a===0)-(b===0))
+// console.log(a);

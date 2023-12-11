@@ -2,11 +2,14 @@
                   <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                       <h5 class="mb-0">Update Product</h5>
+                      <p>{{product}}</p>
+                      {{product.name}}
+                      {{this.name}}
                       
                     </div>
                     <div class="card-body">
-                      <form action="/admin/updateproduct" method="post" enctype="multipart/form-data">
-                      {{#each product}}
+                      <form action="/admin/updateproduct/{{product._id}}" method="post" enctype="multipart/form-data">
+                      
                         <div class="mb-3">
                           <label class="form-label" for="basic-icon-default-fullname">Product Name</label>
                           <div class="input-group input-group-merge">
@@ -17,8 +20,8 @@
                               type="text"
                               class="form-control"
                               id="basic-icon-default-fullname"
-                              name="product"
-                              placeholder="{{this.name}}"
+                              name="productName"
+                              value="Name"
                               aria-label="John Doe"
                               aria-describedby="basic-icon-default-fullname2"
                             />
@@ -35,9 +38,9 @@
                               id="basic-icon-default-company"
                               class="form-control"
                               name="category"
+                              value="{{ product.category }}"
                               aria-label="ACME Inc."
                               aria-describedby="basic-icon-default-company2"
-                              placeholder="{{ this.category }}"
                             />
                           </div>
                         </div>
@@ -49,10 +52,10 @@
                               type="text"
                               id="basic-icon-default-email"
                               class="form-control"
-                              name="price"
+                              name="productprice"
                               aria-label="john.doe"
                               aria-describedby="basic-icon-default-email2"
-                              placeholder="{{ this.price }}"
+                              value="{{product.price}}"
                             />
                           </div>
                         </div>
@@ -68,7 +71,7 @@
                               class="form-control phone-mask"
                               name="stock"
                               aria-describedby="basic-icon-default-phone2"
-                              placeholder="{{ this.stock }}"
+                              
                             />
                           </div>
                         </div>
@@ -83,7 +86,7 @@
                               class="form-control"
                               name="description"
                               aria-describedby="basic-icon-default-message2"
-                              placeholder="{{ this.description }}"
+                              
                             ></textarea>
                           </div>
                         </div>
@@ -93,7 +96,7 @@
                             <input type="file" name="images" />
                           </div>
                         </div>
-                        {{/each}}
+                        
                         <button type="submit" class="btn btn-primary">Update</button>
                       </form>
                     </div>

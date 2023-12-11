@@ -9,7 +9,6 @@ var adminRouter = require('./routes/admin');
 const hbs = require('express-handlebars')
 const connectDb = require('./config/connectDb')
 const session = require('express-session')
-const multer= require('multer')
 const flash = require('express-flash')
 
 var app = express();
@@ -68,19 +67,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.use('/uploads',express.static('public/adminAssts/uploads'))
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-      cb(null, 'uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
-  }
-});
-const upload =multer({storage:storage})
-
-app.post('/your-upload-route', upload.array('files'), (req, res) => {
-  console.log(req.files);
-});
 
 module.exports = app;

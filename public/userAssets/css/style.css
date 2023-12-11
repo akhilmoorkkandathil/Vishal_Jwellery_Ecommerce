@@ -35,9 +35,10 @@ a {
 
 .product-image {
   max-width: 100%;
-  height: auto;
+  height: 500px;
   margin-bottom: 20px;
   border-radius: 5px; /* Rounded corners for the image */
+  margin-top: 20px;
 }
 
 .button-container {
@@ -301,13 +302,13 @@ a {
   color: #2f2f2f; }
 
 .product-section {
-  padding: 7rem 0; }
+  padding: 7rem; }
   .product-section .product-item {
     text-align: center;
     text-decoration: none;
     display: block;
     position: relative;
-    padding-bottom: 50px;
+    
     cursor: pointer; }
     .product-section .product-item .product-thumbnail {
       margin-bottom: 30px;
