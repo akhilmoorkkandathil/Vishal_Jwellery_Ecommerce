@@ -29,7 +29,7 @@ const logOut = (req,res)=>{
         console.error('Error destroying session:', err);
         res.status(500).send('Error destroying session');
       } else {
-       res.redirect("/")
+       res.redirect("/admin/")
       }
     });
   }
@@ -106,29 +106,25 @@ const products = async(req,res)=>{
 //@desc login a admin
 //@router Post admin/login
 //@access public
-const loginAdmin = async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ message: "Email and password are required" });
+// admin login action 
+const adminLogined = async (req, res) => {
+  const {email,password}=req.body
+  try {
+    
+    const user = await AdminModel.findOne({ email,password });
+    
+    if (user) {
+      console.log("admin is in");
+      req.session.isadAuth = true;
+      res.redirect("/admin/dashboard");
+    } else {
+      req.flash("error", "Invalid email or Password");
+      res.render("admin/adminlogin",{Single:true});
     }
-
-    try {
-      console.log("================================");
-        const admin = await AdminModel.findOne({ email });
-        console.log(admin);
-        if (!admin) {
-            return res.status(400).json({ message: "Invalid credencial" });
-        }
-        if (!password) {
-            return res.status(400).json({ message: "Invalid password" });
-        }
-        req.session.isadAuth = true;
-
-        res.render('./admin/dashboard', { message: 'Login successful',Admin:true});
-    } catch (error) {
-      console.log("================================");
-        return res.status(500).json({ message: "Internal server error" });
-    }
+  } catch (error) {
+    console.log(error);
+    res.render("admin/adminlogin", { username: "incorrect username" });
+  }
 };
 
-module.exports = {loginAdmin,dashboard,adminLogin,addCoupen,coupen,userList,deleteUser,products,orders,logOut,blockUser}
+module.exports = {dashboard,adminLogin,addCoupen,coupen,userList,deleteUser,products,orders,logOut,blockUser,adminLogined}

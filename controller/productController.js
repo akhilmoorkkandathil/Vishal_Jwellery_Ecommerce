@@ -113,28 +113,29 @@ const unlistProduct = async (req, res) => {
 
   const editProduct = async (req, res) => {
     try {
+      console.log("=============OKAY==============");
       const id = req.params.id;
       const product = await productModel.findById(id);
-      let products=[product]
-      let arr=[]
-        let maps =products.map((item)=>{
-            let test={
-                "_id":item._id,
-                "name":item.name,
-                "price":item.price,
-                "category":item.category,
-                "images":item.images,
-                "stock":item.stock,
-                "status":item.status,
-                "description":item.description
-            }
-            arr.push(test)
-        })
       
-      console.log(products);
-      console.log(arr);
+      // let arr=[]
+      //   let maps =product.map((item)=>{
+      //       let test={
+      //           "_id":item._id,
+      //           "name":item.name,
+      //           "price":item.price,
+      //           "category":item.category,
+      //           "images":item.images,
+      //           "stock":item.stock,
+      //           "status":item.status,
+      //           "description":item.description
+      //       }
+      //       arr.push(test)
+      //   })
       
-      res.render("./admin/updateProduct", { product:arr, Admin: true });
+      // console.log(arr);
+      console.log(product);
+      
+      res.render("./admin/updateProduct", { product, Admin: true });
     } catch (error) {
       console.log(error);
       res.send(error);

@@ -1,17 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
 require("dotenv").config()
-var userRouter = require('./routes/user');
-var adminRouter = require('./routes/admin');
+const userRouter = require('./routes/user');
+const adminRouter = require('./routes/admin');
 const hbs = require('express-handlebars')
 const connectDb = require('./config/connectDb')
 const session = require('express-session')
+const cookieParser = require('cookie-parser');
 const flash = require('express-flash')
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,7 +30,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie:{
-    maxAge:60000
+    maxAge:600000
   }
 }));
 

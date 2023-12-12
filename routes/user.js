@@ -7,7 +7,7 @@ const session = require('express-session');
 router.get('/',userController.home)
 
 
-router.get('/register',userController.register)
+router.get('/register' ,userController.register)
 router.post('/otppage',userController.registerUser);
 
 router.get('/login',userController.login)
@@ -19,8 +19,6 @@ router.post('/verifyotp',userController.verifyotp)
 
 router.get('/shop',userController.shopProduct)
 router.get('/cart',userController.cartProducts)
-
 router.get('/:id',userController.productPage)
-
 
 module.exports = router;

@@ -10,20 +10,20 @@ const multer=require('multer')
 
 
 router.get('/',adminController.adminLogin);
-router.post('/login',adminController.loginAdmin);
+router.post('/login',adminController.adminLogined);
 router.get('/logout',adminController.logOut)
 
 
 router.get('/dashboard',Session.adisAuth,adminController.dashboard);
 
 //product routers
-router.get('/products',productController.productList);
-router.get('/addproduct',productController.addProduct);
-router.post('/addproduct',upload.array('images'),productController.productAdded)
-router.get('/unlistproduct/:id',productController.unlistProduct)
-router.get('/deleteproduct/:id',productController.deleteProduct)
-router.get('/editproduct/:id',productController.editProduct)
-router.get('/updateproduct/:id',productController.updateProduct)
+router.get('/products',Session.adisAuth,productController.productList);
+router.get('/addproduct',Session.adisAuth,productController.addProduct);
+router.post('/addproduct',Session.adisAuth,upload.array('images'),productController.productAdded)
+router.get('/unlistproduct/:id',Session.adisAuth,productController.unlistProduct)
+router.get('/deleteproduct/:id',Session.adisAuth,productController.deleteProduct)
+router.get('/editproduct/:id',Session.adisAuth,productController.editProduct)
+router.get('/updateproduct/:id',Session.adisAuth,productController.updateProduct)
 
 
 //coupen routers
@@ -46,6 +46,9 @@ router.get('/blockuser/:id',adminController.blockUser)
 
 //order routers
 router.get('/orders',Session.adisAuth,adminController.orders);
+
+//logout
+router.get('logout',Session.adisAuth,adminController.logOut);
 
 
 

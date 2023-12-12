@@ -249,22 +249,52 @@ const loginUser = async (req, res) => {
         }
 
         req.session.user = user;
-        const products = await productModel.find({status:true,category:"Dining"}).limit(4)
-        let obj=[]
-            let maps =products.map((item)=>{
+        const dproduct = await productModel.find({status:true,category:"Dining"}).limit(4)
+        let dobj=[]
+            let dmaps =dproduct.map((iteam)=>{
                 let test={
-                    "_id":item._id,
-                    "name":item.name,
-                    "price":item.price,
-                    "category":item.category,
-                    "images":item.images,
-                    "stock":item.stock,
-                    "status":item.status,
-                    "description":item.description
+                    "_id":iteam._id,
+                    "name":iteam.name,
+                    "price":iteam.price,
+                    "images":iteam.images,
+                    "category":iteam.category,
+                    "stock":iteam.stock,
+                    "status":iteam.status,
+                    "description":iteam.description
                 }
-                obj.push(test)
+                dobj.push(test)
             })
-
+            //console.log(cobj);
+            const bproducts = await productModel.find({status:true,category:"Bedroom"}).limit(4)
+            let bobj=[]
+                let bmaps =bproducts.map((iteam)=>{
+                    let test={
+                        "_id":iteam._id,
+                        "name":iteam.name,
+                        "price":iteam.price,
+                        "images":iteam.images,
+                        "category":iteam.category,
+                        "stock":iteam.stock,
+                        "status":iteam.status,
+                        "description":iteam.description
+                    }
+                    bobj.push(test)
+                })
+                const sproducts = await productModel.find({status:true,category:"Study Room"}).limit(4)
+                let sobj=[]
+                    let smaps =sproducts.map((iteam)=>{
+                        let test={
+                            "_id":iteam._id,
+                            "name":iteam.name,
+                            "price":iteam.price,
+                            "images":iteam.images,
+                            "category":iteam.category,
+                            "stock":iteam.stock,
+                            "status":iteam.status,
+                            "description":iteam.description
+                        }
+                        sobj.push(test)
+                    })
           console.log("==========================2");
           const categories = await categoryModel.find({status:true})
           let arr=[]
@@ -275,7 +305,7 @@ const loginUser = async (req, res) => {
             arr.push(val)
           })
           req.session.isAuth = true;
-        await res.render('./user/home',{products:obj,categories:arr})
+        await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,categories:arr})
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }
@@ -284,9 +314,10 @@ const loginUser = async (req, res) => {
 
 
 const shopProduct = async (req,res)=>{
-  const products = await productModel.find({status:true})
+  console.log("=============ok==============");
+  const product = await productModel.find({status:true})
         let obj=[]
-            let maps =products.map((iteam)=>{
+            let maps =product.map((iteam)=>{
                 let test={
                     "_id":iteam._id,
                     "name":iteam.name,
@@ -299,8 +330,8 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            console.log(obj);
-    await res.render('./user/shop',{products:obj}).limit(4)
+            
+    await res.render('./user/shop',{products:obj})
 }
 
 

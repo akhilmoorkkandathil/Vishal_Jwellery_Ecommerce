@@ -12,7 +12,7 @@ const adminSchema = new mongoose.Schema({
             unique:true,
             tolowecase:true,
         },
-        password:{
+    password:{
             type:String,
             required:[true,'please enter a password'],
             minlength:[6,'min length is 6 character']
