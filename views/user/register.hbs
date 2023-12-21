@@ -138,7 +138,7 @@
               <h4 class="mb-2">Adventure starts here 🚀</h4>
               <p class="mb-4">Make your app management easy and fun!</p>
 
-              <form id="formAuthentication" class="mb-3" action="/otppage" method="POST">
+              <form id="formAuthentication" class="mb-3" action="/register" method="POST">
                  <div class="mb-3">
                   
                   {{#if messages.error}}
@@ -197,9 +197,7 @@
                       aria-describedby="password"
                     />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                    {{#if cpassworderror}}
-                      <div class="alter text-danger text-start">{{cpassworderror}}</div>
-                  {{/if}}
+                    
                   </div>
                 </div>
 

@@ -4,20 +4,12 @@ const loged=(req,res,next)=>{
         next()
     }
     else{
-        res.render("users/signin");
+        res.render("./user/login",{Single:true});
     }
 }
 
 
-const logedToHome=(req,res,next)=>{
-    if(req.session.isAuth)
-    {
-        next()
-    }
-    else{
-        res.redirect("/");
-    }
-}
+
 const forgot=(req,res,next)=>{
     if (req.session.forgot) {
         next()
@@ -43,7 +35,6 @@ const signforgot=(req,res,next)=>{
 
 module.exports={
     loged,
-    logedToHome,
     forgot,
     signforgot,
     

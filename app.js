@@ -33,12 +33,13 @@ app.use(session({
     maxAge:600000
   }
 }));
+app.use(cookieParser());
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(flash())
+
 
 connectDb();
 

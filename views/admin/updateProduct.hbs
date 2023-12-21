@@ -1,101 +1,81 @@
-
 <div class="col-xl my-5 mx-4">
-                  <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h5 class="mb-0">Update Product</h5> </div>
-                    <div class="card-body">
-                      <form action="/admin/updateproduct/{{this._id}}" method="post" enctype="multipart/form-data">
-                      {{#if product}}
-                      <div class="mb-3">
-                          <label class="form-label" for="basic-icon-default-fullname">Product Name</label>
-                          <div class="input-group input-group-merge">
-                            <span id="basic-icon-default-fullname2" class="input-group-text"
-                              ><i class="bx bx-user"></i
-                            ></span>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="basic-icon-default-fullname"                             
-                              value={{this.name}}
-                            />
-                          </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-icon-default-company">Category</label>
-                          <div class="input-group input-group-merge">
-                            <span id="basic-icon-default-company2" class="input-group-text"
-                              ><i class="bx bx-buildings"></i
-                            ></span>
-                            <input
-                              type="text"
-                              id="basic-icon-default-company"
-                              class="form-control"
-                              name="category"
-                              value={{ this.category }}
-                              aria-label="ACME Inc."
-                              aria-describedby="basic-icon-default-company2"
-                            />
-                          </div>
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-icon-default-email">Price</label>
-                          <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="bx bx-envelope"></i></span>
-                            <input
-                              type="text"
-                              id="basic-icon-default-email"
-                              class="form-control"
-                              name="productprice"
-                              aria-label="john.doe"
-                              aria-describedby="basic-icon-default-email2"
-                              value={{this.price}}
-                            />
-                          </div>
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-icon-default-phone">Quantity</label>
-                          <div class="input-group input-group-merge">
-                            <span id="basic-icon-default-phone2" class="input-group-text"
-                              ><i class="bx bx-phone"></i
-                            ></span>
-                            <input
-                              type="text"
-                              id="basic-icon-default-phone"
-                              class="form-control phone-mask"
-                              name="stock"
-                              aria-describedby="basic-icon-default-phone2"
-                              value={{this.stock}}
-                            />
-                          </div>
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-icon-default-message">Description</label>
-                          <div class="input-group input-group-merge">
-                            <span id="basic-icon-default-message2" class="input-group-text"
-                              ><i class="bx bx-comment"></i
-                            ></span>
-                            <textarea
-                              id="basic-icon-default-message"
-                              class="form-control"
-                              name="description"
-                              aria-describedby="basic-icon-default-message2"
-                              value={{this.description}}
-                              
-                            ></textarea>
-                          </div>
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-icon-default-message">Add image</label>
-                          <div class="input-group input-group-merge">
-                            <input type="file" name="images" />
-                          </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">Update</button>
-                        {{/if}}
-                      </form>
-                    </div>
-                  </div>
-                </div>
-  
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Update Product</h5>
+    </div>
+    <div class="card-body">
+      <form action="/admin/updateproduct/{{product._id}}" method="post" enctype="multipart/form-data">
+        {{#if product}}
+        <div class="mb-3">
+          <label class="form-label" for="productName">Product Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="productName"
+            name="name"
+            value="{{product.name}}"
+            
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="category">Category</label>
+          <input
+            type="text"
+            class="form-control"
+            id="category"
+            name="category"
+            value="{{product.category}}"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="productPrice">Price</label>
+          <input
+            type="number"
+            class="form-control"
+            id="productPrice"
+            name="price"
+            value="{{product.price}}"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="productStock">Quantity</label>
+          <input
+            type="text"
+            class="form-control"
+            id="productStock"
+            name="stock"
+            value="{{product.stock}}"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="productDescription">Description</label>
+          <textarea
+            class="form-control"
+            id="productDescription"
+            name="description"
+            value="{{product.description}}"
+          >{{product.description}}</textarea>
+        </div>
+
+
+        <div class="mb-3">
+          <label class="form-label" for="productImage">Add Image</label>
+          <input
+            type="file"
+            class="form-control"
+            id="productImage"
+            name="image"
+            value="product.images"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+        {{/if}}
+      </form>
+    </div>
+  </div>
+</div>

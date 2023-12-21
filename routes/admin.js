@@ -11,7 +11,7 @@ const multer=require('multer')
 
 router.get('/',adminController.adminLogin);
 router.post('/login',adminController.adminLogined);
-router.get('/logout',adminController.logOut)
+
 
 
 router.get('/dashboard',Session.adisAuth,adminController.dashboard);
@@ -22,8 +22,8 @@ router.get('/addproduct',Session.adisAuth,productController.addProduct);
 router.post('/addproduct',Session.adisAuth,upload.array('images'),productController.productAdded)
 router.get('/unlistproduct/:id',Session.adisAuth,productController.unlistProduct)
 router.get('/deleteproduct/:id',Session.adisAuth,productController.deleteProduct)
-router.get('/editproduct/:id',Session.adisAuth,productController.editProduct)
-router.get('/updateproduct/:id',Session.adisAuth,productController.updateProduct)
+router.get('/editproduct/:id',productController.editProduct)
+router.post('/updateproduct/:id',productController.updateProduct)
 
 
 //coupen routers
@@ -38,18 +38,19 @@ router.get('/categorylist',Session.adisAuth,productController.catList)
 router.post('/addcategory',Session.adisAuth,productController.addedCategory)
 router.get('/catstatus/:id',Session.adisAuth,productController.unlistCategory)
 router.get('/deletecategory/:id',Session.adisAuth,productController.deletingCategory)
+router.get('/editcategory/:id',Session.adisAuth,productController.updatecat)
+router.post('/updatecategory/:id',Session.adisAuth,productController.updateCategory)
 
 //user routers
 router.get('/customers',Session.adisAuth,adminController.userList);
-router.get('/deleteuser/:id',adminController.deleteUser)
-router.get('/blockuser/:id',adminController.blockUser)
+router.get('/deleteuser/:id',Session.adisAuth,adminController.deleteUser)
+router.get('/blockuser/:id',Session.adisAuth,adminController.blockUser)
 
 //order routers
 router.get('/orders',Session.adisAuth,adminController.orders);
 
 //logout
-router.get('logout',Session.adisAuth,adminController.logOut);
-
+router.get('/logout',Session.adisAuth,adminController.logOut);
 
 
 

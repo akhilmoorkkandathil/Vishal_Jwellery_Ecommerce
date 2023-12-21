@@ -127,6 +127,15 @@
               <p class="mb-4">Verify your phone number</p>
 
               <form id="formAuthentication" class="mb-3" action="/verifyotp" method="POST">
+               <div class="mb-3">
+                  
+                  {{#if messages.error}}
+                      <div class="alert alert-danger" role="alert">
+                        <div class="alter text-danger text-center">{{messages.error}}</div>
+                      </div>
+                  {{/if}}
+                  
+                 </div>
                 <div class="mb-3">
                     <label for="otp" class="form-label">OTP</label>
                     <input
@@ -138,25 +147,20 @@
                         autofocus
                     />
                 </div>
+                <div class="mb-3">
                   <button class="btn btn-primary d-grid w-100" type="submit">Verify OTP</button>
                 </div>
+                <div class="mb-3">
+                  <p id="timer" class="text-center">Resend OTP in <span id="countdown">60</span> seconds</p>
+
+                </div>
               </form>
+            
             </div>
           </div>
           <!-- /Register -->
         </div>
       </div>
-    </div>
-
-    <!-- / Content -->
-
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/products/Vishal-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
     </div>
 
     <!-- Core JS -->
@@ -178,5 +182,43 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script>
+  // Function to start the countdown
+  function startTimer(duration, display) {
+    var timer = duration,
+      minutes,
+      seconds;
+    setInterval(function () {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      display.textContent = seconds;
+
+      if (--timer < 0) {
+        timer = duration;
+        // Show the resend OTP option after the countdown completes
+        document.getElementById('timer').innerHTML = `
+          <p class="text-center">
+            <span>OTP not received?</span>
+            <a href="/resendotp">
+              <span>Resend OTP</span>
+            </a>
+          </p>
+        `;
+      }
+    }, 1000);
+  }
+
+  // Start the countdown when the page loads
+  window.onload = function () {
+    var countdown = 60, // 60 seconds
+      display = document.querySelector("#countdown");
+    startTimer(countdown, display);
+  };
+</script>
+
   </body>
 </html>

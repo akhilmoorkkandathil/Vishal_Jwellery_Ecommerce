@@ -4,8 +4,12 @@ const AdminModel = require('../model/adminSchema')
 
 
 const dashboard = async(req, res)=> {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
     await res.render('./admin/dashboard',{Admin:true})
 }
+
 
 const adminLogin = async(req,res)=>{
     await res.render('./admin/adminLogin',{Single:true})
@@ -21,18 +25,27 @@ const coupen = async (req,res)=>{
     await res.render('./admin/coupenList',{Admin:true})
 }
 
-const logOut = (req,res)=>{
-    console.log("okay");
-    req.session.isadAuth = false;
-    req.session.destroy(err => {
-      if (err) {
-        console.error('Error destroying session:', err);
-        res.status(500).send('Error destroying session');
-      } else {
-       res.redirect("/admin/")
-      }
-    });
-  }
+const logOut = (req, res) => {
+  console.log("Logging out");
+  
+  // Clear the session variable
+  req.session.isadAuth = false;
+  
+  // Destroy the session
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      res.status(500).send('Error destroying session');
+    } else {
+      // Clear the 'isadAuth' cookie
+      res.clearCookie('myCookie');
+      
+      // Redirect to the logout page or wherever you want after logout
+      res.redirect("/admin/");
+    }
+  });
+};
+
 
 
 const userList = async(req,res)=>{
@@ -51,6 +64,9 @@ const userList = async(req,res)=>{
             obj.push(test)
         })
         console.log(obj);
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
     res.render("./admin/customerList", { users: obj,Admin:true });
 } catch (error) {
   console.log(error);
@@ -100,6 +116,9 @@ const orders = async(req,res)=>{
     await res.render('./admin/orderList',{Admin:true})
 }
 const products = async(req,res)=>{
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     await res.render('./admin/productList',{Admin:true})
   }
 
@@ -118,6 +137,7 @@ const adminLogined = async (req, res) => {
       req.session.isadAuth = true;
       res.redirect("/admin/dashboard");
     } else {
+      //res.cookie('myCookie', 'cookieValue', { maxAge: 900000, httpOnly: true });
       req.flash("error", "Invalid email or Password");
       res.render("admin/adminlogin",{Single:true});
     }

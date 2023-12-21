@@ -12,9 +12,15 @@
 				<div class="collapse navbar-collapse" id="navbarsFurni">
 					<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
 						<li class="nav-item active">
-							<a class="nav-link" href="/">Home</a>
+							<a class="nav-link" href="/home">Home</a>
 						</li>
-						<li><a class="nav-link" href="shop">Shop</a></li>					</ul>
+						<li><a class="nav-link" href="shop">Shop</a></li>
+						{{#unless login}}
+						
+						{{else}}
+						<li><a class="nav-link" href="logout">Logout</a></li>
+						{{/unless}}
+					</ul>
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
 						<li><a class="nav-link" href="#"><img src="images/user.svg"></a></li>
 						<li><a class="nav-link" href="cart"><img src="images/cart.svg"></a></li>

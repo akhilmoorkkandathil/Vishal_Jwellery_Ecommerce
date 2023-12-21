@@ -71,6 +71,8 @@ const productList = async (req, res) => {
             }
             obj.push(test)
         })
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
         await res.render("./admin/productList", { obj, Admin: true });
     } catch (err) {
         console.log(err);
@@ -116,26 +118,28 @@ const unlistProduct = async (req, res) => {
       console.log("=============OKAY==============");
       const id = req.params.id;
       const product = await productModel.findById(id);
+      const pr=[product]
       
-      // let arr=[]
-      //   let maps =product.map((item)=>{
-      //       let test={
-      //           "_id":item._id,
-      //           "name":item.name,
-      //           "price":item.price,
-      //           "category":item.category,
-      //           "images":item.images,
-      //           "stock":item.stock,
-      //           "status":item.status,
-      //           "description":item.description
-      //       }
-      //       arr.push(test)
-      //   })
+      let arr=[]
+        let maps =pr.map((item)=>{
+            let test={
+                "_id":item._id,
+                "name":item.name,
+                "price":item.price,
+                "category":item.category,
+                "images":item.images,
+                "stock":item.stock,
+                "status":item.status,
+                "description":item.description
+            }
+            arr.push(test)
+        })
       
-      // console.log(arr);
-      console.log(product);
+      console.log(arr);
       
-      res.render("./admin/updateProduct", { product, Admin: true });
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.render("./admin/updateProduct", { product:arr[0], Admin: true });
     } catch (error) {
       console.log(error);
       res.send(error);
@@ -147,22 +151,25 @@ const unlistProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const { productName, stock, productprice, description ,category} = req.body;
-    const product = await productModel.findOne({ _id: id });
-    product.name = productName;
-    product.price = productprice;
+    const { name, stock, price, description ,category} = req.body;
+    const product = await productModel.find({_id:ObjectId(id)});
+    product.name = name;
+    product.price = price;
     product.stock = stock;
     product.category= category;
     product.description = description;
     await product.save();
-    res.redirect("/admin/product");
+    res.redirect("/admin/productlist");
+    if(req.file.image){
+
+    }
   } catch (error) {
     console.log(error);
     res.send("Error Occured");
   }
 };
   
-  
+ 
 
 const categories = async (req,res)=>{
     await res.render('./admin/categoryList',{Admin:true})
@@ -217,6 +224,8 @@ const catList = async (req,res)=>{
           obj.push(test)
       })
       console.log(obj);
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
       await res.render('./admin/categoryList',{obj,Admin:true})
   } catch (err) {
       console.log(err);
@@ -270,9 +279,22 @@ const deletingCategory = async (req, res) => {
 // admin category update page
 const updatecat = async (req, res) => {
   try {
+    console.log("====================");
       const id = req.params.id;
       const cat = await categoryModel.findOne({ _id: id });
-      res.render("admin/updatecat", { itemcat: cat });
+      const category=[cat]
+      let obj=[]
+      let maps =category.map((item)=>{
+          let test={
+              "_id":item._id,
+              "name":item.name,
+              "description":item.description,
+              "status":item.status
+          }
+          obj.push(test)
+      })
+      console.log(obj);
+      res.render("./admin/editCategory", { Admin: true,category:obj[0] });
     
   } catch (error) {
     console.log(error);
@@ -282,16 +304,16 @@ const updatecat = async (req, res) => {
 
 
 // admin category updating
-const updatecategory = async (req, res) => {
+const updateCategory = async (req, res) => {
   try {
       const id = req.params.id;
-      const catName = req.body.categoryName;
-      const catdec = req.body.description;
+      const catName = req.body.catname;
+      const catdes = req.body.catdes;
       await categoryModel.updateOne(
         { _id: id },
-        { name: catName, description: catdec }
+        { name: catName, description: catdes }
       );
-      res.redirect("/admin/category");
+      res.redirect("/admin/categorylist");
     
   } catch (error) {
     console.log(error);
@@ -300,4 +322,5 @@ const updatecategory = async (req, res) => {
 };
 
 
-module.exports ={addProduct,productList,categories,addCategory,productAdded,unlistProduct,deleteProduct,editProduct,addedCategory,catList,unlistCategory,deletingCategory,updatecat,updatecategory,updateProduct}
+
+module.exports ={addProduct,productList,categories,addCategory,productAdded,unlistProduct,deleteProduct,editProduct,addedCategory,catList,unlistCategory,deletingCategory,updatecat,updateCategory,updateProduct}
