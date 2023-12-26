@@ -1,3 +1,4 @@
+
 <section>
     <!-- Start Hero Section -->
 			<div class="hero">
@@ -18,11 +19,15 @@
         <div class="row">
             {{#each products}}
             <div class="col-lg-6">
-                <img class="product-image" src="/adminAssets/uploads/{{this.images.[0]}}" alt="Product Image">
+                <div id="img-container">
+                    <img class="product-image" src="/adminAssets/uploads/{{this.images.[0]}}" alt="Product Image">
+                </div>
+                
         
                 <div class="button-container">
-                    <button class="add-to-cart">Add to Cart</button>
-                    <button class="buy-now">Buy Now</button>
+                    <a href="/addtocart/{{this._id}}"><button class="add-to-cart">Add to Cart</button></a>
+                    
+                    <a href=""><button class="buy-now">Buy Now</button></a>
                 </div>
             </div>
             
@@ -49,5 +54,20 @@
             {{/each}}
         </div>
     </div>
+<script>
+
+var options = {
+    width: 500,
+    zoomWidth: 300,
+    offset: {vertical: 100, horizontal: 300},
+    scale:.6
+    
+};
+
+
+new ImageZoom(document.getElementById("img-container"), options);
+
+</script>
 </body>
+
 </section>

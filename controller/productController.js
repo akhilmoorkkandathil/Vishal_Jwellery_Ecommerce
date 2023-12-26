@@ -18,7 +18,7 @@ const addProduct = async(req,res)=>{
         }
         obj.push(test)
     })
-    await res.render('./admin/addProduct',{obj,Admin:true})
+    await res.render('./admin/addProduct',{obj,Admin:true,category:obj})
 } catch (err) {
     console.log(err);
     res.send("Error Occurred");
@@ -134,18 +134,29 @@ const unlistProduct = async (req, res) => {
             }
             arr.push(test)
         })
+        const categories = await categoryModel.find({})
+     console.log(categories);
+    let obj=[]
+    let map =categories.map((item)=>{
+        let test={
+            "_id":item._id,
+            "name":item.name,
+        }
+        obj.push(test)
+    })
       
       console.log(arr);
       
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
-      res.render("./admin/updateProduct", { product:arr[0], Admin: true });
+      res.render("./admin/updateProduct", { product:arr[0],category:obj, Admin: true });
     } catch (error) {
       console.log(error);
       res.send(error);
     }
   };
   
+
 
   // updating the  product
 const updateProduct = async (req, res) => {

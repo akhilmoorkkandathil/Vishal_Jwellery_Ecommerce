@@ -3,6 +3,7 @@ const router = express.Router();
 const  userController= require('../controller/userController')
 const userSession = require('../middlewares/isAuth');
 const session = require('express-session');
+const cartController = require('../controller/cartController');
 
 router.get('/',userController.home)
 
@@ -17,24 +18,23 @@ router.get('/resendotp',userController.resendOtp)
 router.get('/forgototpverify',userController.verifyPage)
 router.get('/newpassword',userController.newPassword)
 router.post('/setpassword',userController.setNewPassword)
-router.get('/home',userSession.loged,userController.loginHome)
 
 router.get('/verifyotp',userController.verifyPage)
 router.post('/verifyotp',userController.verifyotp)
 
-router.get('/shop',userController.shopProduct)
-router.get('/cart',userController.cartProducts)
+router.get('/shop',userSession.userAuth,userController.shopProduct)
+router.get('/cart',userSession.userAuth,cartController.cartProducts)
 
-router.get('/dining',userController.diningProduct)
-router.get('/bedroom',userController.bedroomProduct)
-router.get('/studyroom',userController.studyroomProduct)
+router.get('/dining',userSession.userAuth,userController.diningProduct)
+router.get('/bedroom',userSession.userAuth,userController.bedroomProduct)
+router.get('/studyroom',userSession.userAuth,userController.studyroomProduct)
 
 router.get('/Living',userController.livingProduct)
 router.get('/Dining',userController.diningProduct)
 router.get('/Bedroom',userController.bedroomProduct)
 router.get('/Study%20Room',userController.studyroomProduct)
 
-
+router.get('/addtocart/:id',userSession.userAuth,cartController.addToCart)
 
 router.get('/logout',userController.logOut)
 

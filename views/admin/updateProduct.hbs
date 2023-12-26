@@ -19,14 +19,25 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="category">Category</label>
-          <input
-            type="text"
-            class="form-control"
-            id="category"
-            name="category"
-            value="{{product.category}}"
-          />
+      <label class="form-label" for="basic-icon-default-company">Category</label>
+                            <div class="input-group input-group-merge">
+                                <span id="basic-icon-default-company2" class="input-group-text">
+                                    <i class="bx bx-buildings"></i>
+                                </span>
+                                <select
+                                    id="basic-icon-default-company"
+                                    class="form-select"
+                                    name="category"
+                                    aria-label="Category"
+                                    aria-describedby="basic-icon-default-company2"
+                                >
+                                    <option selected disabled>Select Category</option>
+                                    {{#each category}}
+                                    <option value="category1">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+        
         </div>
 
         <div class="mb-3">

@@ -18,7 +18,6 @@ const {
 
 
 
-
 //@desc Home page
 //@router Get /
 //@acess public
@@ -94,8 +93,16 @@ const home = async(req,res)=>{
             }
             arr.push(val)
           })
-
-    await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,newproducts:newobj,categories:arr})
+          if(req.session.isAuth ===true){
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
+            await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,categories:arr,login:true,newproducts:newobj})
+          }else{
+            await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,newproducts:newobj,categories:arr})
+          }
+          
+    
 }
 
 //@desc Login page
@@ -135,7 +142,7 @@ const sendOTP = async (phoneNumber, otp) => {
         const message = await twilioClient.messages.create({
             body: `Your OTP for verification is: ${otp}`,
             from: '+1 912 228 4094',
-            to: "+91 "+phoneNumber
+            to: "+91 8590948623"
         });
         console.log("sended"+message.sid); // Log the message SID upon successful sending
     } catch (error) {
@@ -318,7 +325,7 @@ const verifyotp = async (req, res) => {
               console.log(req.session.signup);
               await userModel.create(user);
               req.session.signup = false;
-              res.redirect("/home");
+              res.redirect("/");
             } else if (req.session.forgot) {
               console.log("======================okkk=============")
               console.log(req.session.forgot);
@@ -376,13 +383,15 @@ const verifyotp = async (req, res) => {
 const loginUser = async (req, res) => {
   console.log("==========================1");
     const { email, password } = req.body;
+    const user = await userModel.findOne({ email:email,status:true });
+    try {
     if (!email || !password) {
         req.flash("error", "Enter Email & Password");
         return res.redirect('/login')
     }
 
-    try {
-        const user = await userModel.findOne({ email:email,status:true });
+   
+        
         if (!user) {
             req.flash("error", "Invalid username or Password");
             return res.redirect('/login')
@@ -394,85 +403,13 @@ const loginUser = async (req, res) => {
           return res.redirect('/login')
         }
 
-        req.session.user = user;
+        
         const dproduct = await productModel.find({status:true,category:"Dining"}).limit(4)
-        let dobj=[]
-            let dmaps =dproduct.map((iteam)=>{
-                let test={
-                    "_id":iteam._id,
-                    "name":iteam.name,
-                    "price":iteam.price,
-                    "images":iteam.images,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
-                }
-                dobj.push(test)
-            })
-            //console.log(cobj);
-            const bproducts = await productModel.find({status:true,category:"Bedroom"}).limit(4)
-            let bobj=[]
-                let bmaps =bproducts.map((iteam)=>{
-                    let test={
-                        "_id":iteam._id,
-                        "name":iteam.name,
-                        "price":iteam.price,
-                        "images":iteam.images,
-                        "category":iteam.category,
-                        "stock":iteam.stock,
-                        "status":iteam.status,
-                        "description":iteam.description
-                    }
-                    bobj.push(test)
-                })
-                const sproducts = await productModel.find({status:true,category:"Study Room"}).limit(4)
-                let sobj=[]
-                    let smaps =sproducts.map((iteam)=>{
-                        let test={
-                            "_id":iteam._id,
-                            "name":iteam.name,
-                            "price":iteam.price,
-                            "images":iteam.images,
-                            "category":iteam.category,
-                            "stock":iteam.stock,
-                            "status":iteam.status,
-                            "description":iteam.description
-                        }
-                        sobj.push(test)
-                    })
-                
-                    const newProducts = await productModel.find({ status: true })
-                                  .sort({ _id: -1 }) // Sort in descending order based on createdAt field
-                                  .limit(3); // Limit the results to 3
-                    let newobj=[]
-                        let newmaps =newProducts.map((iteam)=>{
-                            let test={
-                                "_id":iteam._id,
-                                "name":iteam.name,
-                                "price":iteam.price,
-                                "images":iteam.images,
-                                "category":iteam.category,
-                                "stock":iteam.stock,
-                                "status":iteam.status,
-                                "description":iteam.description
-                            }
-                            newobj.push(test)
-                        })
-          console.log("==========================2");
-          const categories = await categoryModel.find({status:true})
-          let arr=[]
-          let map =categories.map((cat)=>{
-            let val={
-              name:cat.name
-            }
-            arr.push(val)
-          })
+        
           req.session.isAuth = true;
-          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          res.setHeader('Pragma', 'no-cache');
-          res.setHeader('Expires', '0');
-        await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,categories:arr,login:true,newproducts:newobj})
+          req.session.user = user;
+          res.redirect('/')
+        
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }
@@ -566,6 +503,8 @@ const loginHome= async (req, res) => {
     }
 };
 
+
+
 const shopProduct = async (req,res)=>{
   console.log("=============ok==============");
   const product = await productModel.find({status:true})
@@ -583,7 +522,9 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
     await res.render('./user/shop',{products:obj,name:"Shop"})
 }
 
@@ -605,7 +546,9 @@ const diningProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
     await res.render('./user/shop',{products:obj,name:"Dining"})
 }
 const studyroomProduct = async (req,res)=>{
@@ -625,7 +568,9 @@ const studyroomProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
     await res.render('./user/shop',{products:obj,name:"Study Room"})
 }
 
@@ -646,7 +591,9 @@ const bedroomProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
     await res.render('./user/shop',{products:obj,name:"Bed Room"})
 }
 
@@ -667,23 +614,22 @@ const livingProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
     await res.render('./user/shop',{products:obj,name:"Living Room"})
 }
 
 
 
-const cartProducts =async (req,res)=>{
-  await res.render('./user/cart')
-}
-
-
 const productPage =async (req,res)=>{
   const id = req.params.id;
+  const user = req.session.user
+  console.log(user);
   console.log("============okay==============");
   console.log(id);
-  const products = await productModel.find({ _id:id })
-  console.log(products);
+  const products = await productModel.find({ _id: id})
+   console.log(products);
         let obj=[]
             let maps =products.map((item)=>{
                 let test={
@@ -701,6 +647,7 @@ const productPage =async (req,res)=>{
             console.log(obj);
   await res.render('./user/productPage',{products:obj})
 }
+
 const logOut = async (req, res) => {
   try {
     console.log("===========123========");
@@ -717,4 +664,12 @@ const logOut = async (req, res) => {
 
 
 
-module.exports = {registerUser,loginUser,home,login,register,verifyotp,verifyPage,shopProduct,cartProducts,productPage,logOut,diningProduct,studyroomProduct,bedroomProduct,livingProduct,loginHome,forgotOtp,verifyNumber,newPassword,setNewPassword,resendOtp}
+module.exports = {registerUser,
+  loginUser,home,login,
+  register,verifyotp,verifyPage,
+  shopProduct,productPage,logOut,
+  diningProduct,studyroomProduct,
+  bedroomProduct,livingProduct,
+  loginHome,forgotOtp,verifyNumber,
+  newPassword,setNewPassword,
+  resendOtp}
