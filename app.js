@@ -11,6 +11,7 @@ const session = require('express-session')
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash')
 
+
 const app = express();
 
 // view engine setup
@@ -24,6 +25,7 @@ app.engine('hbs', hbs.engine({
   partialsDir: __dirname + '/views/partials',
   
 }))
+
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -67,6 +69,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.use('/uploads',express.static('public/adminAssts/uploads'))
+app.use('/uploads',express.static('public/adminAssets/uploads'))
 
 module.exports = app;

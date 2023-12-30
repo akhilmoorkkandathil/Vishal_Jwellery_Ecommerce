@@ -22,19 +22,16 @@ router.post('/setpassword',userController.setNewPassword)
 router.get('/verifyotp',userController.verifyPage)
 router.post('/verifyotp',userController.verifyotp)
 
+router.get('/addaddress',userController.addAddress)
+
+
 router.get('/shop',userSession.userAuth,userController.shopProduct)
+
 router.get('/cart',userSession.userAuth,cartController.cartProducts)
+router.get('/add-to-cart/:id',cartController.addToCart)
 
-router.get('/dining',userSession.userAuth,userController.diningProduct)
-router.get('/bedroom',userSession.userAuth,userController.bedroomProduct)
-router.get('/studyroom',userSession.userAuth,userController.studyroomProduct)
 
-router.get('/Living',userController.livingProduct)
-router.get('/Dining',userController.diningProduct)
-router.get('/Bedroom',userController.bedroomProduct)
-router.get('/Study%20Room',userController.studyroomProduct)
 
-router.get('/addtocart/:id',userSession.userAuth,cartController.addToCart)
 
 router.get('/logout',userController.logOut)
 

@@ -2,7 +2,7 @@ const fs=require('fs')
 const path=require('path')
 const productModel = require('../model/productSchema')
 const categoryModel=require('../model/categorySchema')
-const { log } = require('console')
+const cloudinary = require('../utils/cloudinaryConfig');
 
 
 const addProduct = async(req,res)=>{
@@ -28,29 +28,47 @@ const addProduct = async(req,res)=>{
 
 
 const productAdded = async (req, res) => {
-    try {
-        console.log(req.files);
-        console.log("===========================1");
-        const { product, category,price,stock, description} = req.body
-        const newproduct = new productModel({
-            name: product,
-            category: category,
-            price: price,
-            stock:stock,
-            images: req.files.map(file => file.filename),
-            description: description
-        })
-        console.log("===========================2");
-        console.log(newproduct);
-        await newproduct.save()
-        res.redirect('/admin/products')
-        //console.log('okay aanu');
+  console.log("=================okay");
+  try {
+c
+    const urls = [];
+    const files = req.files;
+    console.log(files);
+    console.log("=================okay");
+    for (const file of files) {
+      const { path } = file;
+      console.log(path);
+      const newPath = await uploader(path).catch((err) => { throw err; });
+      console.log("=================okay");
+      urls.push(newPath);
+      await fs.promises.unlink(path); // Using asynchronous unlink
     }
-    catch (err) {
-        console.log(err);
-        res.send("Error Occured")
-    }
-}
+
+  
+    console.log(urls);
+    console.log("===========================1");
+    const { product, category, price, stock, description } = req.body;
+    const newProduct = new productModel({
+      name: product,
+      category: category,
+      price: price,
+      stock: stock,
+      images: urls.map((url) => url),
+      description: description,
+    });
+
+  
+    console.log("===========================2");
+    console.log(newProduct);
+    await newProduct.save();
+    res.redirect('/admin/products');
+    //console.log('okay aanu');
+  } catch (err) {
+    console.log(err);
+    res.send("Error Occurred");
+  }
+};
+
 
 const productList = async (req, res) => {
     try {
@@ -134,8 +152,9 @@ const unlistProduct = async (req, res) => {
             }
             arr.push(test)
         })
+        //console.log(arr);
         const categories = await categoryModel.find({})
-     console.log(categories);
+     //console.log(categories);
     let obj=[]
     let map =categories.map((item)=>{
         let test={
@@ -155,32 +174,42 @@ const unlistProduct = async (req, res) => {
       res.send(error);
     }
   };
-  
+
+const updatePdt = (proId,productDetails)=>{
+  return new Promise((resolve,reject)=>{
+    productModel.updateOne({_id:proId},{
+      $set: {
+        name:productDetails.name,
+        price:productDetails.price,
+        stock:productDetails.stock,
+        category:productDetails.category,
+        description:productDetails.description
+      }
+    }).then((response)=>{
+      resolve()
+    })
+  })
+}
 
 
   // updating the  product
 const updateProduct = async (req, res) => {
   try {
+    console.log("============1111");
     const id = req.params.id;
-    const { name, stock, price, description ,category} = req.body;
-    const product = await productModel.find({_id:ObjectId(id)});
-    product.name = name;
-    product.price = price;
-    product.stock = stock;
-    product.category= category;
-    product.description = description;
-    await product.save();
-    res.redirect("/admin/productlist");
-    if(req.file.image){
-
-    }
+    updatePdt(id,req.body).then(()=>{
+      const product = productModel.findById(id);
+      console.log(product);
+      res.redirect("/admin/products");
+    })
+    
   } catch (error) {
-    console.log(error);
-    res.send("Error Occured");
+    //console.log(error);
+    res.send(error);
   }
 };
   
- 
+
 
 const categories = async (req,res)=>{
     await res.render('./admin/categoryList',{Admin:true})
@@ -244,9 +273,6 @@ const catList = async (req,res)=>{
   }
   
 }
-
-
-
 
 
 

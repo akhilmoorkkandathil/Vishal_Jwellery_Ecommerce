@@ -37,7 +37,7 @@
                                 >
                                     <option selected disabled>Select Category</option>
                                     {{#each category}}
-                                    <option value="category1">{{this.name}}</option>
+                                    <option value="this.category">{{this.name}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -89,7 +89,7 @@
                         <div class="mb-3">
                           <label class="form-label" for="basic-icon-default-message">Add image</label>
                           <div class="input-group input-group-merge">
-                            <input type="file" name="images" />
+                            <input type="file" name="image" multiple>
                           </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Add</button>

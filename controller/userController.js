@@ -123,6 +123,8 @@ const register = async(req,res)=>{
 
 const verifyPage =async (req, res) => {
     try {
+      req.session.user=req.session.user
+      console.log(req.session.user);
         res.render("./user/otpVerification",{Single:true});
     } catch {
       res.status(200).send("error occured");
@@ -134,6 +136,7 @@ const verifyPage =async (req, res) => {
 const generateotp = () => {
     return Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit OTP
 };
+
 
 
 //send otp
@@ -188,6 +191,7 @@ const verifyNumber = async(req,res)=>{
 }
 
 const resendOtp=async(req,res)=>{
+  console.log(req.session.user);
   const number =req.session.user.phone
   const otp = generateotp();
           console.log(otp);
@@ -525,13 +529,18 @@ const shopProduct = async (req,res)=>{
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
+          console.log(req.session.user);
     await res.render('./user/shop',{products:obj,name:"Shop"})
 }
 
 
-const diningProduct = async (req,res)=>{
+const catProduct = async (req,res)=>{
   console.log("=============ok==============");
-  const product = await productModel.find({status:true,category:"Dining"})
+  let cat = req.params.cat
+  
+  console.log(cat);
+  
+  const product = await productModel.find({status:true,category:cat})
         let obj=[]
             let maps =product.map((iteam)=>{
                 let test={
@@ -546,80 +555,11 @@ const diningProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
-    await res.render('./user/shop',{products:obj,name:"Dining"})
+    await res.render('./user/shop',{products:obj,name:cat})
 }
-const studyroomProduct = async (req,res)=>{
-  console.log("=============ok==============");
-  const product = await productModel.find({status:true,category:"Study Room"})
-        let obj=[]
-            let maps =product.map((iteam)=>{
-                let test={
-                    "_id":iteam._id,
-                    "name":iteam.name,
-                    "price":iteam.price,
-                    "images":iteam.images,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
-                }
-                obj.push(test)
-            })
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          res.setHeader('Pragma', 'no-cache');
-          res.setHeader('Expires', '0');
-    await res.render('./user/shop',{products:obj,name:"Study Room"})
-}
-
-const bedroomProduct = async (req,res)=>{
-  console.log("=============ok==============");
-  const product = await productModel.find({status:true,category:"Bedroom"})
-        let obj=[]
-            let maps =product.map((iteam)=>{
-                let test={
-                    "_id":iteam._id,
-                    "name":iteam.name,
-                    "price":iteam.price,
-                    "images":iteam.images,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
-                }
-                obj.push(test)
-            })
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          res.setHeader('Pragma', 'no-cache');
-          res.setHeader('Expires', '0');
-    await res.render('./user/shop',{products:obj,name:"Bed Room"})
-}
-
-const livingProduct = async (req,res)=>{
-  console.log("=============ok==============");
-  const product = await productModel.find({status:true,category:"Living"})
-        let obj=[]
-            let maps =product.map((iteam)=>{
-                let test={
-                    "_id":iteam._id,
-                    "name":iteam.name,
-                    "price":iteam.price,
-                    "images":iteam.images,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
-                }
-                obj.push(test)
-            })
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          res.setHeader('Pragma', 'no-cache');
-          res.setHeader('Expires', '0');
-    await res.render('./user/shop',{products:obj,name:"Living Room"})
-}
-
 
 
 const productPage =async (req,res)=>{
@@ -661,15 +601,16 @@ const logOut = async (req, res) => {
     res.send("Error Occured");
   }
 };
-
-
+const addAddress = async (req,res)=>{
+  console.log("========");
+  await res.render('./user/addAddress',{name:"Add Address"})
+}
 
 module.exports = {registerUser,
   loginUser,home,login,
   register,verifyotp,verifyPage,
   shopProduct,productPage,logOut,
-  diningProduct,studyroomProduct,
-  bedroomProduct,livingProduct,
+  catProduct,
   loginHome,forgotOtp,verifyNumber,
   newPassword,setNewPassword,
-  resendOtp}
+  resendOtp,addAddress}

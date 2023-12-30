@@ -6,12 +6,12 @@ const storage = multer.diskStorage({
       cb(null, 'public/adminAssets/uploads/');
     },
     filename: (req, file, cb) => {
-      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-      cb(null, `${file.fieldname}-${uniqueSuffix}.${file.originalname.split('.').pop()}`);
+      cb(null, Date.now()+file.originalname);
     }
   });
 
   // Create multer instance with specified storage settings
+  console.log("==============");
 const upload = multer({ storage: storage });
 
 module.exports = upload; // Export the configured Multer instance

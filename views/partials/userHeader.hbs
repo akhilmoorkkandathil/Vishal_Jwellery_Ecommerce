@@ -22,7 +22,15 @@
 						{{/unless}}
 					</ul>
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="#"><img src="images/user.svg"></a></li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+								<img src="images/user.svg" alt="Profile">
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="profileDropdown">
+								<li><a class="dropdown-item" href="/profile">Profile Information</a></li>
+								<li><a class="dropdown-item" href="/addaddress">Add Addresses</a></li>
+							</ul>
+						</li>
 						<li><a class="nav-link" href="cart"><img src="images/cart.svg"></a></li>
 					</ul>
 				</div>

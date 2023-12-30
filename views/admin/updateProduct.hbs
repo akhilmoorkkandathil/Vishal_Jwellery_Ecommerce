@@ -33,7 +33,7 @@
                                 >
                                     <option selected disabled>Select Category</option>
                                     {{#each category}}
-                                    <option value="category1">{{this.name}}</option>
+                                    <option value="{{this.name}}">{{this.name}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -71,16 +71,20 @@
             value="{{product.description}}"
           >{{product.description}}</textarea>
         </div>
-
+        <div class="mb-3">
+          <label class="form-label" for="productDescription">Image</label><br>
+          <img src="/adminAssets/uploads/{{product.images.[0]}}" alt="" style="width: 100px; heigth:auto">
+        </div>
 
         <div class="mb-3">
           <label class="form-label" for="productImage">Add Image</label>
           <input
+          
             type="file"
             class="form-control"
             id="productImage"
             name="image"
-            value="product.images"
+            value="{{product.images}}"
           />
         </div>
 
