@@ -20,10 +20,14 @@
             {{#each products}}
             <div class="col-lg-6">
                 <div id="img-container">
-                    <img class="product-image" src="/adminAssets/uploads/{{this.images.[0]}}" alt="Product Image">
+              <img class="product-image" id="mainImage" src="{{this.images.[0]}}" alt="Product Image">
                 </div>
-                
-        
+
+                <div class="thumbnail-container">
+                    {{#each this.images}}
+                        <img class="thumbnail" src="{{this}}" alt="Thumbnail Image">
+                    {{/each}}
+                </div>
                 <div class="button-container">
                     <a href="/add-to-cart/{{this._id}}"><button class="add-to-cart">Add to Cart</button></a>
                     
@@ -55,6 +59,18 @@
         </div>
     </div>
 <script>
+// Get all thumbnail images and main product image
+const thumbnails = document.querySelectorAll('.thumbnail');
+const mainImage = document.getElementById('mainImage');
+
+// Function to handle image click
+thumbnails.forEach(thumbnail => {
+    thumbnail.addEventListener('click', function() {
+        const imageURL = this.src; // Get the clicked thumbnail image URL
+        mainImage.src = imageURL; // Set the main product image to the clicked thumbnail image
+    });
+});
+
 
 var options = {
     width: 500,

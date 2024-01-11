@@ -8,71 +8,85 @@
 
             <div class="col-md-8 col-lg-8 pb-4">
 
-              <form>
+              <form action="addAddress" method="post">
                 <div class="row">
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="text-black" for="fname">Name</label>
-                      <input type="text" class="form-control" id="fname">
+                      <label class="text-black" for="fname" required>First Name</label>
+                      <input type="text" class="form-control" id="fname" name="fname">
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="text-black" for="lname">Phone</label>
-                      <input type="text" class="form-control" id="lname">
+                      <label class="text-black" for="lname" required>Last Name</label>
+                      <input type="text" class="form-control" id="lname" name="lname">
                     </div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="text-black" for="fname">Pincode</label>
-                      <input type="text" class="form-control" id="fname">
+                      <label class="text-black" for="pincode" required>Pincode</label>
+                      <input type="text" class="form-control" id="pincode" name="pincode">
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="text-black" for="lname">Locality</label>
-                      <input type="text" class="form-control" id="lname">
+                      <label class="text-black" for="locality">Locality</label>
+                      <input type="text" class="form-control" id="locality" name="locality">
                     </div>
                   </div>
                 </div>
                 <div class="form-group mb-5">
-                  <label class="text-black" for="message">Address</label>
-                  <textarea name="" class="form-control" id="message" cols="30" rows="5"></textarea>
+                  <label class="text-black" for="message" required>Address</label>
+                  <textarea name="address" class="form-control" id="message" cols="30" rows="5"></textarea>
                 </div>
                 <div class="row">
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="text-black" for="fname">City</label>
-                      <input type="text" class="form-control" id="fname">
+                      <label class="text-black" for="city" required>City</label>
+                      <input type="text" class="form-control" id="city" name="city">
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="text-black" for="lname">State</label>
-                      <input type="text" class="form-control" id="lname">
+                      <label class="text-black" for="state">State</label>
+                      <input type="text" class="form-control" id="state" name="state">
                     </div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="text-black" for="fname">Landmard</label>
-                      <input type="text" class="form-control" id="fname">
+                      <label class="text-black" for="phone" required>Phone</label>
+                      <input type="text" class="form-control" id="phone" name="phone">
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="text-black" for="lname">Alternate Phone</label>
-                      <input type="text" class="form-control" id="lname">
+                      <label class="text-black" for="altphone">Alternate Phone</label>
+                      <input type="text" class="form-control" id="altphone" name="altphone">
                     </div>
                   </div>
                 </div>
-            
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label class="text-black" for="landmark">Landmark</label>
+        <input type="text" class="form-control" id="landmark" name="landmark">
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <label class="text-black" for="country">Country</label>
+        <input type="text" class="form-control" id="country" name="country">
+      </div>
+    </div>
+  </div>
 
-                <button type="submit" class="btn btn-primary-hover-outline mt-3">Add Address</button>
-              </form>
+  <button type="submit" class="btn btn-primary-hover-outline mt-3">Add Address</button>
+</form>
+
 
             </div>
 

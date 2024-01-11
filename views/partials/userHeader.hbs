@@ -8,6 +8,10 @@
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
+				<form class="d-flex my-2 my-lg-0" method="post" action="/search">
+					<input class="form-control mr-sm-2 custom-search-input" name="searchProducts" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-light my-2 my-sm-0 custom-search-btn" type="submit" style="border-radius: 20px; background-color: #68b3c8; color: #fff; border-color: #68b3c8; padding: 8px 16px; transition: all 0.3s ease-in-out;">Search</button>
+				</form>
 
 				<div class="collapse navbar-collapse" id="navbarsFurni">
 					<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
@@ -15,11 +19,7 @@
 							<a class="nav-link" href="/">Home</a>
 						</li>
 						<li><a class="nav-link" href="shop">Shop</a></li>
-						{{#unless login}}
 						
-						{{else}}
-						<li><a class="nav-link" href="logout">Logout</a></li>
-						{{/unless}}
 					</ul>
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
 						<li class="nav-item dropdown">
@@ -27,9 +27,15 @@
 								<img src="images/user.svg" alt="Profile">
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="profileDropdown">
-								<li><a class="dropdown-item" href="/profile">Profile Information</a></li>
-								<li><a class="dropdown-item" href="/addaddress">Add Addresses</a></li>
-							</ul>
+								{{#unless login}}
+								<li><a class="dropdown-item" href="login">Login</a></li>
+								{{else}}
+								<li><a class="dropdown-item" href="address">My Addresses</a></li>
+								<li><a class="dropdown-item" href="orders">My Orders</a></li>
+								<li><a class="dropdown-item" href="logout">Logout</a></li>
+
+								{{/unless}}
+ 							</ul>
 						</li>
 						<li><a class="nav-link" href="cart"><img src="images/cart.svg"></a></li>
 					</ul>

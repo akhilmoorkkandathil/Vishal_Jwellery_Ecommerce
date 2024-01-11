@@ -24,16 +24,12 @@ app.engine('hbs', hbs.engine({
   layoutsDir: __dirname + '/views',
   partialsDir: __dirname + '/views/partials',
   
-}))
-
+}));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false,
-  cookie:{
-    maxAge:600000
-  }
+  saveUninitialized: true,
 }));
 app.use(cookieParser());
 
@@ -69,6 +65,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.use('/uploads',express.static('public/adminAssets/uploads'))
 
 module.exports = app;

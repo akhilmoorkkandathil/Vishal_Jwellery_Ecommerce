@@ -13,6 +13,7 @@ const {
     confirmpasswordValid,
     passwordValid,
   } = require("../utils/userValidator");
+const usersModel = require('../model/userSchema');
 
 //const errorHandler = require('../middlewares/errorhandlerMiddleware')
 
@@ -100,9 +101,7 @@ const home = async(req,res)=>{
             await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,categories:arr,login:true,newproducts:newobj})
           }else{
             await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,newproducts:newobj,categories:arr})
-          }
-          
-    
+          }    
 }
 
 //@desc Login page
@@ -234,7 +233,7 @@ const registerUser = async (req, res) => {
 
         const numberExist = await userModel.findOne({ phone: phone });
         const emailExist = await userModel.findOne({ email: email });
-
+//put it as function
         if (!isusernameValid) {
           console.log("===========================1");
           req.flash("error", "Enter a valid Name");
@@ -385,7 +384,6 @@ const verifyotp = async (req, res) => {
 //@router Post /login
 //@access public
 const loginUser = async (req, res) => {
-  console.log("==========================1");
     const { email, password } = req.body;
     const user = await userModel.findOne({ email:email,status:true });
     try {
@@ -412,6 +410,7 @@ const loginUser = async (req, res) => {
         
           req.session.isAuth = true;
           req.session.user = user;
+          req.session.userId=user._id
           res.redirect('/')
         
     } catch (error) {
@@ -606,6 +605,220 @@ const addAddress = async (req,res)=>{
   await res.render('./user/addAddress',{name:"Add Address"})
 }
 
+const myAddress =async(req,res)=>{
+  const userId = req.session.userId;
+  const user = req.session.user;
+
+  //const user = await userModel.find({_id:userId})
+  // let obj=[]
+  //           let maps =user.map((item)=>{
+  //               let test={
+  //                   "_id":item._id,
+  //                   "username":item.username,
+  //                   "email":item.email,
+  //                   "phone":item.phone,
+  //                   "password":item.password,
+  //                   "address":item.address,
+  //                   "isAdmin":item.isAdmin,
+  //                   "status":item.status
+  //               }
+  //               obj.push(test)
+  //           })
+  //           console.log(obj[0]);
+
+  let login = req.session.isAuth;
+  await res.render('./user/myAddress',{user,login})
+}
+
+const toAddAddress =async (req,res)=>{
+  try {
+    const { fname,lname,phone,pincode,locality,address,city,state,landmark,altphone,country} = req.body;
+    const userId = req.session.userId;
+    console.log(userId);
+    const user = await userModel.findById(userId);
+    console.log(user);
+    if (user) {
+      user.address.push({
+        fname: fname,
+        lname: lname,
+        address: address,
+        locality: locality,
+        pincode: pincode,
+        city: city,
+        state: state,
+        country: country,
+        phone: phone,
+        altphone: altphone,
+        landmark: landmark,
+      });
+
+      // Save the updated user document
+      await user.save();
+    }
+    req.session.user=user;
+    await res.redirect('/address')
+  } catch (error) {
+    console.log("Some errors");
+    console.log(error);
+  }
+}
+
+const editPage = async (req, res) => {
+  try {
+    let index = req.params.index; // Assuming 'index' is the parameter name you want to capture
+    const user = req.session.user;
+    console.log(user);
+    console.log(user.address[index])
+    await res.render('./user/updateAddress', { login: true, address:user.address[index],index}); // Pass 'index' to the render function if needed
+  } catch (error) {
+    console.log("Error:", error);
+    // Handle errors accordingly
+  }
+};
+
+const updateAddress = async (req, res) => {
+
+  try {
+    const index =req.params;
+    const {
+      fname,
+      lname,
+      phone,
+      pincode,
+      locality,
+      address,
+      city,
+      state,
+      landmark,
+      altphone,
+      country
+    } = req.body;
+    
+    const userId = req.session.userId;
+    console.log(userId);
+    await usersModel.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          'address.${index}.fname': fname,
+          'address.${index}.lname': lname,
+          'address.${index}.pincode': pincode,
+          'address.${index}.locality': locality,
+          'address.${index}.address': address,
+          'address.${index}.altphone': altphone,
+          'address.${index}.city': city,
+          'address.${index}.state': state,
+          'address.${index}.country': country,
+          'address.${index}.phone': phone,
+          'address.${index}.landmark': landmark
+        }
+      }
+    );
+    const user = await userModel.findById(userId);
+    req.session.user=user;
+    await res.redirect('/address');
+  } catch (error) {
+    console.error('Error updating address:', error);
+    res.status(500).send('Error updating address');
+  }
+};
+
+const editUserDetails =async(req,res)=>{
+  try {
+    const address=req.session.user;
+    console.log("====================ok");
+    //console.log(address);
+    res.render('./user/editUserDetails',{address});
+    
+  } catch (error) {
+    
+  }
+}
+
+const updateUserAddress = async(req,res)=>{
+  try {
+    const {fname,lname,email}=req.body;
+    const userId = req.session.userId;
+    const username = fname + " " + lname;
+
+    await usersModel.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          username: username,
+          email: email,
+        }
+      }
+    );
+    const user = await userModel.findById(userId);
+    req.session.user=user;
+    await res.redirect('/address');
+  } catch (error) {
+    
+  }
+}
+
+const deleteAddress = async (req, res) => {
+  try {
+    let userId = req.session.userId;
+    let index = req.params.index;
+
+    let user = req.session.user;
+    user.address.splice(index, 1);
+    req.session.user = user;
+
+    let updatedUser = await userModel.findByIdAndUpdate(userId, { address: user.address }, { new: true });
+
+    console.log('User updated successfully:', updatedUser);
+    res.redirect('/address');
+  } catch (error) {
+    console.error('Error occurred while updating user:', error);
+    // Handle error
+    res.status(500).send('Error occurred while updating user');
+  }
+};
+
+
+const searchProducts = async (req, res) => {
+  try {
+    const searchQuery = req.body.searchProducts;
+
+    // Search for products by name
+    const productData = await productModel.findOne({
+      name: { $regex: new RegExp(`^${searchQuery}`, "i") },
+    });
+
+    if (productData) {
+      return res.redirect(`/${productData._id}`);
+    }
+
+    // Search for categories by name
+    const categoryData = await catModel.findOne({
+      name: { $regex: new RegExp(`^${searchQuery}`, "i") },
+    });
+
+    if (categoryData) {
+      return res.redirect(`/shop?category=${categoryData._id}`);
+    }
+
+    // If neither product nor category found, redirect to home
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error", message: err.message });
+  }
+};
+
+const checkoutPage = async(req,res) => {
+  try {
+    const user = req.session.user;
+
+    await res.render('./user/checkout',{user:user})
+  } catch (error) {
+    
+  }
+}
+
 module.exports = {registerUser,
   loginUser,home,login,
   register,verifyotp,verifyPage,
@@ -613,4 +826,5 @@ module.exports = {registerUser,
   catProduct,
   loginHome,forgotOtp,verifyNumber,
   newPassword,setNewPassword,
-  resendOtp,addAddress}
+  resendOtp,addAddress,searchProducts,myAddress,toAddAddress,editPage,updateAddress,editUserDetails,updateUserAddress,deleteAddress,
+  checkoutPage}

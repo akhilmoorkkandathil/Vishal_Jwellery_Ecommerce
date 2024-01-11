@@ -31,7 +31,7 @@
                                     aria-label="Category"
                                     aria-describedby="basic-icon-default-company2"
                                 >
-                                    <option selected disabled>Select Category</option>
+                                    
                                     {{#each category}}
                                     <option value="{{this.name}}">{{this.name}}</option>
                                     {{/each}}
@@ -73,7 +73,7 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="productDescription">Image</label><br>
-          <img src="/adminAssets/uploads/{{product.images.[0]}}" alt="" style="width: 100px; heigth:auto">
+          <img src="{{product.images.[0]}}" alt="" style="width: 100px; heigth:auto">
         </div>
 
         <div class="mb-3">

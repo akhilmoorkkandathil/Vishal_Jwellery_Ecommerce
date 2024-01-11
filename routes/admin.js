@@ -3,11 +3,8 @@ const adminController = require('../controller/adminController');
 const productController = require('../controller/productController')
 const Session= require("../middlewares/isAadAuth")
 const router = express.Router();
-const upload = require('../config/multerSetup')
-
-
-
-
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); 
 
 router.get('/',adminController.adminLogin);
 router.post('/login',adminController.adminLogined);
@@ -18,18 +15,17 @@ router.get('/dashboard',Session.adisAuth,adminController.dashboard);
 
 //product routers
 router.get('/products',Session.adisAuth,productController.productList);
-router.get('/addproduct',Session.adisAuth,productController.addProduct);
-router.post('/addproduct',Session.adisAuth,upload.array('image'),productController.productAdded)
+router.get('/addproductpage',Session.adisAuth,productController.addProduct);
+router.post('/addproduct',Session.adisAuth,upload.array('image', 6),productController.productAdded)
 router.get('/unlistproduct/:id',Session.adisAuth,productController.unlistProduct)
 router.get('/deleteproduct/:id',Session.adisAuth,productController.deleteProduct)
 router.get('/editproduct/:id',productController.editProduct)
-router.post('/updateproduct/:id',productController.updateProduct)
+router.post('/updateproduct/:id',upload.array('image', 6),productController.updateProduct)
 
 
 //coupen routers
 router.get('/coupens',Session.adisAuth,adminController.coupen);
 router.get('/addcoupen',Session.adisAuth,adminController.addCoupen);
-
 
 //category routers
 router.get('/categories',Session.adisAuth,productController.categories);

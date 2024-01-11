@@ -23,12 +23,7 @@
 									<h1>Modern Interior <span class="d-block">Design Studio</span></h1>
 									<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
 								</div>
-							{{#unless login}}
-							<form action="/login" method="GET">
-								
-								<p><button type="submit" class="btn btn-secondary me-2">Login Now</button></p>
-							</form>
-							{{/unless}}
+							
 						</div>
 						
 					</div>
@@ -52,8 +47,8 @@
 					{{#each newproducts}}
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
 						
-						<a class="product-item" href="/{{this._id}}">
-							<img src="/adminAssets/uploads/{{this.images.[0]}}" class="img-fluid product-thumbnail">
+						<a class="product-item" href="{{this._id}}">
+							<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
 							<h3 class="product-title">{{this.name}}</h3>
 							<strong class="product-price">Only {{this.price}}/-</strong>
 						</a>
@@ -84,7 +79,7 @@
 				<div class="col-12 col-md-4 col-lg-3 mb-5">
 					<a href="/{{this._id}}" class="product-link">
 					<div class="product-item">
-						<img src="/adminAssets/uploads/{{this.images.[0]}}" class=img-fluid product-thumbnail">
+						<img src="/{{this.images.[0]}}" class=img-fluid product-thumbnail">
 						<h3 class="product-title">{{this.name}}</h3>
 						<strong class="product-price"> From ${{this.price}}</strong>
 					</div>
@@ -110,7 +105,7 @@
 			<div class="col-12 col-md-4 col-lg-3 mb-5">
 				<a href="/{{this._id}}" class="product-link"> <!-- Wrap content in anchor tag -->
 				<div class="product-item">
-					<img src="/adminAssets/uploads/{{this.images.[0]}}" class="img-fluid product-thumbnail">
+					<img src="/{{this.images.[0]}}" class="img-fluid product-thumbnail">
 					<h3 class="product-title">{{this.name}}</h3>
 					<strong class="product-price"> From ${{this.price}}</strong>
 				</div>
@@ -137,7 +132,7 @@
 				<div class="col-12 col-md-4 col-lg-3 mb-5">
 					<a href="/{{this._id}}" class="product-link">
 					<div class="product-item">
-						<img src="/adminAssets/uploads/{{this.images.[0]}}" class=img-fluid product-thumbnail">
+						<img src="/{{this.images.[0]}}" class=img-fluid product-thumbnail">
 						<h3 class="product-title">{{this.name}}</h3>
 						<strong class="product-price"> From ${{this.price}}</strong>
 					</div>

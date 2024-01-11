@@ -25,14 +25,17 @@ const userSchema = new mongoose.Schema({
     address: {
         type: [{
           saveas:{type:String},
-          fullname:{type:String},
-          adname:{type:String},
-          street: { type: String},
+          fname:{type:String},
+          lname:{type:String},
           pincode:{type:Number},
+          locality: { type: String},
+          address: { type: String},
+          altphone:{type:Number},
           city: { type: String },
           state:{type:String},
           country:{type:String},
-          phonenumber:{type:Number}
+          phone:{type:Number},
+          landmark:{type:String}
         }]},
     isAdmin:{
         type:Boolean,

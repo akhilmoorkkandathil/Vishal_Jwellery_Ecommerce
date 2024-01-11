@@ -1,5 +1,4 @@
-
-		<section>
+<section>
 			<!-- Start Hero Section -->
 			<div class="hero">
 				<div class="container">
@@ -22,7 +21,7 @@
 		{{!-- cart section --}}
 			<div class="untree_co-section before-footer-section">
             <div class="container">
-              {{#if product}}
+              {{#if cart}}
                <div class="row mb-5">
                 <form class="col-md-12" method="post">
                   <div class="site-blocks-table">
@@ -33,22 +32,22 @@
                           <th class="product-name">Product</th>
                           <th class="product-price">Price</th>
                           <th class="product-quantity">Quantity</th>
-                          <th class="product-total">Total</th>
+                          
                           <th class="product-remove">Remove</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {{#each product}}
+                        {{#each cart}}
                         <tr>
                           <td class="product-thumbnail">
-                            <img src="images/product-1.png" alt="Image" class="img-fluid">
+                            <img src="{{this.images.[0]}}" alt="Image" class="img-fluid">
                           </td>
                           <td class="product-name">
                             <h2 class="h5 text-black">{{this.name}}</h2>
                           </td>
                           <td>{{this.price}}</td>
-                          <td>
-                            <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
+                          <td >
+                            <div class="input-group mb-3 ml-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
                               <div class="input-group-prepend">
                                 <button class="btn btn-outline-black decrease" type="button">&minus;</button>
                               </div>
@@ -59,8 +58,7 @@
                             </div>
         
                           </td>
-                          <td>INR 49.00</td>
-                          <td><a href="#" class="btn btn-black btn-sm">X</a></td>
+                          <td><a href="rfcart/{{@index}}" class="btn btn-black btn-sm">X</a></td>
                         </tr>
                         {{/each}}
                         
@@ -71,56 +69,17 @@
               </div>
 
                <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 d-flex">
                   <div class="row mb-5">
                     <div class="col-md-6 mb-3 mb-md-0">
-                      <button class="btn btn-black btn-sm btn-block">Update Cart</button>
-                    </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button>
+                     <a href="/shop" class="btn btn-black btn-sm btn-block">Continue Shopping</a>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <label class="text-black h4" for="coupon">Coupon</label>
-                      <p>Enter your coupon code if you have one.</p>
-                    </div>
-                    <div class="col-md-8 mb-3 mb-md-0">
-                      <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
-                    </div>
-                    <div class="col-md-4">
-                      <button class="btn btn-black">Apply Coupon</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 pl-5">
-                  <div class="row justify-content-end">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="col-md-12 text-right border-bottom mb-5">
-                          <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
-                        </div>
-                      </div>
-                      <div class="row mb-3">
-                        <div class="col-md-6">
-                          <span class="text-black">Subtotal</span>
-                        </div>
-                        <div class="col-md-6 text-right">
-                          <strong class="text-black">$230.00</strong>
-                        </div>
-                      </div>
-                      <div class="row mb-5">
-                        <div class="col-md-6">
-                          <span class="text-black">Total</span>
-                        </div>
-                        <div class="col-md-6 text-right">
-                          <strong class="text-black">$230.00</strong>
-                        </div>
-                      </div>
+                  
         
                       <div class="row">
                         <div class="col-md-12">
-                          <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</button>
+                          <a href="checkout" class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</a>
                         </div>
                       </div>
                     </div>
@@ -137,5 +96,3 @@
           </div>
 		
 		</section>
-
-		

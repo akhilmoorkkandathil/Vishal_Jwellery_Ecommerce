@@ -31,6 +31,24 @@ a {
     font-weight: 600; }
 
 
+    .product-images-container {
+      display: flex;
+  }
+  
+  .main-image-container {
+      margin-right: 20px; /* Adjust margin as needed */
+  }
+  
+  .thumbnails-container {
+      display: flex;
+      flex-direction: column;
+  }
+  
+  .thumbnail {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 10px; /* Adjust margin between thumbnails */
+  }
   
 
 /* Start */

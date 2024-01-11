@@ -2,7 +2,15 @@ const fs=require('fs')
 const path=require('path')
 const productModel = require('../model/productSchema')
 const categoryModel=require('../model/categorySchema')
-const cloudinary = require('../utils/cloudinaryConfig');
+
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDAPIKEY,
+  api_secret: process.env.CLOUDINARYSECRET
+});
 
 
 const addProduct = async(req,res)=>{
@@ -28,53 +36,41 @@ const addProduct = async(req,res)=>{
 
 
 const productAdded = async (req, res) => {
-  console.log("=================okay");
   try {
-c
-    const urls = [];
     const files = req.files;
-    console.log(files);
-    console.log("=================okay");
+    const uploadedImages = [];
     for (const file of files) {
-      const { path } = file;
-      console.log(path);
-      const newPath = await uploader(path).catch((err) => { throw err; });
-      console.log("=================okay");
-      urls.push(newPath);
-      await fs.promises.unlink(path); // Using asynchronous unlink
+      const result = await cloudinary.uploader.upload(file.path);
+      uploadedImages.push(result.url); // Store the secure URL of the uploaded image
     }
-
-  
-    console.log(urls);
-    console.log("===========================1");
+    console.log(uploadedImages);
     const { product, category, price, stock, description } = req.body;
+    const upcat=category.toUpperCase()
     const newProduct = new productModel({
       name: product,
-      category: category,
+      category: upcat, // Assuming 'category' is the ID of the associated category
       price: price,
       stock: stock,
-      images: urls.map((url) => url),
       description: description,
+      images:uploadedImages
     });
+    req
 
-  
-    console.log("===========================2");
-    console.log(newProduct);
     await newProduct.save();
-    res.redirect('/admin/products');
-    //console.log('okay aanu');
+    req.session.uploadedImages = uploadedImages;
+    res.redirect("/admin/products");
   } catch (err) {
     console.log(err);
     res.send("Error Occurred");
   }
+
+  
 };
 
 
 const productList = async (req, res) => {
     try {
-        // Assuming productModel.find() returns an array of objects
         const products = await productModel.find()
-         console.log(products);
         let obj=[]
         let maps =products.map((item)=>{
             let test={
@@ -89,6 +85,7 @@ const productList = async (req, res) => {
             }
             obj.push(test)
         })
+        
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
         await res.render("./admin/productList", { obj, Admin: true });
@@ -163,12 +160,12 @@ const unlistProduct = async (req, res) => {
         }
         obj.push(test)
     })
-      
+    const uploadedImages=req.session.uploadedImages
       console.log(arr);
       
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
-      res.render("./admin/updateProduct", { product:arr[0],category:obj, Admin: true });
+      res.render("./admin/updateProduct", { product:arr[0],category:obj,uploadedImages, Admin: true });
     } catch (error) {
       console.log(error);
       res.send(error);
@@ -208,8 +205,6 @@ const updateProduct = async (req, res) => {
     res.send(error);
   }
 };
-  
-
 
 const categories = async (req,res)=>{
     await res.render('./admin/categoryList',{Admin:true})
@@ -223,9 +218,11 @@ const addedCategory = async (req, res) => {
   try {
     console.log("=================1");
       const catName = req.body.catname;
+      let upperCatName=catName.toUpperCase()
+      console.log(upperCatName);
       const catdes = req.body.catdes;
 
-      const categoryExist = await categoryModel.findOne({ name:catName });
+      const categoryExist = await categoryModel.findOne({ name:upperCatName });
       if(categoryExist){
         console.log("=================2");
         req.flash("error", "This category already exist");
@@ -233,7 +230,7 @@ const addedCategory = async (req, res) => {
       }else{
         console.log("=================3");
         await categoryModel.insertMany({ 
-          name: catName, 
+          name: upperCatName, 
           description: catdes,
           status:true 
         });
@@ -245,7 +242,6 @@ const addedCategory = async (req, res) => {
     res.send(error);
   }
 };
-
 
 const catList = async (req,res)=>{
   try {
@@ -340,15 +336,22 @@ const updatecat = async (req, res) => {
 };
 
 
+
 // admin category updating
 const updateCategory = async (req, res) => {
   try {
       const id = req.params.id;
       const catName = req.body.catname;
+      let catNameUpper =catName.toUpperCase()
       const catdes = req.body.catdes;
+      const categoryExist = await categoryModel.findOne({ name:catNameUpper });
+      if(categoryExist){
+        req.flash("error", "This category already exist");
+        return res.redirect('/admin/editcategory/'+id)
+      }
       await categoryModel.updateOne(
         { _id: id },
-        { name: catName, description: catdes }
+        { name: catNameUpper, description: catdes }
       );
       res.redirect("/admin/categorylist");
     
@@ -357,7 +360,6 @@ const updateCategory = async (req, res) => {
     res.send(error);
   }
 };
-
 
 
 module.exports ={addProduct,productList,categories,addCategory,productAdded,unlistProduct,deleteProduct,editProduct,addedCategory,catList,unlistCategory,deletingCategory,updatecat,updateCategory,updateProduct}
