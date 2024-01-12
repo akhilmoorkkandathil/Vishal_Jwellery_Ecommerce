@@ -15,7 +15,7 @@ const cartProducts = async (req, res) => {
               path: 'item.productId',
               select: 'images name price stock',
           });
-          console.log(cart);
+          //console.log(cart);
       } else {
         
           cart = await cartModel.findOne({ sessionId: sessionId }).populate({
@@ -48,7 +48,7 @@ const cartProducts = async (req, res) => {
             obj.push(test)
           });
           //console.log(obj);
-      res.render('./user/cart', { cart:obj });
+      res.render('./user/cart', { cart:obj , login:req.session.user});
     
   } catch (err) {
     console.log(err);
@@ -127,5 +127,6 @@ const removeProduct = async(req,res)=> {
     
   }
 } 
+
 
 module.exports={addToCart,cartProducts,removeProduct}

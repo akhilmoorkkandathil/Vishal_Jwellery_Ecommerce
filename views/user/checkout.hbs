@@ -131,6 +131,7 @@
 		            </div>
 		          </div>
 		        </div>
+				{{#if cartItems}}
 		        <div class="col-md-6">
 
 		        
@@ -145,21 +146,20 @@
 		                    <th>Total</th>
 		                  </thead>
 		                  <tbody>
+							{{#each cartItems.item}}
 		                    <tr>
-		                      <td>Top Up T-Shirt <strong class="mx-2">x</strong> 1</td>
-		                      <td>$250.00</td>
+		                      <td>{{this.productId.name}}<strong class="mx-2">x</strong> 1</td>
+		                      <td>{{this.productId.price}}</td>
 		                    </tr>
-		                    <tr>
-		                      <td>Polo Shirt <strong class="mx-2">x</strong>   1</td>
-		                      <td>$100.00</td>
-		                    </tr>
+							{{/each}}
+		                    
 		                    <tr>
 		                      <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
-		                      <td class="text-black">$350.00</td>
+		                      <td class="text-black">₹ {{cartItems.total}}</td>
 		                    </tr>
 		                    <tr>
 		                      <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-		                      <td class="text-black font-weight-bold"><strong>$350.00</strong></td>
+		                      <td class="text-black font-weight-bold"><strong>₹ {{cartItems.total}}</strong></td>
 		                    </tr>
 		                  </tbody>
 		                </table>
@@ -197,6 +197,7 @@
 
 		        </div>
 		      </div>
+			  {{/if}}
 		      <!-- </form> -->
 		    </div>
 		  </div>

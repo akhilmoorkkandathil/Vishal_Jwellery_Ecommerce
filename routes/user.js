@@ -4,6 +4,7 @@ const  userController= require('../controller/userController')
 const userSession = require('../middlewares/isAuth');
 const session = require('express-session');
 const cartController = require('../controller/cartController');
+const catController = require('../controller/catagoryController')
 
 router.get('/',userController.home);
 
@@ -12,15 +13,18 @@ router.post('/register',userController.registerUser);
 
 router.get('/login',userController.login);
 router.post('/login',userController.loginUser);
-router.get ('/forgot',userController.forgotOtp);
+router.get('/verifyotp',userController.optPage);
+router.post('/verifyotp',userController.verifyotp);
+
+router.get ('/forgotpassword',userController.phonePage);
 router.post('/resetpassword',userController.verifyNumber);
-router.get('/resendotp',userController.resendOtp);
-router.get('/forgototpverify',userController.verifyPage);
+router.get('/forgototpverify',userController.optPage);
 router.get('/newpassword',userController.newPassword);
 router.post('/setpassword',userController.setNewPassword);
 
-router.get('/verifyotp',userController.verifyPage);
-router.post('/verifyotp',userController.verifyotp);
+
+router.get('/resendotp',userController.resendOtp);
+
 
 router.get('/address',userSession.userAuth,userController.myAddress);
 router.get('/addAddress',userSession.userAuth,userController.addAddress);
@@ -30,7 +34,6 @@ router.post('/updateAddress/:index',userSession.userAuth,userController.updateAd
 router.get('/editUserDetails',userSession.userAuth,userController.editUserDetails);
 router.post('/updateUserAddress',userSession.userAuth,userController.updateUserAddress);
 router.get('/deleteAddress/:index',userSession.userAuth,userController.deleteAddress)
-
 
 router.get('/shop',userController.shopProduct);
 
@@ -42,8 +45,11 @@ router.get('/checkout',userController.checkoutPage)
 
 router.post('/search',userController.searchProducts);
 
+router.get('/category/:name',catController.catPage)
+
 router.get('/logout',userController.logOut);
 
 router.get('/:id',userController.productPage);
 
 module.exports = router;
+

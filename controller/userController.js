@@ -14,6 +14,8 @@ const {
     passwordValid,
   } = require("../utils/userValidator");
 const usersModel = require('../model/userSchema');
+const cartModel = require('../model/cartSchema')
+let objectId = require('mongodb').ObjectId
 
 //const errorHandler = require('../middlewares/errorhandlerMiddleware')
 
@@ -120,10 +122,8 @@ const register = async(req,res)=>{
 }
 
 
-const verifyPage =async (req, res) => {
+const optPage =async (req, res) => {
     try {
-      req.session.user=req.session.user
-      console.log(req.session.user);
         res.render("./user/otpVerification",{Single:true});
     } catch {
       res.status(200).send("error occured");
@@ -154,12 +154,13 @@ const sendOTP = async (phoneNumber, otp) => {
 };
 
 
-const forgotOtp=async(req,res)=>{
-  res.render('./user/forgotPassword',{Single:true})
+const phonePage=async(req,res)=>{
+  res.render('./user/phonePage',{Single:true})
 }
 
 const verifyNumber = async(req,res)=>{
   const number=req.body.phone
+  req.session.phone=number
   const user = await userModel.findOne({ phone: number ,status:true });
   if (!user) {
     req.flash("error", "No user with this phone number");
@@ -190,12 +191,12 @@ const verifyNumber = async(req,res)=>{
 }
 
 const resendOtp=async(req,res)=>{
-  console.log(req.session.user);
-  const number =req.session.user.phone
+
   const otp = generateotp();
           console.log(otp);
           const currentTimestamp = Date.now();
           const expiryTimestamp = currentTimestamp + 60 * 1000;
+          const number = 8590948623;
           const filter = { phone: number };
           const update = {
             $set: {
@@ -210,9 +211,9 @@ const resendOtp=async(req,res)=>{
     
           await otpModel.updateOne(filter, update, options);
           await sendOTP(number, otp);
-          req.session.forgot=true
-          res.redirect("/forgototpverify");
+          res.render("./user/otpVerification",{Single:true});
 }
+
 
 //@desc signup a user
 //@router Post /register
@@ -380,6 +381,7 @@ const verifyotp = async (req, res) => {
   }
 
 
+
 //@desc login a user
 //@router Post /login
 //@access public
@@ -507,7 +509,6 @@ const loginHome= async (req, res) => {
 };
 
 
-
 const shopProduct = async (req,res)=>{
   console.log("=============ok==============");
   const product = await productModel.find({status:true})
@@ -528,8 +529,8 @@ const shopProduct = async (req,res)=>{
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
-          console.log(req.session.user);
-    await res.render('./user/shop',{products:obj,name:"Shop"})
+          
+    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user})
 }
 
 
@@ -809,22 +810,37 @@ const searchProducts = async (req, res) => {
   }
 };
 
-const checkoutPage = async(req,res) => {
+const checkoutPage = async (req, res) => {
   try {
     const user = req.session.user;
+    const userId = user._id;
+    //console.log(user);
+    console.log(userId);
 
-    await res.render('./user/checkout',{user:user})
+    const cartItems = await cartModel.findOne({ userId: userId }).populate({
+      path: 'item.productId',
+      select: 'name price stock',
+  }).lean();
+console.log(cartItems);
+ 
+  
+    await res.render('./user/checkout',{user:user,cartItems:cartItems});
   } catch (error) {
-    
+    // Handle errors
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
-}
+};
 
 module.exports = {registerUser,
   loginUser,home,login,
-  register,verifyotp,verifyPage,
+  register,verifyotp,optPage,
   shopProduct,productPage,logOut,
   catProduct,
-  loginHome,forgotOtp,verifyNumber,
+  loginHome,phonePage,verifyNumber,
   newPassword,setNewPassword,
-  resendOtp,addAddress,searchProducts,myAddress,toAddAddress,editPage,updateAddress,editUserDetails,updateUserAddress,deleteAddress,
+  resendOtp,addAddress,searchProducts,
+  myAddress,toAddAddress,editPage,
+  updateAddress,editUserDetails,
+  updateUserAddress,deleteAddress,
   checkoutPage}
