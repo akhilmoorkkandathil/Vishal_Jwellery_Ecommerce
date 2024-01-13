@@ -54,7 +54,6 @@ const productAdded = async (req, res) => {
       description: description,
       images:uploadedImages
     });
-    req
 
     await newProduct.save();
     req.session.uploadedImages = uploadedImages;

@@ -1,5 +1,6 @@
 const userModel=require("../model/userSchema")
 const AdminModel = require('../model/adminSchema')
+const orderModel=require('../model/orderModel')
 
 
 
@@ -110,16 +111,29 @@ const blockUser = async (req, res) => {
   }
 };
 
-
-
 const orders = async(req,res)=>{
-    await res.render('./admin/orderList',{Admin:true})
+  const orders = await orderModel.find()
+  let obj=[]
+        let maps =orders.map((item)=>{
+            let test={
+                "orderId":item.orderId,
+                "userName":item.userName,
+                "totalPrice":item.totalPrice,
+                "shippingAddress":item.shippingAddress,
+                "paymentMethod":item.paymentMethod,
+                "status":item.status,
+                "createdAt":item.createdAt.toString().substring(0, 10),
+            }
+            obj.push(test)
+        })
+  console.log(orders);
+    await res.render('./admin/orderList',{Admin:true,orders:obj});
 }
 const products = async(req,res)=>{
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
-    await res.render('./admin/productList',{Admin:true})
+    await res.render('./admin/productList',{Admin:true});
   }
 
 //@desc login a admin
@@ -127,7 +141,7 @@ const products = async(req,res)=>{
 //@access public
 // admin login action 
 const adminLogined = async (req, res) => {
-  const {email,password}=req.body
+  const {email,password}=req.body;
   try {
     
     const user = await AdminModel.findOne({ email,password });

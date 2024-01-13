@@ -526,7 +526,7 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
           
@@ -657,7 +657,13 @@ const toAddAddress =async (req,res)=>{
       await user.save();
     }
     req.session.user=user;
-    await res.redirect('/address')
+    if(req.session.checkout){
+      await res.redirect('/checkout')
+      req.sessiion.checout=false;
+    }else{
+      await res.redirect('/address')
+
+    }
   } catch (error) {
     console.log("Some errors");
     console.log(error);
@@ -822,15 +828,18 @@ const checkoutPage = async (req, res) => {
       select: 'name price stock',
   }).lean();
 console.log(cartItems);
- 
+ req.session.checkout=true;
   
-    await res.render('./user/checkout',{user:user,cartItems:cartItems});
+    await res.render('./user/checkout',{user:user,cartItems:cartItems,login:req.session.user});
   } catch (error) {
     // Handle errors
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
+
+
+
 
 module.exports = {registerUser,
   loginUser,home,login,

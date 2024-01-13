@@ -4,6 +4,7 @@ const productController = require('../controller/productController')
 const Session= require("../middlewares/isAadAuth")
 const router = express.Router();
 const multer = require('multer');
+const orderController = require('../controller/orderController');
 const upload = multer({ dest: 'uploads/' }); 
 
 router.get('/',adminController.adminLogin);
@@ -44,6 +45,7 @@ router.get('/blockuser/:id',Session.adisAuth,adminController.blockUser)
 
 //order routers
 router.get('/orders',Session.adisAuth,adminController.orders);
+router.get('/shipped/:id',orderController.orderShipped)
 
 //logout
 router.get('/logout',Session.adisAuth,adminController.logOut);

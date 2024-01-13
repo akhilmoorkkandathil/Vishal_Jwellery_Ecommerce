@@ -1,7 +1,5 @@
 const mongoose=require('mongoose')
 
-
-
 const orderschema=mongoose.Schema({
     orderId:{
         type:String,
@@ -50,7 +48,8 @@ const orderschema=mongoose.Schema({
         updatedAt:{
             type:Date,
         }
-})
-const orderModel=new mongoose.model("orders",orderschema)
+});
+
+const orderModel = new mongoose.model("orders",orderschema);
 
 module.exports=orderModel;

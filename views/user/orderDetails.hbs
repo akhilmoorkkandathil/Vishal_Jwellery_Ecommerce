@@ -1,8 +1,9 @@
-<hr class="my-5" />
-
+<section>
+    <hr class="my-5" />
+    <h5 class="card-header m-5"><strong>My Orders</strong></h5>
               <!-- Hoverable Table rows -->
-              <div class="card mx-4">
-                <h5 class="card-header">Orders</h5>
+              <div class="card md-8 m-5">
+        
                 <div class="table-responsive text-nowrap">
                   
                   {{#if orders}}
@@ -10,9 +11,7 @@
                     <thead>
                       <tr>
                         <th>OrderId</th>
-                        <th>Username</th>
-                        <th>Price</th>
-                        <th>Address</th>
+                        <th>Total Price</th>
                         <th>Payment Methode</th>
                         <th>Status</th>
                         <th>OrderDate</th>
@@ -22,19 +21,10 @@
                     <tbody class="table-border-bottom-0">
                       {{#each orders}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{this.orderId}}</strong></td>
-                        <td>{{this.userName}}</td>
-                        <td>{{this.totalPrice}}</td>
-                        <td>
-                          {{this.shippingAddress.fname}} {{this.shippingAddress.lname}}<br>
-                          {{this.shippingAddress.locality}}, {{this.shippingAddress.city}}<br>
-                          Phone: {{this.shippingAddress.phone}},<br> 
-                          Alt Phone: {{this.shippingAddress.altphone}}<br>
-                          Pincode: {{this.shippingAddress.pincode}}, <br>
-                          Landmark: {{this.shippingAddress.landmark}}
-                        </td>
+                        <td> <strong>{{this.orderId}}</strong></td>
+                        <td>{{this.price}}</td>
                         <td>{{this.paymentMethod}}</td>
-                        <td><span class="badge bg-label-primary me-1">{{this.status}}</span></td>
+                        <td>{{this.status}}</td>
                         <td>{{this.createdAt}}</td>
                         <td>
                             <div class="dropdown">
@@ -42,14 +32,15 @@
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="shipped/{{this.orderId}}"
-                                ><i class="bx bx-edit-alt me-1"></i> Shipped</a
+                              <a class="dropdown-item" href="cancelOrder/{{this.orderId}}"
+                                ><i class="bx bx-edit-alt me-1"></i> Cancel</a
                               >
                               
-                              <a class="dropdown-item" href=""  onclick="return confirm('Do you want to delete {{this.name}}?')"
+                              <a class="dropdown-item" href="viewOrders/{{this.orderId}}"  onclick="return confirm('Do you want to delete {{this.name}}?')"
                                 ><i class="bx bx-trash me-1"></i> View</a
                               >
                             </div>
+                        </td>
                       </tr>
                       {{/each}}
                     </tbody>
@@ -62,3 +53,5 @@
               <!--/ Hoverable Table rows -->
 
               <hr class="my-5" />
+
+</section>

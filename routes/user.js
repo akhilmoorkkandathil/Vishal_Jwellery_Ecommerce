@@ -5,6 +5,8 @@ const userSession = require('../middlewares/isAuth');
 const session = require('express-session');
 const cartController = require('../controller/cartController');
 const catController = require('../controller/catagoryController')
+const orderController = require('../controller/orderController')
+
 
 router.get('/',userController.home);
 
@@ -42,6 +44,14 @@ router.get('/add-to-cart/:id',userSession.userAuth,cartController.addToCart);
 router.get('/rfcart/:index',cartController.removeProduct)
 
 router.get('/checkout',userController.checkoutPage)
+
+
+router.get('/orders',orderController.orderPage)
+router.get('/delAddress',orderController.delAdress)
+router.post('/placeorder',orderController.placeOrder)
+router.get('/cancelorder/:orderId',orderController.cacelOrder)
+
+
 
 router.post('/search',userController.searchProducts);
 
