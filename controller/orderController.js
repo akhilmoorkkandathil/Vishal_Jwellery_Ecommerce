@@ -63,6 +63,7 @@ module.exports = {
             console.log(error);
         }
     },
+
     delAdress: async (req,res) => {
         try {
             console.log(req.body);
@@ -88,13 +89,20 @@ module.exports = {
             const orderId = req.params.id;
     const filter = { orderId: orderId, status: { $ne: 'Cancelled' } };
     const update = { status: "Shipped" };
-
-    console.log("Filter:", filter);
-
     const order = await orderModel.updateOne(filter, { $set: update });
 
     console.log("Update Result:", order);
             await res.redirect('/admin/orders')
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    viewOrderdProducts: async (req,res) => {
+        try {
+            const userId = req.session.userId;
+            const orders = await orderModel.find({userId:userId})
+            console.log(orders);
+            res.render('./user/orderedProducs',{order:order})
         } catch (error) {
             console.log(error);
         }

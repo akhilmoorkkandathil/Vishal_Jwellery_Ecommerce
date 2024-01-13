@@ -7,7 +7,11 @@
 
 
             <div class="col-md-8 col-lg-8 pb-4">
-
+              {{#if messages.error}}
+                      <div class="alert alert-danger" role="alert">
+                        <div class="alter text-danger text-center">{{messages.error}}</div>
+                      </div>
+                  {{/if}}
               <form action="addAddress" method="post">
                 <div class="row">
                   <div class="col-6">

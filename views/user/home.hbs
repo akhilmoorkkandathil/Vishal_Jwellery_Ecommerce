@@ -47,7 +47,7 @@
 					{{#each newproducts}}
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
 						
-						<a class="product-item" href="{{this._id}}">
+						<a class="product-item" href="/{{this._id}}">
 							<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
 							<h3 class="product-title">{{this.name}}</h3>
 							<strong class="product-price">Only {{this.price}}/-</strong>
@@ -62,19 +62,19 @@
 		<!-- Start Product Section -->
 
 		<!-- Start Dining catagory Section -->
+		{{#each category}}
 		<div class="untree_co-section product-section before-footer-section">
 		<div class="container">
 			<div class="row mb-5">
 				<div class="col-md-6">
-					<h2 class="section-title">Dining</h2>
+					<h2 class="section-title">{{this.name}}</h2>
 				</div>
 				<div class="col-md-6 text-start text-md-end">
-					<a href="/dining" class="more">View All Products</a>
+					<a href="{{this.name}}" class="more">View All Products</a>
 				</div>
 			</div>
 
 			<div class="row">
-				{{#each dproducts}}
 				<!-- Start Column 1 -->
 				<div class="col-12 col-md-4 col-lg-3 mb-5">
 					<a href="/{{this._id}}" class="product-link">
@@ -86,63 +86,13 @@
 					</a>
 				</div> 
 				<!-- End Column 1 -->
-				{{/each}}
+				
 			</div>
 		</div>
-		<div class="container">
-			<div class="row mb-5">
-				<div class="col-md-6">
-					<h2 class="section-title">Bedroom</h2>
-				</div>
-				<div class="col-md-6 text-start text-md-end">
-					<a href="/bedroom" class="more">View All Products</a>
-				</div>
-			</div>
-
-			<div class="row">
-			{{#each bproducts}}
-			<!-- Start Column 1 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a href="/{{this._id}}" class="product-link"> <!-- Wrap content in anchor tag -->
-				<div class="product-item">
-					<img src="/{{this.images.[0]}}" class="img-fluid product-thumbnail">
-					<h3 class="product-title">{{this.name}}</h3>
-					<strong class="product-price"> From ${{this.price}}</strong>
-				</div>
-				</a>
-			</div>
-			<!-- End Column 1 -->
-			{{/each}}
-			</div>
-
-		</div>
-		<div class="container">
-			<div class="row mb-5">
-				<div class="col-md-6">
-					<h2 class="section-title">Study Room</h2>
-				</div>
-				<div class="col-md-6 text-start text-md-end">
-					<a href="/studyroom" class="more">View All Products</a>
-				</div>
-			</div>
-
-			<div class="row">
-				{{#each sproducts}}
-				<!-- Start Column 1 -->
-				<div class="col-12 col-md-4 col-lg-3 mb-5">
-					<a href="/{{this._id}}" class="product-link">
-					<div class="product-item">
-						<img src="/{{this.images.[0]}}" class=img-fluid product-thumbnail">
-						<h3 class="product-title">{{this.name}}</h3>
-						<strong class="product-price"> From ${{this.price}}</strong>
-					</div>
-					</a>
-				</div> 
-				<!-- End Column 1 -->
-				{{/each}}
-			</div>
+		
 		</div>
         </div>
+		{{/each}}
 		<!-- Start Dining catagory Section -->
 
 		</section>

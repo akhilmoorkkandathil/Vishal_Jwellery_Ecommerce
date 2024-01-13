@@ -44,6 +44,8 @@ connectDb();
 app.use(express.static(__dirname + '/public'));
 app.use('/admin',express.static(path.join(__dirname, 'public/adminAssets')));
 app.use('/',express.static(path.join(__dirname, 'public/userAssets')));
+app.use('/category',express.static(path.join(__dirname, 'public/adminAssets')));
+
 
 
 app.use('/admin',adminRouter)

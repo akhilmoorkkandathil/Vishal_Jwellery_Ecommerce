@@ -12,7 +12,9 @@ const {
     phoneValid,
     confirmpasswordValid,
     passwordValid,
-  } = require("../utils/userValidator");
+    onlyNumbers,
+
+  } = require("../utils/Validator");
 const usersModel = require('../model/userSchema');
 const cartModel = require('../model/cartSchema')
 let objectId = require('mongodb').ObjectId
@@ -25,92 +27,60 @@ let objectId = require('mongodb').ObjectId
 //@router Get /
 //@acess public
 const home = async(req,res)=>{
-  const dproduct = await productModel.find({status:true,category:"Dining"}).limit(4)
-  let dobj=[]
-      let dmaps =dproduct.map((iteam)=>{
-          let test={
-              "_id":iteam._id,
-              "name":iteam.name,
-              "price":iteam.price,
-              "images":iteam.images,
-              "category":iteam.category,
-              "stock":iteam.stock,
-              "status":iteam.status,
-              "description":iteam.description
-          }
-          dobj.push(test)
+  
+    try {
+      const newProducts = await productModel.find({ status: true })
+      .sort({ createdAt: -1 }) // Sort in descending order based on createdAt field
+      .limit(3); // Limit the results to 3
+      let newobj=[]
+      let newmaps =newProducts.map((iteam)=>{
+      let test={
+        "_id":iteam._id,
+        "name":iteam.name,
+        "price":iteam.price,
+        "images":iteam.images,
+      }
+      newobj.push(test)
       })
-      //console.log(cobj);
-      const bproducts = await productModel.find({status:true,category:"Bedroom"}).limit(4)
-      let bobj=[]
-          let bmaps =bproducts.map((iteam)=>{
-              let test={
-                  "_id":iteam._id,
-                  "name":iteam.name,
-                  "price":iteam.price,
-                  "images":iteam.images,
-                  "category":iteam.category,
-                  "stock":iteam.stock,
-                  "status":iteam.status,
-                  "description":iteam.description
-              }
-              bobj.push(test)
-          })
-          const sproducts = await productModel.find({status:true,category:"Study Room"}).limit(4)
-          let sobj=[]
-              let smaps =sproducts.map((iteam)=>{
-                  let test={
-                      "_id":iteam._id,
-                      "name":iteam.name,
-                      "price":iteam.price,
-                      "images":iteam.images,
-                      "category":iteam.category,
-                      "stock":iteam.stock,
-                      "status":iteam.status,
-                      "description":iteam.description
-                  }
-                  sobj.push(test)
-              })
-              const newProducts = await productModel.find({ status: true })
-                                  .sort({ createdAt: -1 }) // Sort in descending order based on createdAt field
-                                  .limit(3); // Limit the results to 3
-          let newobj=[]
-              let newmaps =newProducts.map((iteam)=>{
-                  let test={
-                      "_id":iteam._id,
-                      "name":iteam.name,
-                      "price":iteam.price,
-                      "images":iteam.images,
-                      "category":iteam.category,
-                      "stock":iteam.stock,
-                      "status":iteam.status,
-                      "description":iteam.description
-                  }
-                  newobj.push(test)
-              })
-        const categories = await categoryModel.find({status:true})
-          let arr=[]
-          let map =categories.map((cat)=>{
-            let val={
-              name:cat.name
-            }
-            arr.push(val)
-          })
-          if(req.session.isAuth ===true){
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          res.setHeader('Pragma', 'no-cache');
-          res.setHeader('Expires', '0');
-            await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,categories:arr,login:true,newproducts:newobj})
-          }else{
-            await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,newproducts:newobj,categories:arr})
-          }    
+
+      const categories = await categoryModel.find({status:true})
+      //console.log(categories);
+      let arr=[]
+      let map =categories.map((cat)=>{
+      let val={
+      name:cat.name
+      }
+      arr.push(val)
+
+      })
+      const productsByCategory = await Promise.all(categories.map(async (category) => {
+      const products = await productModel.find({ category: category.name }).limit(4);
+      return { category, products };
+      }));
+      console.log(productsByCategory);
+      if(req.session.isAuth ===true){
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      await res.render('./user/home',{login:true,newproducts:newobj,categories:arr})
+      }else{
+      await res.render('./user/home',{newproducts:newobj,categories:arr})
+      }   
+      
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    } 
 }
 
 //@desc Login page
 //@router Get /login
 //@acess public
 const login = async(req,res)=>{
-    await res.render('./user/login',{Single:true})
+    try {
+      await res.render('./user/login',{Single:true})
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 
@@ -118,7 +88,11 @@ const login = async(req,res)=>{
 //@router Get /register
 //@acess public
 const register = async(req,res)=>{
-    res.render('./user/register',{Single:true})
+    try {
+      res.render('./user/register',{Single:true})
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 
@@ -159,40 +133,45 @@ const phonePage=async(req,res)=>{
 }
 
 const verifyNumber = async(req,res)=>{
-  const number=req.body.phone
-  req.session.phone=number
-  const user = await userModel.findOne({ phone: number ,status:true });
-  if (!user) {
-    req.flash("error", "No user with this phone number");
-    return res.redirect('/forgot')
-  }else{
-    const otp = generateotp();
-          console.log(otp);
-          const currentTimestamp = Date.now();
-          const expiryTimestamp = currentTimestamp + 60 * 1000;
-          const filter = { phone: number };
-          const update = {
-            $set: {
-              phone: number,
-              otp: otp,
-              expiry: new Date(expiryTimestamp),
-            },
-          };
-        
-    
-          const options = { upsert: true };
-    
-          await otpModel.updateOne(filter, update, options);
-          await sendOTP(number, otp);
-          req.session.forgot=true
-          req.session.user=user
-          res.redirect("/forgototpverify");
+  try {
+    const number=req.body.phone
+    req.session.phone=number
+    const user = await userModel.findOne({ phone: number ,status:true });
+    if (!user) {
+      req.flash("error", "No user with this phone number");
+      return res.redirect('/forgot')
+    }else{
+      const otp = generateotp();
+            console.log(otp);
+            const currentTimestamp = Date.now();
+            const expiryTimestamp = currentTimestamp + 60 * 1000;
+            const filter = { phone: number };
+            const update = {
+              $set: {
+                phone: number,
+                otp: otp,
+                expiry: new Date(expiryTimestamp),
+              },
+            };
+          
+      
+            const options = { upsert: true };
+      
+            await otpModel.updateOne(filter, update, options);
+            await sendOTP(number, otp);
+            req.session.forgot=true
+            req.session.user=user
+            res.redirect("/forgototpverify");
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
 const resendOtp=async(req,res)=>{
 
-  const otp = generateotp();
+  try {
+    const otp = generateotp();
           console.log(otp);
           const currentTimestamp = Date.now();
           const expiryTimestamp = currentTimestamp + 60 * 1000;
@@ -212,6 +191,9 @@ const resendOtp=async(req,res)=>{
           await otpModel.updateOne(filter, update, options);
           await sendOTP(number, otp);
           res.render("./user/otpVerification",{Single:true});
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 
@@ -236,31 +218,24 @@ const registerUser = async (req, res) => {
         const emailExist = await userModel.findOne({ email: email });
 //put it as function
         if (!isusernameValid) {
-          console.log("===========================1");
           req.flash("error", "Enter a valid Name");
           return res.redirect('/register')
         } else if (!isEmailValid) {
-          console.log("===========================2");
           req.flash("error", "Enter a valid E-mail");
           return res.redirect('/register')
         } else if (!isPhoneValid) {
-          console.log("===========================3");
           req.flash("error", "Enter a valid Phone Number");
           return res.redirect('/register')
         } else if (!ispasswordValid) {
-          console.log("===========================4");
           req.flash("error", "Password should contain one (A, a, 2)");
           return res.redirect('/register')
         } else if (!iscpasswordValid) {
-          console.log("===========================5");
           req.flash("error", "Password and Confirm password should match");
           return res.redirect('/register')
         } else if (numberExist) {
-          console.log("===========================6");
           req.flash("error", "This number already have an account");
           return res.redirect('/register')
         } else if (emailExist) {
-          console.log("===========================6");
           req.flash("error", "This email already have an account");
           return res.redirect('/register')
         } else {
@@ -309,7 +284,6 @@ const registerUser = async (req, res) => {
 // otp verifying page 
 const verifyotp = async (req, res) => {
     try {
-      console.log("======================okkk1=============")
         const enteredotp = req.body.otp;
         const eotp=parseInt(enteredotp)
         const user = req.session.user;
@@ -331,7 +305,6 @@ const verifyotp = async (req, res) => {
               req.session.signup = false;
               res.redirect("/");
             } else if (req.session.forgot) {
-              console.log("======================okkk=============")
               console.log(req.session.forgot);
               res.redirect("/newpassword");
             }
@@ -350,22 +323,22 @@ const verifyotp = async (req, res) => {
   };
 
 
+
   const newPassword=async(req,res)=>{
     res.render('./user/newPassword',{Single:true})
   }
 
   const setNewPassword = async(req,res)=>{
-    const password = req.body.password;
+    try {
+      const password = req.body.password;
     const cpassword = req.body.confirm_password;
     const ispasswordValid = passwordValid(password);
     const iscpasswordValid = confirmpasswordValid(cpassword, password);
 
     if (!ispasswordValid) {
-      console.log("===========================4");
       req.flash("error", "Password should contain one (A, a, 2)");
       return res.redirect('/register')
     } else if (!iscpasswordValid) {
-      console.log("===========================5");
       req.flash("error", "Password and Confirm password should match");
       return res.redirect('/register')
     }else{
@@ -378,6 +351,9 @@ const verifyotp = async (req, res) => {
             res.redirect('/login')
 
     }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 
@@ -386,9 +362,10 @@ const verifyotp = async (req, res) => {
 //@router Post /login
 //@access public
 const loginUser = async (req, res) => {
+    
+    try {
     const { email, password } = req.body;
     const user = await userModel.findOne({ email:email,status:true });
-    try {
     if (!email || !password) {
         req.flash("error", "Enter Email & Password");
         return res.redirect('/login')
@@ -425,71 +402,19 @@ const loginUser = async (req, res) => {
 const loginHome= async (req, res) => {
    try {
         
-        const dproduct = await productModel.find({status:true,category:"Dining"}).limit(4)
-        let dobj=[]
-            let dmaps =dproduct.map((iteam)=>{
-                let test={
-                    "_id":iteam._id,
-                    "name":iteam.name,
-                    "price":iteam.price,
-                    "images":iteam.images,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
-                }
-                dobj.push(test)
-            })
-            //console.log(cobj);
-            const bproducts = await productModel.find({status:true,category:"Bedroom"}).limit(4)
-            let bobj=[]
-                let bmaps =bproducts.map((iteam)=>{
-                    let test={
-                        "_id":iteam._id,
-                        "name":iteam.name,
-                        "price":iteam.price,
-                        "images":iteam.images,
-                        "category":iteam.category,
-                        "stock":iteam.stock,
-                        "status":iteam.status,
-                        "description":iteam.description
-                    }
-                    bobj.push(test)
-                })
-                const sproducts = await productModel.find({status:true,category:"Study Room"}).limit(4)
-                let sobj=[]
-                    let smaps =sproducts.map((iteam)=>{
-                        let test={
-                            "_id":iteam._id,
-                            "name":iteam.name,
-                            "price":iteam.price,
-                            "images":iteam.images,
-                            "category":iteam.category,
-                            "stock":iteam.stock,
-                            "status":iteam.status,
-                            "description":iteam.description
-                        }
-                        sobj.push(test)
-                    })
-                
-                    const newProducts = await productModel.find({ status: true })
+        const newProducts = await productModel.find({ status: true })
                                   .sort({ _id: -1 }) // Sort in descending order based on createdAt field
                                   .limit(3); // Limit the results to 3
                     let newobj=[]
                         let newmaps =newProducts.map((iteam)=>{
                             let test={
-                                "_id":iteam._id,
+                              "_id":iteam._id,
                                 "name":iteam.name,
                                 "price":iteam.price,
                                 "images":iteam.images,
-                                "category":iteam.category,
-                                "stock":iteam.stock,
-                                "status":iteam.status,
-                                "description":iteam.description
                             }
                             newobj.push(test)
                         })
-          console.log("==========================2");
           const categories = await categoryModel.find({status:true})
           let arr=[]
           let map =categories.map((cat)=>{
@@ -502,7 +427,7 @@ const loginHome= async (req, res) => {
           res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
-        await res.render('./user/home',{dproducts:dobj,bproducts:bobj,sproducts:sobj,categories:arr,login:true,newproducts:newobj})
+        await res.render('./user/home',{login:true,newproducts:newobj})
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }
@@ -510,19 +435,15 @@ const loginHome= async (req, res) => {
 
 
 const shopProduct = async (req,res)=>{
-  console.log("=============ok==============");
-  const product = await productModel.find({status:true})
+  try {
+    const product = await productModel.find({status:true})
         let obj=[]
             let maps =product.map((iteam)=>{
                 let test={
-                    "_id":iteam._id,
+                  "_id":iteam._id,
                     "name":iteam.name,
                     "price":iteam.price,
                     "images":iteam.images,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
                 }
                 obj.push(test)
             })
@@ -531,27 +452,24 @@ const shopProduct = async (req,res)=>{
           res.setHeader('Expires', '0');
           
     await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user})
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 
 const catProduct = async (req,res)=>{
-  console.log("=============ok==============");
-  let cat = req.params.cat
-  
-  console.log(cat);
-  
+  try {
+    let cat = req.params.cat;
   const product = await productModel.find({status:true,category:cat})
         let obj=[]
             let maps =product.map((iteam)=>{
                 let test={
-                    "_id":iteam._id,
+                  "_id":iteam._id,
                     "name":iteam.name,
                     "price":iteam.price,
                     "images":iteam.images,
-                    "category":iteam.category,
-                    "stock":iteam.stock,
-                    "status":iteam.status,
-                    "description":iteam.description
+                    
                 }
                 obj.push(test)
             })
@@ -559,15 +477,16 @@ const catProduct = async (req,res)=>{
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
     await res.render('./user/shop',{products:obj,name:cat})
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 
 const productPage =async (req,res)=>{
-  const id = req.params.id;
+  try {
+    const id = req.params.id;
   const user = req.session.user
-  console.log(user);
-  console.log("============okay==============");
-  console.log(id);
   const products = await productModel.find({ _id: id})
    console.log(products);
         let obj=[]
@@ -586,11 +505,13 @@ const productPage =async (req,res)=>{
             })
             console.log(obj);
   await res.render('./user/productPage',{products:obj})
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const logOut = async (req, res) => {
   try {
-    console.log("===========123========");
       req.session.isAuth = false;
       res.clearCookie('myCookie');
       req.session.destroy();
@@ -602,7 +523,6 @@ const logOut = async (req, res) => {
   }
 };
 const addAddress = async (req,res)=>{
-  console.log("========");
   await res.render('./user/addAddress',{name:"Add Address"})
 }
 
@@ -634,6 +554,35 @@ const myAddress =async(req,res)=>{
 const toAddAddress =async (req,res)=>{
   try {
     const { fname,lname,phone,pincode,locality,address,city,state,landmark,altphone,country} = req.body;
+    const fnameValid = nameValid(fname);
+        const pinValid = onlyNumbers(pincode);
+        const isPhoneValid = phoneValid(phone);
+        const isaltPhoneValid = phoneValid(altphone);
+        const isAdressValid = nameValid(address)
+        const isLocalityValid = nameValid(locality)
+        const islandmarkValid = nameValid(country)
+        if (!fnameValid) {
+          req.flash("error", "Enter a valid First Name");
+          return res.redirect('/addAddress')
+        } else if (!pinValid) {
+          req.flash("error", "Enter a valid Pincode");
+          return res.redirect('/addAddress')
+        } else if (!isLocalityValid) {
+          req.flash("error", "Enter a valid Locality");
+          return res.redirect('/addAddress')
+        } else if (!isAdressValid) {
+          req.flash("error", "Enter a valid Address");
+          return res.redirect('/addAddress')
+        } else if (!isPhoneValid) {
+          req.flash("error", "Enter a valid Phone Nummber");
+          return res.redirect('/addAddress')
+        } else if (!isaltPhoneValid) {
+          req.flash("error", "Enter valid alternative Phone Nummber");
+          return res.redirect('/addAddress')
+        } else if (!islandmarkValid) {
+          req.flash("error", "Enter valid Landmark");
+          return res.redirect('/addAddress')
+        }
     const userId = req.session.userId;
     console.log(userId);
     const user = await userModel.findById(userId);
@@ -666,7 +615,7 @@ const toAddAddress =async (req,res)=>{
     }
   } catch (error) {
     console.log("Some errors");
-    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 

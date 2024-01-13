@@ -1,6 +1,40 @@
+
 <section>
-    <hr class="my-5" />
-    <h5 class="card-header m-5"><strong>My Orders</strong></h5>
+    <div class="container">
+  <div class="row m-5 p-3">
+    <div class="col-md-3">
+      <!-- Left Side Box -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Menu</h5>
+          <ul class="list-group">
+            <li class="list-group-item"><a href="address">My Address</a></li>
+            <li class="list-group-item"><a href="orders">My Orders</a></li>
+            <li class="list-group-item"><a href="logout">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+  <!-- Right Side Box -->
+  <div class="card">
+    <div class="card-body">
+      <div class="container">
+        <div class="row">
+          {{#if user}}
+            <address>
+              <p class="text-dark"><strong>User Address</strong></p>
+              <h6>{{user.username}}</h6>
+              {{user.email}}<br>
+              Phone: {{user.phone}}<br>
+              <a href="editUserDetails" class="text-decoration-none text-primary"> Edit</a>
+            </address>
+          {{/if}}
+        </div>
+      </div>
+      
+       <h5 class="card-header m-5"><strong>My Orders</strong></h5>
               <!-- Hoverable Table rows -->
               <div class="card md-8 m-5">
         
@@ -36,7 +70,7 @@
                                 ><i class="bx bx-edit-alt me-1"></i> Cancel</a
                               >
                               
-                              <a class="dropdown-item" href="viewOrders/{{this.orderId}}"  onclick="return confirm('Do you want to delete {{this.name}}?')"
+                              <a class="dropdown-item" href="viewOrderePrducts/{{this.orderId}}"
                                 ><i class="bx bx-trash me-1"></i> View</a
                               >
                             </div>
@@ -50,8 +84,18 @@
                   {{/if}}
                 </div>
               </div>
-              <!--/ Hoverable Table rows -->
 
-              <hr class="my-5" />
+      <!-- Button to add new address -->
+    </div>
+  </div>
+</div>
 
+  </div>
+</div>
 </section>
+
+
+
+
+
+

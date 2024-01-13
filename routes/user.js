@@ -46,12 +46,11 @@ router.get('/rfcart/:index',cartController.removeProduct)
 router.get('/checkout',userController.checkoutPage)
 
 
-router.get('/orders',orderController.orderPage)
-router.get('/delAddress',orderController.delAdress)
+router.get('/orders',userSession.userAuth,orderController.orderPage)
+router.get('/delAddress',userSession.userAuth,orderController.delAdress)
 router.post('/placeorder',orderController.placeOrder)
-router.get('/cancelorder/:orderId',orderController.cacelOrder)
-
-
+router.get('/cancelorder/:orderId',userSession.userAuth,orderController.cacelOrder)
+router.get('/viewOrderePrducts/:orderId',userSession.userAuth,orderController.viewOrderdProducts)
 
 router.post('/search',userController.searchProducts);
 
@@ -60,6 +59,7 @@ router.get('/category/:name',catController.catPage)
 router.get('/logout',userController.logOut);
 
 router.get('/:id',userController.productPage);
+
 
 module.exports = router;
 
