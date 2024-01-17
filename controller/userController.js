@@ -435,7 +435,13 @@ const loginHome= async (req, res) => {
 
 const shopProduct = async (req,res)=>{
   try {
-    const product = await productModel.find({status:true})
+    let limit =4;
+   let pageNUmber = req.query.page-1 || 0;
+   let skip = pageNUmber*limit;
+   const search = req.query.search || "";
+   let sort = req.query.price || "price";
+   let category =req.query.category || "All";
+    const product = await productModel.find({status:true}).skip(skip).limit(limit)
         let obj=[]
             let maps =product.map((iteam)=>{
                 let test={
@@ -446,11 +452,17 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
+            let a=[]
+            for(let i=1;i<4;i++){
+              a.push(i)
+            }
+            let pageCount=parseInt((product.length/limit)+1)
+            console.log(pageCount);
           res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
           
-    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user})
+    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages:a})
   } catch (error) {
     console.log(error);
   }

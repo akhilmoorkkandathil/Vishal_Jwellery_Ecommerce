@@ -86,22 +86,21 @@ module.exports = {
     },
 
     orderShipped: async (req,res) => {
-        try {
-            const orderId = req.params.id;
-            const orderbtTheId = await orderModel.find({orderId: orderId})
-            console.log(orderbtTheId[0].status);
+    try {
+        const orderId = req.params.id;
+        const orderbtTheId = await orderModel.find({orderId: orderId})
     if(orderbtTheId[0].status==="pending"){
         const filter = { orderId: orderId};
         const update = { status: "Shipped" };
-        const order = await orderModel.updateOne(filter, { $set: update });
+        await orderModel.updateOne(filter, { $set: update });
         await res.redirect('/admin/orders')
     }else if(orderbtTheId[0].status==="Shipped"){
         const filter = { orderId: orderId };
         const update = { status: "Delivered" };
-        const order = await orderModel.updateOne(filter, { $set: update });
-        await res.redirect('/admin/orders')
+        await orderModel.updateOne(filter, { $set: update });
+        await res.redirect('/admin/orders');
     }else{
-        await res.redirect('/admin/orders')
+        await res.redirect('/admin/orders');
     }
         
         } catch (error) {
@@ -113,8 +112,7 @@ module.exports = {
         try {
             const userId = req.session.userId;
             const orders = await orderModel.find({userId:userId})
-            console.log(orders);
-            res.render('./user/orderedProducs',{order:order})
+            res.render('./user/orderedProducs',{order:orders})
         } catch (error) {
             console.log(error);
         }

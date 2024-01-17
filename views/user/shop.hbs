@@ -13,8 +13,12 @@
 				</div>
 			</div>
 		<!-- End Hero Section -->
+        
+        
+        
             <div class="untree_co-section product-section before-footer-section">
                 <div class="container">
+                    
                     <div class="row">
                         {{#each products}}
                         <!-- Start Column 1 -->
@@ -35,7 +39,27 @@
                         {{/each}}
                     </div>
                 </div>
+                <div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Start Column 1 -->
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    {{#each pages}}
+                                    <li class="page-item">
+                                        <a class="page-link" href="shop?page={{this}}" data-page="{{this}}">
+                                            <div class="page-box">{{this}}</div>
+                                        </a>
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </nav>
+                            <!-- End Column 1 -->
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            
+            <!-- Pagination template -->         
 </section>
