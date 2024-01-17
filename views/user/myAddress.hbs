@@ -1,0 +1,74 @@
+<section>
+    <div class="container">
+  <div class="row m-5 p-3">
+    <div class="col-md-3">
+      <!-- Left Side Box -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Menu</h5>
+          <ul class="list-group">
+            <li class="list-group-item"><a href="address">My Address</a></li>
+            <li class="list-group-item"><a href="orders">My Orders</a></li>
+            <li class="list-group-item"><a href="logout">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+  <!-- Right Side Box -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">My Addresses</h5>
+      <div class="container">
+        <div class="row">
+          {{#if user}}
+            <address>
+              <p class="text-dark"><strong>User Address</strong></p>
+              <h6>{{user.username}}</h6>
+              {{user.email}}<br>
+              Phone: {{user.phone}}<br>
+              <a href="editUserDetails" class="text-decoration-none text-primary"> Edit</a>
+            </address>
+          {{/if}}
+        </div>
+      </div>
+      
+      {{#if user.address}}
+        <div class="container">
+          <div class="row">
+            <div class="row">
+              {{#each user.address as |address index|}}
+                  <div class="col-md-6">
+                    <address>
+                      {{#if @first}}
+                        <strong>Default Address</strong><br>
+                      {{else}}
+                        <strong>Address {{index}}</strong><br>
+                      {{/if}}
+                      {{address.fname}} {{address.lname}}<br>
+                      {{address.address}}<br>
+                      {{address.locality}}, {{address.pincode}}<br>
+                      {{address.city}}, {{address.state}}, {{address.country}}<br>
+                      Phone: {{address.phone}}<br>
+                      Alt Phone: {{address.altphone}}<br>
+                      <a href="editAddress/{{index}}" class="text-decoration-none text-primary">Edit</a> |
+                      <a href="deleteAddress/{{index}}" class="text-decoration-none text-primary">Delete</a>
+                    </address>
+                  </div>
+                {{/each}}
+
+            </div>
+          </div>
+        </div>
+      {{/if}}
+
+      <!-- Button to add new address -->
+      <a href="/addAddress" class="btn btn-primary">Add New Address</a>
+    </div>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>

@@ -1,0 +1,57 @@
+<section>
+    <div class="untree_co-section">
+      <div class="container">
+
+        <div class="block">
+          <div class="row justify-content-center">
+
+
+            <div class="col-md-8 col-lg-8 pb-4">
+                {{#if address}}
+              <form action="/updateUserAddress" method="post">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label class="text-black" for="fname" required>First Name</label>
+                      <input type="text" class="form-control" id="fname" name="fname" value="{{address.username}}">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label class="text-black" for="lname" required>Last Name</label>
+                      <input type="text" class="form-control" id="lname" name="lname">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label class="text-black" for="pincode" required>Email</label>
+                      <input type="email" class="form-control" id="pincode" name="pincode"  value="{{address.email}}">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label class="text-black" for="locality">Phone</label>
+                      <input type="text" class="form-control" id="locality" name="locality" value="{{address.phone}}" disabled>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary-hover-outline mt-3">Update</button>
+                </form>
+                {{/if}}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+
+  <!-- End Contact Form -->
+</section>

@@ -1,0 +1,95 @@
+<div class="col-xl my-5 mx-4">
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Update Product</h5>
+    </div>
+    <div class="card-body">
+      <form action="/admin/updateproduct/{{product._id}}" method="post" enctype="multipart/form-data">
+        {{#if product}}
+        
+        <div class="mb-3">
+          <label class="form-label" for="productName">Product Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="productName"
+            name="name"
+            value="{{product.name}}"
+            
+          />
+        </div>
+
+        <div class="mb-3">
+      <label class="form-label" for="basic-icon-default-company">Category</label>
+                            <div class="input-group input-group-merge">
+                                <span id="basic-icon-default-company2" class="input-group-text">
+                                    <i class="bx bx-buildings"></i>
+                                </span>
+                                <select
+                                    id="basic-icon-default-company"
+                                    class="form-select"
+                                    name="category"
+                                    aria-label="Category"
+                                    aria-describedby="basic-icon-default-company2"
+                                >
+                                    
+                                    {{#each category}}
+                                    <option value="{{this.name}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+        
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="productPrice">Price</label>
+          <input
+            type="number"
+            class="form-control"
+            id="productPrice"
+            name="price"
+            value="{{product.price}}"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="productStock">Quantity</label>
+          <input
+            type="text"
+            class="form-control"
+            id="productStock"
+            name="stock"
+            value="{{product.stock}}"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="productDescription">Description</label>
+          <textarea
+            class="form-control"
+            id="productDescription"
+            name="description"
+            value="{{product.description}}"
+          >{{product.description}}</textarea>
+        </div>
+
+{{#each product.images as |image index|}}
+            <div class="mb-3">
+              <img src="{{image}}" alt="" style="width: 100px; height: auto">
+              <a href="/admin/deleteImage?index={{index}}" class="btn btn-danger">Delete</a>
+            </div>
+          {{/each}}
+        <div class="mb-3">
+          <div class="mb-3">
+                          <label class="form-label" for="basic-icon-default-message">Add image</label>
+                          <div class="input-group input-group-merge">
+                            <input type="file" name="image" multiple>
+                          </div>
+                        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+        {{/if}}
+      </form>
+    </div>
+  </div>
+</div>

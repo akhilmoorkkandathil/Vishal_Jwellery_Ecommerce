@@ -1,0 +1,62 @@
+<hr class="my-5" />
+
+              <!-- Hoverable Table rows -->
+              <div class="card mx-4">
+                <h5 class="card-header">Users List</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      {{#each users}}
+                      <tr>
+                    <p>{{users}}</p>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{this.username}}</strong></td>
+                        <td>
+                          {{this.email}}
+                        </td>
+                        <td>{{this.phone}}</td>
+                        
+                        <td>
+                          {{#if this.status}}
+                          <p>Active</p>
+                          {{else}}
+                          <p>Blocked</p>
+                          </td>
+                          {{/if}}
+                        <td>
+                          <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                              <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                              {{#if this.status}}
+                              <a class="dropdown-item" href="/admin/blockuser/{{this._id}}"
+                                ><i class="bx bx-edit-alt me-1"></i>Block </a
+                              >
+                              {{else}}
+                               <a class="dropdown-item" href="/admin/blockuser/{{this._id}}"
+                                ><i class="bx bx-edit-alt me-1"></i>Unblock </a
+                              >
+                              {{/if}}
+                              <a class="dropdown-item" href="/admin/deleteuser/{{this._id}}" 
+                                ><i class="bx bx-trash me-1"></i> Delete</a
+                              >
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                </div>
+              </div>
+              <!--/ Hoverable Table rows -->
+
+              
