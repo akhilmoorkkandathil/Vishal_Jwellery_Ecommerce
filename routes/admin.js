@@ -48,6 +48,8 @@ router.get('/shipped/:id',Session.adisAuth,orderController.orderShipped)
 //logout
 router.get('/logout',Session.adisAuth,adminController.logOut);
 
+router.get('/error',adminController.errorPage)
+
 
 
 module.exports = router;

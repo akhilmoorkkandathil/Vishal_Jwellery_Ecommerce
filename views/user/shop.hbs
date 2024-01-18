@@ -1,3 +1,4 @@
+
 <section>
 	<!-- Start Hero Section -->
 			<div class="hero">
@@ -13,6 +14,39 @@
 				</div>
 			</div>
 		<!-- End Hero Section -->
+        <div>
+    <div class="container">
+        <div class="row justify-content-center mt-3">
+            <div class="col-lg-5 d-flex justify-content-around">
+                <!-- Sort Dropdown -->
+                <div class="dropdown">
+                    <button class="btn-warning dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 400px;">
+                        Sort
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                        <a class="dropdown-item " style="width: 400px; href="#">Price low - high</a>
+                        <a class="dropdown-item" style="width: 400px; href="#">Price high - lows</a>
+                        <a class="dropdown-item" style="width: 400px; href="#">Option 3</a>
+                        <!-- Add more sorting options as needed -->
+                    </div>
+                </div>
+
+                <!-- Filter Dropdown -->
+                <div class="dropdown ml-3">
+                    <button class="btn-warning dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 400px; ">
+                        Filter
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                        <a class="dropdown-item"  style="width: 400px; href="#">Option A</a>
+                        <a class="dropdown-item"  style="width: 400px; href="#">Option B</a>
+                        <a class="dropdown-item"  style="width: 400px; href="#">Option C</a>
+                        <!-- Add more filter options as needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         
         
         
@@ -40,26 +74,46 @@
                     </div>
                 </div>
                 <div>
+                    {{#if pages}}
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
                             <!-- Start Column 1 -->
                             <nav aria-label="Page navigation">
                                 <ul class="pagination">
-                                    {{#each pages}}
-                                    <li class="page-item">
-                                        <a class="page-link" href="shop?page={{this}}" data-page="{{this}}">
-                                            <div class="page-box">{{this}}</div>
+                                    
+                                    <li class="page-item d-flex">
+                                        <a class="page-link" href="shop" >
+                                            <div class="page-box"> < </div>
+                                            
                                         </a>
+                                        {{#each pages}}
+                                        <a class="page-link" href="shop?page={{this}}" data-page="{{this}}">
+                                            
+                                            
+                                            <div class="page-box">{{this}}</div>
+                                            
+                                        </a>
+                                        {{/each}}
+                                        <a class="page-link" href="shop" >
+                                            <div class="page-box"> > </div>
+                                            
+                                        </a>
+                                        
                                     </li>
-                                    {{/each}}
+                                    
+                                   
                                 </ul>
                             </nav>
                             <!-- End Column 1 -->
                         </div>
                     </div>
                 </div>
+                {{/if}}
             </div>
             
             <!-- Pagination template -->         
 </section>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

@@ -21,7 +21,7 @@
 		{{!-- cart section --}}
 			<div class="untree_co-section before-footer-section">
             <div class="container">
-              {{#if cart}}
+              {{#if products}}
                <div class="row mb-5">
                 <form class="col-md-12" method="post">
                   <div class="site-blocks-table">
@@ -37,7 +37,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {{#each cart}}
+                        {{#each products}}
                         <tr>
                           <td class="product-thumbnail">
                             <img src="{{this.images.[0]}}" alt="Image" class="img-fluid">
@@ -51,9 +51,10 @@
                               <div class="input-group-prepend">
                                 <button class="btn btn-outline-black decrease" type="button">&minus;</button>
                               </div>
-                              <input type="text" disabled class="form-control text-center quantity-amount" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                              <input type="text" disabled class="form-control text-center quantity-amount" value="{{this.quantity}}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                               <div class="input-group-append">
-                                <button class="btn btn-outline-black increase" type="button">&plus;</button>
+                                <button class="btn btn-outline-black increase" type="button" onclick="incrementProduct({{this.productId}},{{this.cartId}})">+</button>
+
                               </div>
                             </div>
         
@@ -96,3 +97,44 @@
           </div>
 		
 		</section>
+<script>
+  function incrementProduct(productId,cartId) {
+    // Get the current quantity value
+    let currentQuantity = parseInt(document.getElementById('quantity-amount').value, 10);
+
+    // Increment the quantity
+    currentQuantity++;
+
+    // Update the display
+    document.getElementById('quantity-amount').value = currentQuantity;
+
+    // Update the database via AJAX
+    updateDatabase(productId, currentQuantity,cartId);
+  }
+
+  function updateDatabase(productId, newQuantity,cartId) {
+    // Perform an AJAX request to update the database
+    // Use the productId and newQuantity in the request data
+
+    // Example using Fetch API
+    fetch('/update-product', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productId: productId,
+        newQuantity: newQuantity,
+        cartId:cartId
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response, if needed
+        console.log('Database updated successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error updating database:', error);
+      });
+  }
+</script>

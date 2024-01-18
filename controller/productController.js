@@ -2,6 +2,7 @@ const fs=require('fs')
 const path=require('path')
 const productModel = require('../model/productSchema')
 const categoryModel=require('../model/categorySchema')
+const sharp = require('sharp')
 
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
@@ -38,10 +39,17 @@ const addProduct = async(req,res)=>{
 const productAdded = async (req, res) => {
   try {
     const files = req.files;
+    console.log(files);
     const uploadedImages = [];
     for (const file of files) {
       
-      const result = await cloudinary.uploader.upload(file.path);
+
+      // Resize the image using sharp before uploading to Cloudinary
+      const resizedImageBuffer = await sharp(file.path)
+          .resize({ width: 300, height: 300 }) // Set your desired dimensions
+          .toFile(file.path+"a")
+      // console.log(file.buff);
+      const result = await cloudinary.uploader.upload(file.path+"a");
       uploadedImages.push(result.url); // Store the secure URL of the uploaded image
     }
     console.log(uploadedImages);
@@ -62,7 +70,7 @@ const productAdded = async (req, res) => {
     res.redirect("/admin/products");
   } catch (err) {
     console.log(err);
-    res.send("Error Occurred");
+    res.redirect('/admin/error')
   }
 
   
@@ -92,7 +100,7 @@ const productList = async (req, res) => {
         await res.render("./admin/productList", { obj, Admin: true });
     } catch (err) {
         console.log(err);
-        res.send("Error Occurred");
+        res.redirect('/admin/error')
     }
 };
 
@@ -105,9 +113,7 @@ const unlistProduct = async (req, res) => {
       if (!product) {
         return res.status(404).send("Product not found");
       }
-  
-      console.log(product);
-  
+    
       product.status = !product.status;
       await product.save();
       res.redirect("/admin/products");
@@ -125,13 +131,12 @@ const unlistProduct = async (req, res) => {
       res.redirect("/admin/products");
     } catch (error) {
       console.log(error);
-      res.send(error);
+      res.redirect('/admin/error')
     }
   };
 
   const editProduct = async (req, res) => {
     try {
-      console.log("=============OKAY==============");
       const id = req.params.id;
       const product = await productModel.findById(id);
       const pr=[product]
@@ -152,9 +157,7 @@ const unlistProduct = async (req, res) => {
             }
             arr.push(test)
         })
-        //console.log(arr);
         const categories = await categoryModel.find({})
-     //console.log(categories);
     let obj=[]
     let map =categories.map((item)=>{
         let test={
@@ -164,14 +167,13 @@ const unlistProduct = async (req, res) => {
         obj.push(test)
     })
     const uploadedImages=req.session.uploadedImages
-      console.log(arr);
       
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.render("./admin/updateProduct", { product:arr[0],category:obj,uploadedImages, Admin: true });
     } catch (error) {
       console.log(error);
-      res.send(error);
+      res.redirect('/admin/error')
     }
   };
 
@@ -192,7 +194,7 @@ const unlistProduct = async (req, res) => {
       
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.redirect('/admin/error')
     }
   };
 
@@ -239,8 +241,8 @@ const updateProduct = async (req, res) => {
     })
     
   } catch (error) {
-    //console.log(error);
-    res.send(error);
+    console.log(error);
+    res.redirect('/admin/error')
   }
 };
 
@@ -278,16 +280,14 @@ const addedCategory = async (req, res) => {
    
   } catch (error) {
     console.log(error);
-    res.send(error);
+    res.redirect('/admin/error')
   }
 };
 
 const catList = async (req,res)=>{
   try {
-      console.log("=================");
-      // Assuming productModel.find() returns an array of objects
+
       const categories = await categoryModel.find()
-      //console.log(products);
       let obj=[]
       let maps =categories.map((item)=>{
           let test={
@@ -304,7 +304,7 @@ const catList = async (req,res)=>{
       await res.render('./admin/categoryList',{obj,Admin:true})
   } catch (err) {
       console.log(err);
-      res.send("Error Occurred");
+      res.redirect('/admin/error')
   }
   
 }
@@ -314,7 +314,6 @@ const catList = async (req,res)=>{
 // product unlisting 
 const unlistCategory = async (req, res) => {
   try {
-    console.log("==========================1212");
     const id = req.params.id;
     const Category = await categoryModel.findById(id);
 
@@ -330,7 +329,7 @@ const unlistCategory = async (req, res) => {
     res.redirect("/admin/categorylist");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.redirect('/admin/error')
   }
 };
 
@@ -345,7 +344,7 @@ const deletingCategory = async (req, res) => {
     console.log("okay deleted");
   } catch (error) {
     console.log(error);
-    res.send(error);
+    res.redirect('/admin/error')
   }
 };
 
@@ -353,7 +352,6 @@ const deletingCategory = async (req, res) => {
 // admin category update page
 const updatecat = async (req, res) => {
   try {
-    console.log("====================");
       const id = req.params.id;
       const cat = await categoryModel.findOne({ _id: id });
       const category=[cat]
@@ -372,7 +370,7 @@ const updatecat = async (req, res) => {
     
   } catch (error) {
     console.log(error);
-    res.send(error);
+    res.redirect('/admin/error')
   }
 };
 
@@ -399,7 +397,7 @@ const updateCategory = async (req, res) => {
     
   } catch (error) {
     console.log(error);
-    res.send(error);
+    res.redirect('/admin/error')
   }
 };
 

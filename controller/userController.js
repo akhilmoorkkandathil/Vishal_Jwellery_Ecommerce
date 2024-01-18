@@ -438,9 +438,6 @@ const shopProduct = async (req,res)=>{
     let limit =4;
    let pageNUmber = req.query.page-1 || 0;
    let skip = pageNUmber*limit;
-   const search = req.query.search || "";
-   let sort = req.query.price || "price";
-   let category =req.query.category || "All";
     const product = await productModel.find({status:true}).skip(skip).limit(limit)
         let obj=[]
             let maps =product.map((iteam)=>{
@@ -462,8 +459,9 @@ const shopProduct = async (req,res)=>{
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
           
-    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages:a})
+    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages:a,pageNUmber})
   } catch (error) {
+    res.redirect('/error')
     console.log(error);
   }
 }
@@ -533,6 +531,9 @@ const logOut = async (req, res) => {
     res.send("Error Occured");
   }
 };
+const errorPage = async (req,res) => {
+  await res.render('./user/errorPage',{Single:true})
+}
 const addAddress = async (req,res)=>{
   await res.render('./user/addAddress',{name:"Add Address"})
 }
@@ -781,6 +782,9 @@ const checkoutPage = async (req, res) => {
   try {
     const user = req.session.user;
     const userId = user._id;
+    console.log(req.body);
+    const quantity = req.body.quantity || 1;
+    console.log("==============",quantity);
     //console.log(user);
     console.log(userId);
 
@@ -795,7 +799,7 @@ console.log(cartItems);
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.redirect('/error')
   }
 };
 
@@ -813,4 +817,4 @@ module.exports = {registerUser,
   myAddress,toAddAddress,editPage,
   updateAddress,editUserDetails,
   updateUserAddress,deleteAddress,
-  checkoutPage}
+  checkoutPage,errorPage}

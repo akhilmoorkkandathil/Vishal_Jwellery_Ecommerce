@@ -47,6 +47,10 @@ const logOut = (req, res) => {
   });
 };
 
+const errorPage = async (req,res) => {
+  await res.render('./admin/errorPage',{Single:true})
+}
+
 
 
 const userList = async(req,res)=>{
@@ -148,18 +152,16 @@ const adminLogined = async (req, res) => {
     const user = await AdminModel.findOne({ email,password });
     
     if (user) {
-      console.log("admin is in");
       req.session.isadAuth = true;
       res.redirect("/admin/dashboard");
     } else {
-      //res.cookie('myCookie', 'cookieValue', { maxAge: 900000, httpOnly: true });
       req.flash("error", "Invalid email or Password");
       res.render("admin/adminlogin",{Single:true});
     }
   } catch (error) {
     console.log(error);
-    res.render("admin/adminlogin", { username: "incorrect username" });
+    res.redirect('/admin/error')
   }
 };
 
-module.exports = {dashboard,adminLogin,addCoupen,coupen,userList,deleteUser,products,orders,logOut,blockUser,adminLogined}
+module.exports = {dashboard,adminLogin,addCoupen,coupen,userList,deleteUser,products,orders,logOut,blockUser,adminLogined,errorPage}

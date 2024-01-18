@@ -42,6 +42,7 @@ router.get('/shop',userController.shopProduct);
 router.get('/cart',userSession.userAuth,cartController.cartProducts);
 router.get('/add-to-cart/:id',userSession.userAuth,cartController.addToCart);
 router.get('/rfcart/:index',cartController.removeProduct)
+router.proppatch('/update-product',cartController.updateProduct)
 
 router.get('/checkout',userController.checkoutPage)
 
@@ -57,7 +58,7 @@ router.post('/search',userController.searchProducts);
 router.get('/category/:name',catController.catPage)
 
 router.get('/logout',userController.logOut);
-
+router.get('/error',userController.errorPage)
 router.get('/:id',userController.productPage);
 
 

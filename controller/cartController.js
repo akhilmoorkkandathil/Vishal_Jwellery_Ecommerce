@@ -3,7 +3,9 @@ const cartModel=require("../model/cartSchema")
 const productModel=require("../model/productSchema")
 const objectId = require('mongodb').ObjectId
 
-const cartProducts = async (req, res) => {
+
+module.exports = {
+ cartProducts : async (req, res) => {
   try {
       const userId = req.session.userId;
       const sessionId = req.session.id;
@@ -11,16 +13,18 @@ const cartProducts = async (req, res) => {
       let cart;
 
       if (userId) {
-          cart = await cartModel.findOne({ userId: userId }).populate({
+          cart = await cartModel.findOne({ userId: userId })
+          .populate({
               path: 'item.productId',
               select: 'images name price stock',
           });
-          //console.log(cart);
+          console.log("+++++++++++++");
+          console.log(cart);
       } else {
         
           cart = await cartModel.findOne({ sessionId: sessionId }).populate({
               path: 'item.productId',
-              select: 'images name price',
+              select: '_id images name price',
           });
       }
 
@@ -34,28 +38,32 @@ const cartProducts = async (req, res) => {
               total: 0,
             });
       }
+      console.log(cart);
       //console.log(cart.item);
       req.session.checkout=true
       let obj=[]
         let maps =cart.item.map((item)=>{
             let test={
-                "_id":item.productId._id,
+                "productId":item.productId._id,
                 "name":item.productId.name,
                 "price":item.productId.price,
                 "images":item.productId.images,
                 "stock":item.stock,
+                "quantity":item.quantity,
+                "userId":item.userId,
+                "cartId":item._id
             }
             obj.push(test)
           });
           //console.log(obj);
-      res.render('./user/cart', { cart:obj , login:req.session.user});
+      res.render('./user/cart', { products:obj , login:req.session.user});
     
   } catch (err) {
     console.log(err);
-    res.render("users/serverError");
+    res.redirect('/error')
 }
-};
-  const addToCart = async (req, res) => {
+},
+   addToCart : async (req, res) => {
     try {
       const pid = req.params.id;
       const product = await productModel.findOne({ _id: pid });
@@ -106,9 +114,9 @@ const cartProducts = async (req, res) => {
       console.log(error);
       res.send(error);
     }
-  };
+  },
 
-const removeProduct = async(req,res)=> {
+ removeProduct : async(req,res)=> {
   try {
     let index = req.params.index;
     console.log(index);
@@ -116,7 +124,6 @@ const removeProduct = async(req,res)=> {
     const cart = await cartModel.findOne({ userId: userid });
     console.log(cart);
     cart.item.splice(index,1)
-    console.log("==============");
     console.log(cart);
     
     await cart.save();
@@ -126,7 +133,21 @@ const removeProduct = async(req,res)=> {
   } catch (error) {
     
   }
-} 
+} ,
 
+ updateProduct : async (req,res) => {
+  try {
+    const { productId, newQuantity,cartId } = req.body;
+    cartModel.findOneAndUpdate(
+      { _id: cartId, productId: productId },
+      { $set: { 'products.$.quantity': newQuantity } },
+      { new: true }
+    )
 
-module.exports={addToCart,cartProducts,removeProduct}
+  } catch (error) {
+    console.log(error);
+    res.redirect('/')
+  }
+},
+
+}
