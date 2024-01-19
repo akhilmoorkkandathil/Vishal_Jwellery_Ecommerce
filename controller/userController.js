@@ -77,6 +77,9 @@ const home = async(req,res)=>{
 //@acess public
 const login = async(req,res)=>{
     try {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       await res.render('./user/login',{Single:true})
     } catch (error) {
       return res.status(500).json({ message: "Internal server error" });
@@ -451,9 +454,19 @@ const shopProduct = async (req,res)=>{
    if (req.query.category) {
      filterOption = { category: req.query.category };
    }
+   let searchQuery = {};
+    if (req.query.search) {
+      searchQuery = {
+        $or: [
+          { name: { $regex: new RegExp(req.query.search, 'i') } },
+          { description: { $regex: new RegExp(req.query.search, 'i') } },
+          {category: { $regex: new RegExp(req.query.search, 'i')}},
+        ],
+      };
+    }
 
     const product = await productModel
-    .find({ status: true, ...filterOption })
+    .find({ status: true, ...filterOption, ...searchQuery })
     .skip(skip)
     .limit(limit)
     .sort(sortOption) // Apply sorting here
@@ -468,10 +481,8 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            const products = await productModel.find({status:true, ...filterOption }).count()
-            console.log(products);
+            const products = await productModel.find({status:true, ...filterOption, ...searchQuery }).count()
             let pageCount=parseInt((products/limit)+1)
-            console.log(pageCount);
             let a=[]
             for(let i=1;i<=pageCount;i++){
               a.push(i)
@@ -485,7 +496,6 @@ const shopProduct = async (req,res)=>{
             }
             arr.push(test);
           })
-          console.log("=========="+arr[0]);
           res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
@@ -519,6 +529,7 @@ const catProduct = async (req,res)=>{
     await res.render('./user/shop',{products:obj,name:cat})
   } catch (error) {
     console.log(error);
+    res.redirect('/error')
   }
 }
 
@@ -582,7 +593,7 @@ const toAddAddress =async (req,res)=>{
         const pinValid = onlyNumbers(pincode);
         const isPhoneValid = phoneValid(phone);
         const isaltPhoneValid = phoneValid(altphone);
-        const isAdressValid = nameValid(address)
+        
         const isLocalityValid = nameValid(locality)
         const islandmarkValid = nameValid(country)
         if (!fnameValid) {
@@ -594,10 +605,7 @@ const toAddAddress =async (req,res)=>{
         } else if (!isLocalityValid) {
           req.flash("error", "Enter a valid Locality");
           return res.redirect('/addAddress')
-        } else if (!isAdressValid) {
-          req.flash("error", "Enter a valid Address");
-          return res.redirect('/addAddress')
-        } else if (!isPhoneValid) {
+        }else if (!isPhoneValid) {
           req.flash("error", "Enter a valid Phone Nummber");
           return res.redirect('/addAddress')
         } else if (!isaltPhoneValid) {
@@ -766,9 +774,12 @@ const searchProducts = async (req, res) => {
   try {
     const searchQuery = req.body.searchProducts;
 
-    // Search for products by name
+    // Search for products by name or description
     const productData = await productModel.findOne({
-      name: { $regex: new RegExp(`^${searchQuery}`, "i") },
+      $or: [
+        { name: { $regex: new RegExp(`^${searchQuery}`, "i") } },
+        { description: { $regex: new RegExp(`^${searchQuery}`, "i") } },
+      ],
     });
 
     if (productData) {
@@ -776,7 +787,7 @@ const searchProducts = async (req, res) => {
     }
 
     // Search for categories by name
-    const categoryData = await catModel.findOne({
+    const categoryData = await cartModel.findOne({
       name: { $regex: new RegExp(`^${searchQuery}`, "i") },
     });
 
@@ -788,9 +799,10 @@ const searchProducts = async (req, res) => {
     res.redirect("/");
   } catch (err) {
     console.error(err);
-    res.redirect('/error')
+    res.redirect('/error');
   }
 };
+
 
 const checkoutPage = async (req, res) => {
   try {
@@ -804,7 +816,6 @@ const checkoutPage = async (req, res) => {
       path: 'item.productId',
       select: 'name price stock',
   }).lean();
-console.log(cartItems);
 req.session.checkout=true;
   
     await res.render('./user/checkout',{user:user,cartItems:cartItems,login:req.session.user});
@@ -822,13 +833,8 @@ const newDeliveryAddrres = async (req,res) =>{
     console.log(user);
     console.log(index);
     let deliveryAddress = user.address.splice(index,1)
-    console.log("======================123");
-
-    console.log(deliveryAddress);
     user.address.unshift(deliveryAddress[0])
-    console.log("======================11111");
     req.session.user=user;
-    console.log(user);
     res.redirect('/checkout')
   } catch (error) {
     res.redirect('/error')

@@ -110,9 +110,21 @@ module.exports = {
 
     viewOrderdProducts: async (req,res) => {
         try {
+            const orderId = req.params.orderId;
             const userId = req.session.userId;
-            const orders = await orderModel.find({userId:userId})
-            res.render('./user/orderedProducs',{order:orders})
+            const orders = await orderModel.find({userId:userId,orderId:orderId})
+            console.log(orders[0]);
+            let maps =orders.map((item)=>{
+                let test={
+                    "orderId":item.orderId,
+                    "price":item.totalPrice,
+                    "status":item.status,
+                    "paymentMethod":item.paymentMethod,
+                    "createdAt":item.createdAt.toString().substring(0, 10),
+                }
+                obj.push(test)
+            })
+            res.render('./user/orderedProducts',{order:orders})
         } catch (error) {
             console.log(error);
         }

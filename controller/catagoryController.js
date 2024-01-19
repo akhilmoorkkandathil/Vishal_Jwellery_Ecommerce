@@ -26,9 +26,11 @@ module.exports = {
                   }
                   obj.push(test)
               })
+              req.session.isadAuth = true;
               await res.render('./user/shop',{products:obj,name:"Shop"})
         } catch (error) {
-            
+            console.log(error);
+            res.redirect('/admin/error')
         }
     }
 }

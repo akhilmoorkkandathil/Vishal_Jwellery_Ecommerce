@@ -15,7 +15,7 @@ router.get('/dashboard',Session.adisAuth,adminController.dashboard);
 //product routers
 router.get('/products',Session.adisAuth,productController.productList);
 router.get('/addproductpage',Session.adisAuth,productController.addProduct);
-router.post('/addproduct',Session.adisAuth,upload.array('image', 6),productController.productAdded)
+router.post('/addproduct',upload.array('image', 6),productController.productAdded)
 router.get('/unlistproduct/:id',Session.adisAuth,productController.unlistProduct)
 router.get('/deleteproduct/:id',Session.adisAuth,productController.deleteProduct)
 router.get('/editproduct/:id',Session.adisAuth,productController.editProduct)

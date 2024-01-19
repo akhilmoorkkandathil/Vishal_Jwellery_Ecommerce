@@ -10,6 +10,7 @@ const connectDb = require('./config/connectDb')
 const session = require('express-session')
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash')
+const cacheControl = require('cache-control');
 
 
 const app = express();
@@ -25,7 +26,7 @@ app.engine('hbs', hbs.engine({
   partialsDir: __dirname + '/views/partials',
   
 }));
-
+app.use(cacheControl({ noCache: true }));
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,

@@ -1,3 +1,6 @@
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <section>
 			<!-- Start Hero Section -->
 			<div class="hero">
@@ -49,12 +52,11 @@
                           <td >
                             <div class="input-group mb-3 ml-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
                               <div class="input-group-prepend">
-                                <button class="btn btn-outline-black decrease" type="button">&minus;</button>
+                              <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}', 'quantity-amount-{{@index}}')" type="button">-</button>
                               </div>
                               <input type="text" disabled class="form-control text-center quantity-amount" value="{{this.quantity}}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                               <div class="input-group-append">
-                                <button class="btn btn-outline-black increase" type="button" onclick="incrementProduct({{this.productId}},{{this.cartI}})">+</button>
-
+                              <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}', 'quantity-amount-{{@index}}')" type="button">+</button>
                               </div>
                             </div>
         
@@ -98,3 +100,58 @@
 		
 		</section>
 
+<script>
+   function updateProductQuantity(productId, cartId, newQuantity) {
+      // Use fetch to update the quantity in the database
+      fetch('/updateQuantity', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            productId: productId,
+            cartId:cartId,
+            newQuantity: newQuantity,
+         }),
+      })
+      .then(response => {
+         if (!response.ok) {
+            throw new Error('Network response was not ok');
+         }
+         return response.json();
+      })
+      .then(data => {
+         // Update the quantity on the page after successful update
+         document.querySelector('.quantity-amount').value = newQuantity;
+      })
+      .catch(error => {
+         console.error('Error updating quantity:', error);
+      });
+   }
+
+   function incrementProduct(productId, cartId) {
+      // Get the current quantity
+      console.log("here")
+      var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
+
+      // Increment the quantity
+      var newQuantity = currentQuantity + 1;
+
+      // Update the quantity in the database and on the page
+      updateProductQuantity(productId, cartId, newQuantity);
+   }
+
+   function decrementProduct(productId, cartId) {
+      // Get the current quantity
+      var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
+
+      // Ensure the quantity doesn't go below 1
+      if (currentQuantity > 1) {
+         // Decrement the quantity
+         var newQuantity = currentQuantity - 1;
+
+         // Update the quantity in the database and on the page
+         updateProductQuantity(productId, cartId, newQuantity);
+      }
+   }
+</script>

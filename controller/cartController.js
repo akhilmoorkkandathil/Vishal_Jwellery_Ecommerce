@@ -50,7 +50,8 @@ module.exports = {
                 "stock":item.stock,
                 "quantity":item.quantity,
                 "userId":item.userId,
-                "cartId":item._id
+                "cartId":item._id,
+                total:item.total,
             }
             obj.push(test)
           });
@@ -150,6 +151,49 @@ module.exports = {
     res.redirect('/')
   }
 },
+
+updateQuantity : async (req,res) => {
+   const { productId, newQuantity ,cartId } = req.body;
+   try {
+    // Find the cart based on cartId
+    const sessionId = req.session.sessionId;
+    const userId = req.session.userId;
+    const cart = await cartModel.findOne({ userId: userId });
+    console.log(cart);
+    console.log("==================");
+
+    if (!cart) {
+       return res.status(404).json({ error: 'Cart not found' });
+    }
+
+    // Find the item in the cart based on productId
+    const cartItem = cart.item.find(item => item.productId.toString() === productId);
+
+    if (!cartItem) {
+       return res.status(404).json({ error: 'Product not found in the cart' });
+    }
+
+    // Check if the new quantity is within the available stock
+    if (newQuantity > cartItem.stock) {
+       return res.status(400).json({ error: 'New quantity exceeds available stock' });
+    }
+
+    // Update the quantity and total in the cart item
+    cartItem.quantity = newQuantity;
+    cartItem.total = newQuantity * cartItem.price;
+
+    // Recalculate the total for the entire cart
+    cart.total = cart.item.reduce((acc, item) => acc + item.total, 0);
+    console.log(cart);
+    // Save the updated cart to the database
+    await cart.save();
+
+    res.json({ success: true, cart });
+ } catch (error) {
+    console.error('Error updating quantity:', error);
+    res.redirect('/error');
+ }
+}
 
 }
 
