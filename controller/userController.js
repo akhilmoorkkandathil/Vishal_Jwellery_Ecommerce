@@ -438,7 +438,26 @@ const shopProduct = async (req,res)=>{
     let limit =4;
    let pageNUmber = req.query.page-1 || 0;
    let skip = pageNUmber*limit;
-    const product = await productModel.find({status:true}).skip(skip).limit(limit)
+
+   // Sorting options
+   let sortOption = {};
+   if (req.query.sort) {
+     const sortOrder = req.query.sort === 'des' ? -1 : 1;
+     sortOption = { price: sortOrder };
+   }
+
+   // Filtering options
+   let filterOption = {};
+   if (req.query.category) {
+     filterOption = { category: req.query.category };
+   }
+
+    const product = await productModel
+    .find({ status: true, ...filterOption })
+    .skip(skip)
+    .limit(limit)
+    .sort(sortOption) // Apply sorting here
+   
         let obj=[]
             let maps =product.map((iteam)=>{
                 let test={
@@ -449,7 +468,7 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            const products = await productModel.find({status:true}).count()
+            const products = await productModel.find({status:true, ...filterOption }).count()
             console.log(products);
             let pageCount=parseInt((products/limit)+1)
             console.log(pageCount);
@@ -457,12 +476,21 @@ const shopProduct = async (req,res)=>{
             for(let i=1;i<=pageCount;i++){
               a.push(i)
             }
-            
+          const category = await categoryModel.find()
+          console.log(category);
+          let arr=[]
+          let map = category.map((item)=>{
+            let test = {
+              "name":item.name
+            }
+            arr.push(test);
+          })
+          console.log("=========="+arr[0]);
           res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
           
-    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages:a,pageNUmber})
+    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages:a,pageNUmber,category:arr})
   } catch (error) {
     res.redirect('/error')
     console.log(error);

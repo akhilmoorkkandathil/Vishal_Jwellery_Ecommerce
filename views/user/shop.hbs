@@ -24,8 +24,8 @@
                         Sort
                     </button>
                     <div class="dropdown-menu" aria-labelledby="sortDropdown">
-                        <a class="dropdown-item " style="width: 400px; href="shop?price=asc">Price low - high</a>
-                        <a class="dropdown-item" style="width: 400px; href="shop?price=asc">Price high - lows</a>
+                        <a class="dropdown-item " style="width: 400px;" href="shop?sort=asc">Price low - high</a>
+                        <a class="dropdown-item" style="width: 400px;" href="shop?sort=des">Price high - lows</a>
                         <!-- Add more sorting options as needed -->
                     </div>
                 </div>
@@ -36,9 +36,9 @@
                         Filter
                     </button>
                     <div class="dropdown-menu" aria-labelledby="filterDropdown">
-                        <a class="dropdown-item"  style="width: 400px; href="#">Option A</a>
-                        <a class="dropdown-item"  style="width: 400px; href="#">Option B</a>
-                        <a class="dropdown-item"  style="width: 400px; href="#">Option C</a>
+                        {{#each category}}
+                        <a class="dropdown-item"  style="width: 400px;" href="shop?category={{this.name}}">{{this.name}}</a>
+                        {{/each}}
                         <!-- Add more filter options as needed -->
                     </div>
                 </div>
