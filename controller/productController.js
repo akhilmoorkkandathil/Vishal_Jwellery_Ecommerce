@@ -27,6 +27,7 @@ const addProduct = async(req,res)=>{
         }
         obj.push(test)
     })
+    req.session.isadAuth = true;
     await res.render('./admin/addProduct',{obj,Admin:true,category:obj})
 } catch (err) {
     console.log(err);

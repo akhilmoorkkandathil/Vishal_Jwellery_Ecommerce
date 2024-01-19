@@ -449,12 +449,15 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
+            const products = await productModel.find({status:true}).count()
+            console.log(products);
+            let pageCount=parseInt((products/limit)+1)
+            console.log(pageCount);
             let a=[]
-            for(let i=1;i<4;i++){
+            for(let i=1;i<=pageCount;i++){
               a.push(i)
             }
-            let pageCount=parseInt((product.length/limit)+1)
-            console.log(pageCount);
+            
           res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
@@ -539,26 +542,7 @@ const addAddress = async (req,res)=>{
 }
 
 const myAddress =async(req,res)=>{
-  const userId = req.session.userId;
   const user = req.session.user;
-
-  //const user = await userModel.find({_id:userId})
-  // let obj=[]
-  //           let maps =user.map((item)=>{
-  //               let test={
-  //                   "_id":item._id,
-  //                   "username":item.username,
-  //                   "email":item.email,
-  //                   "phone":item.phone,
-  //                   "password":item.password,
-  //                   "address":item.address,
-  //                   "isAdmin":item.isAdmin,
-  //                   "status":item.status
-  //               }
-  //               obj.push(test)
-  //           })
-  //           console.log(obj[0]);
-
   let login = req.session.isAuth;
   await res.render('./user/myAddress',{user,login})
 }
@@ -619,15 +603,17 @@ const toAddAddress =async (req,res)=>{
     }
     req.session.user=user;
     if(req.session.checkout){
+      req.session.isAuth=true
       await res.redirect('/checkout')
-      req.sessiion.checout=false;
+      req.session.checkout=false;
     }else{
+      req.session.isAuth=true
       await res.redirect('/address')
 
     }
   } catch (error) {
     console.log("Some errors");
-    return res.status(500).json({ message: "Internal server error" });
+    return res.redirect('/error')
   }
 }
 
@@ -638,6 +624,7 @@ const editPage = async (req, res) => {
     const user = req.session.user;
     console.log(user);
     console.log(user.address[index])
+    req.session.isAuth=true
     await res.render('./user/updateAddress', { login: true, address:user.address[index],index}); // Pass 'index' to the render function if needed
   } catch (error) {
     console.log("Error:", error);
@@ -695,12 +682,11 @@ const updateAddress = async (req, res) => {
 const editUserDetails =async(req,res)=>{
   try {
     const address=req.session.user;
-    console.log("====================ok");
-    //console.log(address);
+    req.session.isAuth=true
     res.render('./user/editUserDetails',{address});
     
   } catch (error) {
-    
+    res.redirect('/error')
   }
 }
 
@@ -723,7 +709,7 @@ const updateUserAddress = async(req,res)=>{
     req.session.user=user;
     await res.redirect('/address');
   } catch (error) {
-    
+    res.redirect('/error')
   }
 }
 
@@ -743,7 +729,7 @@ const deleteAddress = async (req, res) => {
   } catch (error) {
     console.error('Error occurred while updating user:', error);
     // Handle error
-    res.status(500).send('Error occurred while updating user');
+    res.redirect('/error')
   }
 };
 
@@ -774,7 +760,7 @@ const searchProducts = async (req, res) => {
     res.redirect("/");
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal Server Error", message: err.message });
+    res.redirect('/error')
   }
 };
 
@@ -784,8 +770,6 @@ const checkoutPage = async (req, res) => {
     const userId = user._id;
     console.log(req.body);
     const quantity = req.body.quantity || 1;
-    console.log("==============",quantity);
-    //console.log(user);
     console.log(userId);
 
     const cartItems = await cartModel.findOne({ userId: userId }).populate({
@@ -793,7 +777,7 @@ const checkoutPage = async (req, res) => {
       select: 'name price stock',
   }).lean();
 console.log(cartItems);
- req.session.checkout=true;
+req.session.checkout=true;
   
     await res.render('./user/checkout',{user:user,cartItems:cartItems,login:req.session.user});
   } catch (error) {
@@ -803,7 +787,25 @@ console.log(cartItems);
   }
 };
 
+const newDeliveryAddrres = async (req,res) =>{
+  try {
+    const index = req.params.index;
+    const user = req.session.user;
+    console.log(user);
+    console.log(index);
+    let deliveryAddress = user.address.splice(index,1)
+    console.log("======================123");
 
+    console.log(deliveryAddress);
+    user.address.unshift(deliveryAddress[0])
+    console.log("======================11111");
+    req.session.user=user;
+    console.log(user);
+    res.redirect('/checkout')
+  } catch (error) {
+    res.redirect('/error')
+  }
+}
 
 
 module.exports = {registerUser,
@@ -817,4 +819,4 @@ module.exports = {registerUser,
   myAddress,toAddAddress,editPage,
   updateAddress,editUserDetails,
   updateUserAddress,deleteAddress,
-  checkoutPage,errorPage}
+  checkoutPage,errorPage,newDeliveryAddrres}

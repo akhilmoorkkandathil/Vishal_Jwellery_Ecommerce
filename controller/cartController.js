@@ -38,7 +38,6 @@ module.exports = {
               total: 0,
             });
       }
-      console.log(cart);
       //console.log(cart.item);
       req.session.checkout=true
       let obj=[]
@@ -56,7 +55,8 @@ module.exports = {
             obj.push(test)
           });
           //console.log(obj);
-      res.render('./user/cart', { products:obj , login:req.session.user});
+          req.session.isAuth=true;
+          res.render('./user/cart', { products:obj , login:req.session.user});
     
   } catch (err) {
     console.log(err);
@@ -108,6 +108,7 @@ module.exports = {
   
       cart.total = cart.item.reduce((acc, item) => acc + item.total, 0);
       await cart.save();
+      req.session.isAuth=true;
       res.redirect("/cart");
     }
     } catch (error) {
@@ -151,3 +152,4 @@ module.exports = {
 },
 
 }
+

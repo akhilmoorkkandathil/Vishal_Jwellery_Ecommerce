@@ -42,16 +42,17 @@ router.get('/shop',userController.shopProduct);
 router.get('/cart',userSession.userAuth,cartController.cartProducts);
 router.get('/add-to-cart/:id',userSession.userAuth,cartController.addToCart);
 router.get('/rfcart/:index',cartController.removeProduct)
-router.proppatch('/update-product',cartController.updateProduct)
+router.post('/update-product',cartController.updateProduct)
 
 router.get('/checkout',userController.checkoutPage)
-
+router.get('/new-Del-Add/:index',userController.newDeliveryAddrres)
 
 router.get('/orders',userSession.userAuth,orderController.orderPage)
 router.get('/delAddress',userSession.userAuth,orderController.delAdress)
 router.post('/placeorder',orderController.placeOrder)
 router.get('/cancelorder/:orderId',userSession.userAuth,orderController.cacelOrder)
 router.get('/viewOrderePrducts/:orderId',userSession.userAuth,orderController.viewOrderdProducts)
+
 
 router.post('/search',userController.searchProducts);
 
