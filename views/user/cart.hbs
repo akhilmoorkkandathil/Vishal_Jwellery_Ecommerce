@@ -35,7 +35,7 @@
                           <th class="product-name">Product</th>
                           <th class="product-price">Price</th>
                           <th class="product-quantity">Quantity</th>
-                          
+                          <th>Total Price</th>
                           <th class="product-remove">Remove</th>
                         </tr>
                       </thead>
@@ -48,18 +48,23 @@
                           <td class="product-name">
                             <h2 class="h5 text-black">{{this.name}}</h2>
                           </td>
-                          <td>{{this.price}}</td>
+                          <td class="current-price">{{this.price}}</td>
                           <td >
                             <div class="input-group mb-3 ml-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
                               <div class="input-group-prepend">
-                              <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}', 'quantity-amount-{{@index}}')" type="button">-</button>
+                              <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.p}}, 'quantity-amount-{{@index}}')" type="button">-</button>
                               </div>
                               <input type="text" disabled class="form-control text-center quantity-amount" value="{{this.quantity}}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                               <div class="input-group-append">
-                              <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}', 'quantity-amount-{{@index}}')" type="button">+</button>
+                              <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.total}}, 'quantity-amount-{{@index}}')" type="button">+</button>
                               </div>
                             </div>
         
+                          </td>
+                          <td>
+                            <div  >
+                              <input disabled type="text" class="total-price" value="{{this.total}}">
+                            </div>
                           </td>
                           <td><a href="rfcart/{{@index}}" class="btn btn-black btn-sm">X</a></td>
                         </tr>
@@ -101,7 +106,7 @@
 		</section>
 
 <script>
-   function updateProductQuantity(productId, cartId, newQuantity) {
+   function updateProductQuantity(productId, cartId, newQuantity,total) {
       // Use fetch to update the quantity in the database
       fetch('/updateQuantity', {
          method: 'POST',
@@ -123,35 +128,39 @@
       .then(data => {
          // Update the quantity on the page after successful update
          document.querySelector('.quantity-amount').value = newQuantity;
+         document.querySelector('.total-price').value = total;
       })
       .catch(error => {
          console.error('Error updating quantity:', error);
       });
    }
 
-   function incrementProduct(productId, cartId) {
+   function incrementProduct(productId, cartId,total) {
       // Get the current quantity
       console.log("here")
       var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
+      var curentPrice = parseInt(document.querySelector('.current-price').value)
 
       // Increment the quantity
       var newQuantity = currentQuantity + 1;
-
+       var total = newQuantity*curentPrice;
       // Update the quantity in the database and on the page
-      updateProductQuantity(productId, cartId, newQuantity);
+      updateProductQuantity(productId, cartId, newQuantity,total);
    }
 
-   function decrementProduct(productId, cartId) {
+   function decrementProduct(productId, cartId,total) {
       // Get the current quantity
       var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
+      var curentPrice = parseInt(document.querySelector('.current-price').value)
 
       // Ensure the quantity doesn't go below 1
       if (currentQuantity > 1) {
          // Decrement the quantity
          var newQuantity = currentQuantity - 1;
+         var total = newQuantity*curentPrice
 
          // Update the quantity in the database and on the page
-         updateProductQuantity(productId, cartId, newQuantity);
+         updateProductQuantity(productId, cartId, newQuantity,total);
       }
    }
 </script>

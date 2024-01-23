@@ -4,6 +4,7 @@ const productModel=require('../model/productSchema')
 const categoryModel=require('../model/categorySchema')
 const otpModel = require("../model/userOtpModel");
 const bcrypt = require('bcrypt')
+require("dotenv").config()
 const session = require('express-session')
 const twilioClient = require('../config/twilioService');
 const {
@@ -19,9 +20,24 @@ const usersModel = require('../model/userSchema');
 const cartModel = require('../model/cartSchema')
 let objectId = require('mongodb').ObjectId
 
+
 //const errorHandler = require('../middlewares/errorhandlerMiddleware')
 
 
+
+
+const createOrder = (req, res) => {
+  const { amount } = req.body;
+
+  razorpayInstance.orders.create({ amount, currency: 'INR' }, (err, order) => {
+     if (!err) {
+        res.json(order);
+        console.log(order);
+     } else {
+        res.status(500).send(err);
+     }
+  });
+};
 
 //@desc Home page
 //@router Get /
@@ -671,7 +687,8 @@ const editPage = async (req, res) => {
 const updateAddress = async (req, res) => {
 
   try {
-    const index =req.params;
+    console.log("==============");
+    const index =req.params.index;
     const {
       fname,
       lname,
@@ -688,7 +705,7 @@ const updateAddress = async (req, res) => {
     
     const userId = req.session.userId;
     console.log(userId);
-    await usersModel.updateOne(
+    const update=await userModel.updateOne(
       { _id: userId },
       {
         $set: {
@@ -706,12 +723,14 @@ const updateAddress = async (req, res) => {
         }
       }
     );
+    console.log(update);
     const user = await userModel.findById(userId);
     req.session.user=user;
+    req.session.isAuth=true;
     await res.redirect('/address');
   } catch (error) {
     console.error('Error updating address:', error);
-    res.status(500).send('Error updating address');
+    res.redirect('/error')
   }
 };
 
@@ -853,4 +872,4 @@ module.exports = {registerUser,
   myAddress,toAddAddress,editPage,
   updateAddress,editUserDetails,
   updateUserAddress,deleteAddress,
-  checkoutPage,errorPage,newDeliveryAddrres}
+  checkoutPage,errorPage,newDeliveryAddrres,createOrder}

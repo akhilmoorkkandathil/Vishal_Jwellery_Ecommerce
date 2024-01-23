@@ -32,7 +32,7 @@ router.get('/address',userSession.userAuth,userController.myAddress);
 router.get('/addAddress',userSession.userAuth,userController.addAddress);
 router.post('/addAddress',userSession.userAuth,userController.toAddAddress);
 router.get('/editAddress/:index',userSession.userAuth, userController.editPage);
-router.post('/updateAddress/:index',userSession.userAuth,userController.updateAddress);
+router.post('/editAddress/updateAddress/:index',userSession.userAuth,userController.updateAddress);
 router.get('/editUserDetails',userSession.userAuth,userController.editUserDetails);
 router.post('/updateUserAddress',userSession.userAuth,userController.updateUserAddress);
 router.get('/deleteAddress/:index',userSession.userAuth,userController.deleteAddress)
@@ -53,11 +53,13 @@ router.get('/delAddress',userSession.userAuth,orderController.delAdress)
 router.post('/placeorder',orderController.placeOrder)
 router.get('/cancelorder/:orderId',userSession.userAuth,orderController.cacelOrder)
 router.get('/orderedProducts/:orderId',userSession.userAuth,orderController.viewOrderdProducts)
+router.post('/createOrder',userController.createOrder)
+router.get('/verify_payment',orderController.verifyPayment)
 
 router.get('/category/:name',catController.catPage)
 
 router.get('/logout',userController.logOut);
-router.get('/error',userController.errorPage)
+router.get('/error',userController.errorPage);
 router.get('/:id',userController.productPage);
 
 

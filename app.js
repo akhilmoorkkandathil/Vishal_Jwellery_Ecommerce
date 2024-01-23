@@ -12,9 +12,10 @@ const cookieParser = require('cookie-parser');
 const flash = require('express-flash')
 const cacheControl = require('cache-control');
 
-
 const app = express();
 
+
+const port = process.env.PORT || '3000';
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -57,6 +58,8 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+
+//use as middleware=========
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -68,5 +71,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
-module.exports = app;
+app.listen(port,()=>{
+  console.log(`Server is running at http://localhost:${port}`);
+});

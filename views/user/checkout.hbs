@@ -1,226 +1,286 @@
 
 
-		<!-- Start Hero Section -->
-			<div class="hero">
-				<div class="container">
-					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Checkout</h1>
-							</div>
+	<!-- Start Hero Section -->
+		<div class="hero">
+			<div class="container">
+				<div class="row justify-content-between">
+					<div class="col-lg-5">
+						<div class="intro-excerpt">
+							<h1>Checkout</h1>
 						</div>
-						<div class="col-lg-7">
-							
-						</div>
+					</div>
+					<div class="col-lg-7">
+						
 					</div>
 				</div>
 			</div>
-		<!-- End Hero Section -->
+		</div>
+	<!-- End Hero Section -->
 
-		<div class="untree_co-section">
-		    <div class="container">
-		      <div class="row mb-5">
-		        
-		      </div>
-		      <div class="row">
-		        <div class="col-md-6 mb-5 mb-md-0">
-		          <h2 class="h3 mb-3 text-black">Billing Details</h2>
-		          <div class="p-3 p-lg-5 border bg-white">
-		            {{#if user.address}}
-    <div class="row">
-        {{#each user.address as |address index|}}
-            <div class="col-md-6">
-                <label class="form-check">
-                    <input class="form-check-input" type="radio" name="address" id="address{{index}}" value="{{index}}">
-                    <span class="form-check-label">
-                        {{#if @first}}
-                            <strong>Delivery Address</strong><br>
-                        {{/if}}
-                        {{address.fname}} {{address.lname}}<br>
-                        {{address.address}}, {{address.locality}}, {{address.pincode}}, {{address.city}}, {{address.state}}, {{address.country}}<br>
-                        Phone: {{address.phone}}<br>
-                        Alt Phone: {{address.altphone}}<br>
-                        {{#if @first}}
-                            <!-- Additional action for the first address (Delivery Address) -->
-                        {{else}}
-                            <a href="new-Del-Add/{{index}}" class="change-delivery-address-link" data-index="{{index}}">Deliver to this address</a>
-                        {{/if}}
-                        <br>
-                    </span>
-                </label>
-            </div>
-        {{/each}}
-    </div>
+	<div class="untree_co-section">
+		<div class="container">
+			<div class="row mb-5">
+			
+			</div>
+			<div class="row">
+			<div class="col-md-6 mb-5 mb-md-0">
+				<h2 class="h3 mb-3 text-black">Billing Details</h2>
+				<div class="p-3 p-lg-5 border bg-white">
+				{{#if user.address}}
+<div class="row">
+	{{#each user.address as |address index|}}
+		<div class="col-md-6">
+			<label class="form-check">
+				<input class="form-check-input" type="radio" name="address" id="address{{index}}" value="{{index}}">
+				<span class="form-check-label">
+					{{#if @first}}
+						<strong>Delivery Address</strong><br>
+					{{/if}}
+					{{address.fname}} {{address.lname}}<br>
+					{{address.address}}, {{address.locality}}, {{address.pincode}}, {{address.city}}, {{address.state}}, {{address.country}}<br>
+					Phone: {{address.phone}}<br>
+					Alt Phone: {{address.altphone}}<br>
+					{{#if @first}}
+						<!-- Additional action for the first address (Delivery Address) -->
+					{{else}}
+						<a href="new-Del-Add/{{index}}" class="change-delivery-address-link" data-index="{{index}}">Deliver to this address</a>
+					{{/if}}
+					<br>
+				</span>
+			</label>
+		</div>
+	{{/each}}
+</div>
 {{/if}}
 
 
-					<form action="addAddress" method="post">
-					<div class="form-group">
-						<label for="c_ship_different_address" class="text-black" data-bs-toggle="collapse" href="#ship_different_address" role="button" aria-expanded="false" aria-controls="ship_different_address">
-							<input type="checkbox" value="1" id="c_ship_different_address"> Ship To A Different Address?
-						</label>
-						<div class="collapse" id="ship_different_address">
-							<div class="py-2">
-								<div class="form-group row">
-						
-		                    <div class="col-md-6">
-		                      <label for="c_diff_fname" class="text-black">First Name <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_fname" name="fname">
-		                    </div>
-		                    <div class="col-md-6">
-		                      <label for="c_diff_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_lname" name="lname">
-		                    </div>
-		                  </div>
-						  <div class="form-group row">
-		                    <div class="col-md-6">
-		                      <label for="c_diff_fname" class="text-black">Pincode <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_fname" name="pincode">
-		                    </div>
-		                    <div class="col-md-6">
-		                      <label for="c_diff_lname" class="text-black">Locality <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_lname" name="locality">
-		                    </div>
-		                  </div>
-
-		    
-
-		                  <div class="form-group row  mb-3">
-		                    <div class="col-md-12">
-		                      <label for="c_diff_address" class="text-black">Address <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_address" name="address" placeholder="Street address">
-		                    </div>
-		                  </div>
-
-		                  
-		                  <div class="form-group row">
-		                    <div class="col-md-6">
-		                      <label for="c_diff_state_country" class="text-black">City <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_state_country" name="city">
-		                    </div>
-		                    <div class="col-md-6">
-		                      <label for="c_diff_postal_zip" class="text-black">State <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_postal_zip" name="state">
-		                    </div>
-		                  </div>
-
-		                  <div class="form-group row mb-5">
-		                    <div class="col-md-6">
-		                      <label for="c_diff_phone" class="text-black">Phone <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_phone" name="phone" placeholder="Phone Number">
-		                    </div>
-		                    <div class="col-md-6">
-		                      <label for="c_diff_phone" class="text-black">Alternative Phone <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_phone" name="altphone" placeholder="Phone Number">
-		                    </div>
-		                  </div>
-						  <div class="form-group row mb-5">
-		                    <div class="col-md-6">
-		                      <label for="c_diff_phone" class="text-black">Landmark <span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_phone" name="landmark" placeholder="Phone Number">
-		                    </div>
-		                    <div class="col-md-6">
-		                      <label for="c_diff_phone" class="text-black">Country<span class="text-danger">*</span></label>
-		                      <input type="text" class="form-control" id="c_diff_phone" name="country" placeholder="Phone Number">
-		                    </div>
-		                  </div>
-						  <div class="form-group row mb-5">
-    					<button type="submit" class="btn btn-primary-hover-outline mt-3">Add Address</button>
-
-		                  </div>
-							</div>
+				<form action="addAddress" method="post">
+				<div class="form-group">
+					<label for="c_ship_different_address" class="text-black" data-bs-toggle="collapse" href="#ship_different_address" role="button" aria-expanded="false" aria-controls="ship_different_address">
+						<input type="checkbox" value="1" id="c_ship_different_address"> Ship To A Different Address?
+					</label>
+					<div class="collapse" id="ship_different_address">
+						<div class="py-2">
+							<div class="form-group row">
+					
+						<div class="col-md-6">
+							<label for="c_diff_fname" class="text-black">First Name <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_fname" name="fname">
 						</div>
-					</div>
-					</form>
-		           
-		          </div>
-				  <div class="row mb-5">
-		            <div class="col-md-12">
-		              <h2 class="h3 mb-3 mt-3 text-black">Coupon Code</h2>
-		              <div class="p-3 p-lg-5 border bg-white">
-
-		                <label for="c_code" class="text-black mb-3">Enter your coupon code if you have one</label>
-		                <div class="input-group w-75 couponcode-wrap">
-		                  <input type="text" class="form-control me-2" id="c_code" placeholder="Coupon Code" aria-label="Coupon Code" aria-describedby="button-addon2">
-		                  <div class="input-group-append">
-		                    <button class="btn btn-black btn-sm" type="button" id="button-addon2">Apply</button>
-		                  </div>
-		                </div>
-
-		              </div>
-		            </div>
-		          </div>
-		        </div>
-				{{#if cartItems}}
-		        <div class="col-md-6">
-
-		        
-
-		          <div class="row mb-5">
-		            <div class="col-md-12">
-		              <h2 class="h3 mb-3 text-black">Your Order</h2>
-		              <div class="p-3 p-lg-5 border bg-white">
-		                <table class="table site-block-order-table mb-5">
-		                  <thead>
-		                    <th>Product</th>
-		                    <th>Total</th>
-		                  </thead>
-		                  <tbody>
-							{{#each cartItems.item}}
-		                    <tr>
-		                      <td>{{this.productId.name}}<strong class="mx-2">x</strong> {{this.quantity}}</td>
-		                      <td>{{this.productId.price}}</td>
-		                    </tr>
-							{{/each}}
-		                    
-		                    <tr>
-		                      <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
-		                      <td class="text-black">₹ {{cartItems.total}}</td>
-		                    </tr>
-		                    <tr>
-		                      <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-		                      <td class="text-black font-weight-bold"><strong>₹ {{cartItems.total}}</strong></td>
-		                    </tr>
-		                  </tbody>
-		                </table>
-						<form action="/placeorder" method="post">
-		                <div class="border p-3 mb-3">
-							  <h3 class="h6 mb-3"><a class="d-block" data-bs-toggle="collapse" href="#collapseContent" role="button" aria-expanded="false" aria-controls="collapseContent">Payment Details</a></h3>
-		                    <div class="form-check">
-							<input class="form-check-input" type="radio" name="paymentMethod" id="bankTransfer" value="bankTransfer" checked>
-							<label class="form-check-label" for="bankTransfer">
-								Direct Bank Transfer
-							</label>
-							</div>
-
-							<div class="form-check">
-							<input class="form-check-input" type="radio" name="paymentMethod" id="cashOnDelivery" value="COD">
-							<label class="form-check-label" for="cashOnDelivery">
-								Cash on Delivery (COD)
-							</label>
-							</div>
-
-							<div class="form-check">
-							<input class="form-check-input" type="radio" name="paymentMethod" id="paypal" value="paypal">
-							<label class="form-check-label" for="paypal">
-								Paypal
-							</label>
-							</div>
-
-		                <div class="form-group">
-		                  <button class="btn btn-black btn-lg py-3 btn-block">Place Order</button>
-		                </div>
-
-		              </div>
-					  </form>
-		            </div>
-		          </div>
-
-		        </div>
-		      </div>
-			  {{/if}}
-		      <!-- </form> -->
-		    </div>
-		  </div>
+						<div class="col-md-6">
+							<label for="c_diff_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_lname" name="lname">
+						</div>
+						</div>
+						<div class="form-group row">
+						<div class="col-md-6">
+							<label for="c_diff_fname" class="text-black">Pincode <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_fname" name="pincode">
+						</div>
+						<div class="col-md-6">
+							<label for="c_diff_lname" class="text-black">Locality <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_lname" name="locality">
+						</div>
+						</div>
 
 		
+
+						<div class="form-group row  mb-3">
+						<div class="col-md-12">
+							<label for="c_diff_address" class="text-black">Address <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_address" name="address" placeholder="Street address">
+						</div>
+						</div>
+
+						
+						<div class="form-group row">
+						<div class="col-md-6">
+							<label for="c_diff_state_country" class="text-black">City <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_state_country" name="city">
+						</div>
+						<div class="col-md-6">
+							<label for="c_diff_postal_zip" class="text-black">State <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_postal_zip" name="state">
+						</div>
+						</div>
+
+						<div class="form-group row mb-5">
+						<div class="col-md-6">
+							<label for="c_diff_phone" class="text-black">Phone <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_phone" name="phone" placeholder="Phone Number">
+						</div>
+						<div class="col-md-6">
+							<label for="c_diff_phone" class="text-black">Alternative Phone <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_phone" name="altphone" placeholder="Phone Number">
+						</div>
+						</div>
+						<div class="form-group row mb-5">
+						<div class="col-md-6">
+							<label for="c_diff_phone" class="text-black">Landmark <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_phone" name="landmark" placeholder="Phone Number">
+						</div>
+						<div class="col-md-6">
+							<label for="c_diff_phone" class="text-black">Country<span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="c_diff_phone" name="country" placeholder="Phone Number">
+						</div>
+						</div>
+						<div class="form-group row mb-5">
+					<button type="submit" class="btn btn-primary-hover-outline mt-3">Add Address</button>
+
+						</div>
+						</div>
+					</div>
+				</div>
+				</form>
+				
+				</div>
+				<div class="row mb-5">
+				<div class="col-md-12">
+					<h2 class="h3 mb-3 mt-3 text-black">Coupon Code</h2>
+					<div class="p-3 p-lg-5 border bg-white">
+
+					<label for="c_code" class="text-black mb-3">Enter your coupon code if you have one</label>
+					<div class="input-group w-75 couponcode-wrap">
+						<input type="text" class="form-control me-2" id="c_code" placeholder="Coupon Code" aria-label="Coupon Code" aria-describedby="button-addon2">
+						<div class="input-group-append">
+						<button class="btn btn-black btn-sm" type="button" id="button-addon2">Apply</button>
+						</div>
+					</div>
+
+					</div>
+				</div>
+				</div>
+			</div>
+			{{#if cartItems}}
+			<div class="col-md-6">
+
+			
+
+				<div class="row mb-5">
+				<div class="col-md-12">
+					<h2 class="h3 mb-3 text-black">Your Order</h2>
+					<div class="p-3 p-lg-5 border bg-white">
+					<table class="table site-block-order-table mb-5">
+						<thead>
+						<th>Product</th>
+						<th>Total</th>
+						</thead>
+						<tbody>
+						{{#each cartItems.item}}
+						<tr>
+							<td>{{this.productId.name}}<strong class="mx-2">x</strong> {{this.quantity}}</td>
+							<td>{{this.productId.price}}</td>
+						</tr>
+						{{/each}}
+						
+						<tr>
+							<td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
+							<td class="text-black">₹ {{cartItems.total}}</td>
+						</tr>
+						<tr>
+							<td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+							<td class="text-black font-weight-bold"><strong>₹ {{cartItems.total}}</strong></td>
+						</tr>
+						</tbody>
+					</table>
+					
+					
+				</div>
+				<form action="/placeorder" method="post">
+					<div class="card-header py-3">
+						<h5 class="mb-0">Payment Method</h5>
+					</div>
+					<input type="text" name="userId" id="" value="{{user._id}}" hidden>
+					<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+						<div class="m-3">
+						<strong>Cash on delivery</strong>
+
+						</div>
+						<div class="m-3">
+							<span> <input type="radio" name="paymentMethod" value="COD" required></span>
+						</div>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+						<div class="m-3">
+						<strong>Resopay</strong><br>
+						
+						</div>
+						<div class="m-3">
+							<span> <input type="radio" name="paymentMethod" value="Resopay"></span>
+						</div>
+					</li>
+					<div class="form-group">
+						<button class="btn btn-black btn-lg py-3 btn-block">Place Order</button>
+					</div>
+					</form>
+					</div>
+				</div>
+
+			</div>
+			</div>
+			{{/if}}
+			<!-- </form> -->
+		</div>
+		</div>
+
+<!-- Add this script at the end of your HTML body or in the head section -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+// Function to make an AJAX request to the server and fetch the order details
+function fetchOrder() {
+fetch('/placeorder') // Update the endpoint to match your server-side route
+	.then(response => response.json())
+	.then(order => {
+			console.log("clent side",order)
+
+	// Configure the Razorpay options with the fetched order details
+	var options = {
+		"key": "rzp_test_pLc9MoYbVxqB7b", // Enter the Key ID generated from the Dashboard
+		"amount": order.amount.toString(), // Convert amount to string
+		"currency": order.currency,
+		"name": "Vishal",
+		"description": "Test Transaction",
+		"image": "https://example.com/your_logo",
+		"order_id": order.id, // Use the order ID obtained from the server
+		"handler": function (response) {
+		alert(response.razorpay_payment_id);
+		alert(response.razorpay_order_id);
+		alert(response.razorpay_signature);
+		verifyPayment(response,order);
+		},
+		"theme": {
+		"color": "#3399cc"
+		}
+	};
+	var rzp1 = new Razorpay(options);
+	rzp1.on('payment.failed', function (response) {
+		alert(response.error.code);
+		alert(response.error.description);
+		alert(response.error.source);
+		alert(response.error.step);
+		alert(response.error.reason);
+		alert(response.error.metadata.order_id);
+		alert(response.error.metadata.payment_id);
+	});
+
+	rzp1.open();
+	})
+	.catch(error => console.error('Error fetching order:', error));
+}
+
+// Call the fetchOrder function when the script runs
+fetchOrder();
+
+verifyPayment(response,order){
+	$.ajax({
+		url:'verify_payment',
+		data:{
+			response,
+			order
+		},
+		methode:'post'
+
+	})
+}
+</script>

@@ -51,9 +51,10 @@ module.exports = {
                 "quantity":item.quantity,
                 "userId":item.userId,
                 "cartId":item._id,
-                total:item.total,
+                "total":item.total,
             }
             obj.push(test)
+            console.log(test);
           });
           //console.log(obj);
           req.session.isAuth=true;
