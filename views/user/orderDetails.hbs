@@ -37,54 +37,38 @@
        <h5 class="card-header m-5"><strong>My Orders</strong></h5>
               <!-- Hoverable Table rows -->
               <div class="card md-8 m-5">
-        
-                <div class="table-responsive text-nowrap">
-                  
-                  {{#if orders}}
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>OrderId</th>
-                        <th>Total Price</th>
-                        <th>Payment Methode</th>
-                        <th>Status</th>
-                        <th>OrderDate</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                      {{#each orders}}
-                      <tr>
-                        <td> <strong>{{this.orderId}}</strong></td>
-                        <td>{{this.price}}</td>
-                        <td>{{this.paymentMethod}}</td>
-                        <td>{{this.status}}</td>
-                        <td>{{this.createdAt}}</td>
-                        <td>
-                            <div class="dropdown">
+    <div class="table-responsive text-nowrap m-3">
+        {{#if orders}}
+            {{#each orders}}
+                <div class="card mb-3 d-flex">
+                    <div class="card-body d-flex justify-content-between">
+                        <h5 class="card-title">{{this.orderId}}</h5>
+                        <p class="card-text">{{this.price}} INR</p>
+                        <p class="card-text">{{this.paymentMethod}}</p>
+                        <p class="card-text">{{this.status}}</p>
+                        <p class="card-text">Order Date:{{this.createdAt}}</p>
+                        <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                              <i class="bx bx-dots-vertical-rounded"></i>
+                                <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="cancelOrder/{{this.orderId}}"
-                                ><i class="bx bx-edit-alt me-1"></i> Cancel</a
-                              >
-                              
-                              <a class="dropdown-item" href="orderedProducts/{{this.orderId}}">
-                                <i class="bx bx-trash me-1"></i> View
-                              </a>
-
+                                <a class="dropdown-item" href="cancelOrder/{{this.orderId}}">
+                                    <i class="bx bx-edit-alt me-1"></i> Cancel
+                                </a>
+                                <a class="dropdown-item" href="myOrders/{{this.orderId}}">
+                                    <i class="bx bx-trash me-1"></i> View
+                                </a>
                             </div>
-                        </td>
-                      </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-                  {{else}}
-                  <h5 class="ml-5">No Orders Yet!</h5>
-                  {{/if}}
+                        </div>
+                    </div>
                 </div>
-              </div>
+            {{/each}}
+        {{else}}
+            <h5 class="ml-5">No Orders Yet!</h5>
+        {{/if}}
+    </div>
+</div>
+
 
       <!-- Button to add new address -->
     </div>
@@ -94,9 +78,3 @@
   </div>
 </div>
 </section>
-
-
-
-
-
-

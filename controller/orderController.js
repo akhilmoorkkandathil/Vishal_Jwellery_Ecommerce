@@ -22,7 +22,7 @@ orderPage: async(req,res)=>{
     try {
         const userId = req.session.userId;
 
-        const orders = await orderModel.find({userId:userId})
+        const orders = await orderModel.find({userId:userId}).sort({ createdAt: -1 })
         console.log(orders);
         let obj=[]
     let maps =orders.map((item)=>{
@@ -73,7 +73,7 @@ placeOrder: async(req,res) => {
                 const cart = await cartModel.find({userId:userId});
                 console.log(cart);
 
-        res.redirect('/orders')
+        res.redirect('/orderSuccess')
 
         }else{
             console.log("Rasorpay payment started");
@@ -87,9 +87,8 @@ placeOrder: async(req,res) => {
                 console.error("Error in patment",err);
                 return res.redirect('/error')
                 }
-                console.log(order);
-                    // Sending the order object as JSON response
-                    res.json(order);
+                
+                   res.send({orderId:order.id})
                 });
             
         }
@@ -167,11 +166,84 @@ viewOrderdProducts: async (req,res) => {
     }
 },
 
+myOrders: async (req, res) => {
+    try {
+      const orderId = req.params.id;
+      console.log(typeof(orderId));
+      console.log("============");
+      const order1 = await orderModel.find(); 
+      console.log(order1[0].items[0]);
+      const result = await orderModel.aggregate([
+        {
+          $match: {
+            orderId:orderId,
+          },
+        },
+        {
+          $unwind: "$items",
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "items.productId",
+            foreignField: "_id",
+            as: "productDetails",
+          },
+        },
+        {
+          $unwind: "$productDetails",
+        },
+        {
+          $project: {
+            _id: 1,
+            orderId: 1,
+            userName: 1,
+            productName: "$productDetails.name",
+            price: "$productDetails.price",
+            quantity: "$items.quantity",
+            purchaseDate: "$createdAt",
+            status: "$status",
+          },
+        },
+      ]);
+      console.log(result);
+      let obj=[]
+      let maps =result.map((item)=>{
+        let test={
+            "productName":item.productName,
+            "price":item.price,
+            "status":item.status,
+            "quantity":item.quantity,
+            "purchaseDate":item.purchaseDate.toString().substring(0, 10),
+        }
+        obj.push(test)
+    })
+    if(req.session.isAuth){
+        res.render('./user/eachOrderProducts',{orderedProducts:obj}); // Corrected typo in the redirect URL
+    }else{
+        res.render('./admin/eachOrderProducts',{orderedProducts:obj,Admin:true}); // Corrected typo in the redirect URL
+    }
+     
+    } catch (error) {
+      console.error(error);
+      res.redirect('/error');
+    }
+  }
+  ,
+
 verifyPayment: async (req,res) => {
     try {
         console.log(req.body);
     } catch (error) {
         res.redirect('/error')
+    }
+},
+
+orderSuccess : async (req,res) => {
+    try {
+        res.render('./user/orderSuccess')
+    } catch (error) {
+        
     }
 }
 }

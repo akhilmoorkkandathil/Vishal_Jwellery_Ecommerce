@@ -1,0 +1,22 @@
+<section>
+    <div class="container mt-5">
+  <h2 class="mb-4">Ordered Products</h2>
+  
+  <div class="row">
+    {{#each orderedProducts}}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{productName}}</h5>
+            <p class="card-text">Price: ${{price}}</p>
+            <p class="card-text">Quantity: {{quantity}}</p>
+            <p class="card-text">Purchase Date: {{purchaseDate}}</p>
+            <p class="card-text">Status: {{status}}</p>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+
+</div>
+</section>

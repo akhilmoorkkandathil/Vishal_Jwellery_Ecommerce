@@ -117,7 +117,7 @@ const blockUser = async (req, res) => {
 };
 
 const orders = async(req,res)=>{
-  const orders = await orderModel.find()
+  const orders = await orderModel.find().sort({ createdAt: -1 })
   let obj=[]
         let maps =orders.map((item)=>{
             let test={

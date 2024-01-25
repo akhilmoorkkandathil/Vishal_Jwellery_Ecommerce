@@ -45,8 +45,8 @@ router.get('/rfcart/:index',cartController.removeProduct)
 router.post('/update-product',cartController.updateProduct)
 router.post('/updateQuantity',cartController.updateQuantity)
 
-router.get('/checkout',userController.checkoutPage)
-router.get('/new-Del-Add/:index',userController.newDeliveryAddrres)
+router.get('/checkout',userSession.userAuth,userController.checkoutPage)
+router.get('/new-Del-Add/:index',userSession.userAuth,userController.newDeliveryAddrres)
 
 router.get('/orders',userSession.userAuth,orderController.orderPage)
 router.get('/delAddress',userSession.userAuth,orderController.delAdress)
@@ -54,14 +54,15 @@ router.post('/placeorder',orderController.placeOrder)
 router.get('/cancelorder/:orderId',userSession.userAuth,orderController.cacelOrder)
 router.get('/orderedProducts/:orderId',userSession.userAuth,orderController.viewOrderdProducts)
 router.post('/createOrder',userController.createOrder)
-router.get('/verify_payment',orderController.verifyPayment)
+router.get('/verify_payment',userSession.userAuth,orderController.verifyPayment)
+router.get('/orderSuccess',userSession.userAuth,orderController.orderSuccess)
+router.get('/myOrders/:id',userSession.userAuth,orderController.myOrders)
 
-router.get('/category/:name',catController.catPage)
+router.get('/category/:name',userSession.userAuth,catController.catPage)
 
 router.get('/logout',userController.logOut);
 router.get('/error',userController.errorPage);
 router.get('/:id',userController.productPage);
-
 
 module.exports = router;
 

@@ -69,6 +69,7 @@ router.post(
   productController.updateCategory
 );
 
+
 //user routers
 router.get("/customers", Session.adisAuth, adminController.userList);
 router.get("/deleteuser/:id", Session.adisAuth, adminController.deleteUser);
@@ -77,6 +78,7 @@ router.get("/blockuser/:id", Session.adisAuth, adminController.blockUser);
 //order routers
 router.get("/orders", Session.adisAuth, adminController.orders);
 router.get("/shipped/:id", Session.adisAuth, orderController.orderShipped);
+router.get('/myOrders/:id',orderController.myOrders)
 
 //logout
 router.get("/logout", Session.adisAuth, adminController.logOut);
