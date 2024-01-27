@@ -40,10 +40,10 @@ router.get('/deleteAddress/:index',userSession.userAuth,userController.deleteAdd
 router.get('/shop',userController.shopProduct);
 
 router.get('/cart',userSession.userAuth,cartController.cartProducts);
-router.get('/add-to-cart/:id',userSession.userAuth,cartController.addToCart);
-router.get('/rfcart/:index',cartController.removeProduct)
-router.post('/update-product',cartController.updateProduct)
-router.post('/updateQuantity',cartController.updateQuantity)
+router.get('/add-to-cart/:id',userSession.userAuth,userSession.userAuth,cartController.addToCart);
+router.get('/rfcart/:index',userSession.userAuth,cartController.removeProduct)
+router.post('/update-product',userSession.userAuth,cartController.updateProduct)
+router.post('/updateQuantity',userSession.userAuth,cartController.updateQuantity)
 
 router.get('/checkout',userSession.userAuth,userController.checkoutPage)
 router.get('/new-Del-Add/:index',userSession.userAuth,userController.newDeliveryAddrres)

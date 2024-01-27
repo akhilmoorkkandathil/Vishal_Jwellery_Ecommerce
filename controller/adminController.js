@@ -1,14 +1,17 @@
 const userModel=require("../model/userSchema")
-const AdminModel = require('../model/adminSchema')
+const adminModel = require('../model/adminSchema')
 const orderModel=require('../model/orderModel')
 
 
 
 const dashboard = async(req, res)=> {
+  const admin = await adminModel.find()
+  const adminName = admin.name;
+
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
-    await res.render('./admin/dashboard',{Admin:true})
+    await res.render('./admin/dashboard',{Admin:true,adminName:adminName})
 }
 
 
