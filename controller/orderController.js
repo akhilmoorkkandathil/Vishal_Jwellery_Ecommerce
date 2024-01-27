@@ -5,6 +5,7 @@ const { default: ShortUniqueId } = require('short-unique-id');
 const moment = require("moment");
 let date = moment();
 const Razorpay = require('razorpay');
+const productModel = require('../model/productSchema');
 
 const razorpayInstance = new Razorpay({ 
 
@@ -22,8 +23,9 @@ orderPage: async(req,res)=>{
     try {
         const userId = req.session.userId;
 
-        const orders = await orderModel.find({userId:userId}).sort({ createdAt: -1 })
+        const orders = await orderModel.find({userId:userId}).sort({ createdAt: -1 , orderId: -1 })
         console.log(orders);
+        console.log(orders[0].items);
         let obj=[]
     let maps =orders.map((item)=>{
         let test={
@@ -52,14 +54,13 @@ placeOrder: async(req,res) => {
         const cartProducts = await cartModel.find({userId:userId});
         let total=cartProducts[0].total
         console.log(total);
-        const items = cartProducts[0].item;
         const orderId=uid.randomUUID(6)
         if(payMethode==="COD"){
             const order = new orderModel({
                 orderId: orderId,
-                userId: userId,
+                userId: req.session.userId,
                 userName: username,
-                items: items,
+                items: cartProducts[0].item,
                 totalPrice: cartProducts[0].total,
                 shippingAddress: selectedAddress,
                 paymentMethod: payMethode,
@@ -71,7 +72,8 @@ placeOrder: async(req,res) => {
                 await order.save();
                 await cartModel.updateOne({ userId: userId }, { $set: { item: [] } });
                 const cart = await cartModel.find({userId:userId});
-                console.log(cart);
+                console.log("Cart",cart);
+                console.log("Order"+order);
 
         res.redirect('/orderSuccess')
 

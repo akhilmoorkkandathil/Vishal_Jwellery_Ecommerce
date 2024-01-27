@@ -52,11 +52,11 @@
                           <td >
                             <div class="input-group mb-3 ml-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
                               <div class="input-group-prepend">
-                              <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.p}}, 'quantity-amount-{{@index}}')" type="button">-</button>
+                              <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.price}}, 'quantity-amount-{{@index}}')" type="button">-</button>
                               </div>
                               <input type="text" disabled class="form-control text-center quantity-amount" value="{{this.quantity}}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                               <div class="input-group-append">
-                              <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.total}}, 'quantity-amount-{{@index}}')" type="button">+</button>
+                              <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.price}}, 'quantity-amount-{{@index}}')" type="button">+</button>
                               </div>
                             </div>
         
@@ -135,29 +135,27 @@
       });
    }
 
-   function incrementProduct(productId, cartId,total) {
+   function incrementProduct(productId, cartId,price) {
       // Get the current quantity
       console.log("here")
       var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
-      var curentPrice = parseInt(document.querySelector('.current-price').value)
 
       // Increment the quantity
       var newQuantity = currentQuantity + 1;
-       var total = newQuantity*curentPrice;
+       var total = newQuantity*price;
       // Update the quantity in the database and on the page
       updateProductQuantity(productId, cartId, newQuantity,total);
    }
 
-   function decrementProduct(productId, cartId,total) {
+   function decrementProduct(productId, cartId,price) {
       // Get the current quantity
       var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
-      var curentPrice = parseInt(document.querySelector('.current-price').value)
 
       // Ensure the quantity doesn't go below 1
       if (currentQuantity > 1) {
          // Decrement the quantity
          var newQuantity = currentQuantity - 1;
-         var total = newQuantity*curentPrice
+         var total = newQuantity*price
 
          // Update the quantity in the database and on the page
          updateProductQuantity(productId, cartId, newQuantity,total);

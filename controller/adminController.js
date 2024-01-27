@@ -1,15 +1,76 @@
 const userModel=require("../model/userSchema")
-const AdminModel = require('../model/adminSchema')
+const adminModel = require('../model/adminSchema')
 const orderModel=require('../model/orderModel')
 
 
 
 const dashboard = async(req, res)=> {
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-    await res.render('./admin/dashboard',{Admin:true})
+  const admin = await adminModel.find({})
+  let adminName = admin[0].name;
+  console.log(adminName);
+        const ordersCount = await orderModel.find({}).count();
+        console.log(ordersCount);
+
+        const payments = await orderModel.aggregate([
+            // Match orders with status "Delivered"
+            { $match: { status: "Delivered" } },
+            // Group by payment method and calculate total amount received
+            {
+                $group: {
+                    _id: "$paymentMethod",
+                    totalAmount: { $sum: "$totalPrice" },
+                    count: { $sum: 1 }
+                }
+            },
+            // Project to rename fields
+            {
+                $project: {
+                    paymentMethod: "$_id",
+                    totalAmount: 1,
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ]);
+        const orderCounts = await orderModel.aggregate([
+            {
+              $group: {
+                _id: "$status",
+                count: { $sum: 1 }
+              }
+            }
+        ])
+        
+        const pipeline = [
+            {
+              $unwind: "$items"
+            },
+            {
+              $lookup: {
+                from: "products", // Assuming your product collection is named "products"
+                localField: "items.productId",
+                foreignField: "_id",
+                as: "product"
+              }
+            },
+            {
+              $unwind: "$product"
+            },
+            {
+              $group: {
+                _id: "$product.category",
+                totalOrders: { $sum: 1 }
+              }
+            }
+          ];
+          
+          const totalOrdersByCategory = await orderModel.aggregate(pipeline);
+          console.log(payments,orderCounts);
+          console.log(totalOrdersByCategory);
+
+    await res.render('./admin/dashboard',{Admin:true,adminName,ordersCount,payments:payments,orderCounts:orderCounts,totalOrdersByCategory:totalOrdersByCategory})
 }
+
 
 
 const adminLogin = async(req,res)=>{
@@ -69,9 +130,7 @@ const userList = async(req,res)=>{
             obj.push(test)
         })
         console.log(obj);
-        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
+       
         req.session.isadAuth = true;
     res.render("./admin/customerList", { users: obj,Admin:true });
 } catch (error) {
@@ -117,7 +176,7 @@ const blockUser = async (req, res) => {
 };
 
 const orders = async(req,res)=>{
-  const orders = await orderModel.find().sort({ createdAt: -1 })
+  const orders = await orderModel.find().sort({ createdAt: -1, orderId: -1 })
   let obj=[]
         let maps =orders.map((item)=>{
             let test={
@@ -136,9 +195,8 @@ const orders = async(req,res)=>{
     await res.render('./admin/orderList',{Admin:true,orders:obj});
 }
 const products = async(req,res)=>{
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
+    
+    
     await res.render('./admin/productList',{Admin:true});
   }
 
@@ -150,7 +208,7 @@ const adminLogined = async (req, res) => {
   const {email,password}=req.body;
   try {
     
-    const user = await AdminModel.findOne({ email,password });
+    const user = await adminModel.findOne({ email,password });
     
     if (user) {
       req.session.isadAuth = true;

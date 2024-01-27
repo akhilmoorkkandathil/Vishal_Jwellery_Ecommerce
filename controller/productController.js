@@ -96,8 +96,7 @@ const productList = async (req, res) => {
             obj.push(test)
         })
         
-        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-        res.setHeader('Pragma', 'no-cache');
+       
         await res.render("./admin/productList", { obj, Admin: true });
     } catch (err) {
         console.log(err);
@@ -169,8 +168,7 @@ const unlistProduct = async (req, res) => {
     })
     const uploadedImages=req.session.uploadedImages
       
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
+     
       res.render("./admin/updateProduct", { product:arr[0],category:obj,uploadedImages, Admin: true });
     } catch (error) {
       console.log(error);
@@ -300,8 +298,7 @@ const catList = async (req,res)=>{
           obj.push(test)
       })
       console.log(obj);
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
+      
       await res.render('./admin/categoryList',{obj,Admin:true})
   } catch (err) {
       console.log(err);
