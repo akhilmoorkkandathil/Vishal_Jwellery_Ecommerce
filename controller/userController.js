@@ -73,11 +73,8 @@ const home = async(req,res)=>{
       const products = await productModel.find({ category: category.name }).limit(4);
       return { category, products };
       }));
-      console.log(productsByCategory);
       if(req.session.isAuth ===true){
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', '0');
+     
       await res.render('./user/home',{login:true,newproducts:newobj,categories:arr})
       }else{
       await res.render('./user/home',{newproducts:newobj,categories:arr})
@@ -93,9 +90,7 @@ const home = async(req,res)=>{
 //@acess public
 const login = async(req,res)=>{
     try {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', '0');
+     
       await res.render('./user/login',{Single:true})
     } catch (error) {
       return res.status(500).json({ message: "Internal server error" });
@@ -442,9 +437,7 @@ const loginHome= async (req, res) => {
             arr.push(val)
           })
           req.session.isAuth = true;
-          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          res.setHeader('Pragma', 'no-cache');
-          res.setHeader('Expires', '0');
+        
         await res.render('./user/home',{login:true,newproducts:newobj})
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
@@ -512,9 +505,7 @@ const shopProduct = async (req,res)=>{
             }
             arr.push(test);
           })
-          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          res.setHeader('Pragma', 'no-cache');
-          res.setHeader('Expires', '0');
+         
           
     await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages:a,pageNUmber,category:arr})
   } catch (error) {
@@ -539,9 +530,7 @@ const catProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          res.setHeader('Pragma', 'no-cache');
-          res.setHeader('Expires', '0');
+        
     await res.render('./user/shop',{products:obj,name:cat})
   } catch (error) {
     console.log(error);

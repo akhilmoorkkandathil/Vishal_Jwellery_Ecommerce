@@ -54,7 +54,6 @@ module.exports = {
                 "total":item.total,
             }
             obj.push(test)
-            console.log(test);
           });
           //console.log(obj);
           req.session.isAuth=true;

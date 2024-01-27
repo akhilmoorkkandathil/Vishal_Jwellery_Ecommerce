@@ -139,7 +139,6 @@
       // Get the current quantity
       console.log("here")
       var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
-      var curentPrice = parseInt(document.querySelector('.current-price').value)
 
       // Increment the quantity
       var newQuantity = currentQuantity + 1;
@@ -151,7 +150,6 @@
    function decrementProduct(productId, cartId,price) {
       // Get the current quantity
       var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
-      var curentPrice = parseInt(document.querySelector('.current-price').value)
 
       // Ensure the quantity doesn't go below 1
       if (currentQuantity > 1) {

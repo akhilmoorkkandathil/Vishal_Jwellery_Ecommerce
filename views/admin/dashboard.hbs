@@ -9,7 +9,7 @@
           <div class="d-flex align-items-end row">
             <div class="col-sm-7">
               <div class="card-body">
-                <h5 class="card-title text-primary">Congratulations John! 🎉</h5>
+                <h5 class="card-title text-primary">Congratulations {{adminName}}! 🎉</h5>
                 <p class="mb-4">
                   You have done <span class="fw-bold">72%</span> more sales today. Check your new badge in
                   your profile.
@@ -95,7 +95,7 @@
                   </div>
                 </div>
                 <span>Sales</span>
-                <h3 class="card-title text-nowrap mb-1">$4,679</h3>
+                <h3 class="card-title text-nowrap mb-1">11</h3>
                 <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +28.42%</small>
               </div>
             </div>
@@ -110,7 +110,6 @@
           <div class="card-header d-flex align-items-center justify-content-between pb-0">
             <div class="card-title mb-0">
               <h5 class="m-0 me-2">Order Statistics</h5>
-              <small class="text-muted">42.82k Total Sales</small>
             </div>
             <div class="dropdown">
               <button
@@ -133,79 +132,82 @@
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="d-flex flex-column align-items-center gap-1">
-                <h2 class="mb-2">8,258</h2>
+                <h2 class="mb-2">{{ordersCount}}</h2>
                 <span>Total Orders</span>
               </div>
               <div id="orderStatisticsChart"></div>
             </div>
             <ul class="p-0 m-0">
+              {{#each totalOrdersByCategory}}
               <li class="d-flex mb-4 pb-1">
                 <div class="avatar flex-shrink-0 me-3">
                   <span class="avatar-initial rounded bg-label-primary"
-                    ><i class="bx bx-mobile-alt"></i
+                    ></i
                   ></span>
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
-                    <h6 class="mb-0">Electronic</h6>
-                    <small class="text-muted">Mobile, Earbuds, TV</small>
+                    <h6 class="mb-0">{{this._id}}</h6>
                   </div>
                   <div class="user-progress">
-                    <small class="fw-semibold">82.5k</small>
+                    <small class="fw-semibold">{{this.totalOrders}} Orders</small>
                   </div>
                 </div>
               </li>
-              <li class="d-flex mb-4 pb-1">
-                <div class="avatar flex-shrink-0 me-3">
-                  <span class="avatar-initial rounded bg-label-success"><i class="bx bx-closet"></i></span>
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Fashion</h6>
-                    <small class="text-muted">T-shirt, Jeans, Shoes</small>
-                  </div>
-                  <div class="user-progress">
-                    <small class="fw-semibold">23.8k</small>
-                  </div>
-                </div>
-              </li>
-              <li class="d-flex mb-4 pb-1">
-                <div class="avatar flex-shrink-0 me-3">
-                  <span class="avatar-initial rounded bg-label-info"><i class="bx bx-home-alt"></i></span>
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Decor</h6>
-                    <small class="text-muted">Fine Art, Dining</small>
-                  </div>
-                  <div class="user-progress">
-                    <small class="fw-semibold">849k</small>
-                  </div>
-                </div>
-              </li>
-              <li class="d-flex">
-                <div class="avatar flex-shrink-0 me-3">
-                  <span class="avatar-initial rounded bg-label-secondary"
-                    ><i class="bx bx-football"></i
-                  ></span>
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Sports</h6>
-                    <small class="text-muted">Football, Cricket Kit</small>
-                  </div>
-                  <div class="user-progress">
-                    <small class="fw-semibold">99</small>
-                  </div>
-                </div>
-              </li>
+              {{/each}}
             </ul>
           </div>
         </div>
       </div>
       <!--/ Order Statistics -->
-
-      <!-- Expense Overview -->
+      <!-- Transactions -->
+      <div class="col-md-6 col-lg-4 order-2 mb-4">
+        <div class="card h-100">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="card-title m-0 me-2">Order Status</h5>
+            <div class="dropdown">
+              <button
+                class="btn p-0"
+                type="button"
+                id="transactionID"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID">
+                <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
+                <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
+                <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <ul class="p-0 m-0">
+              {{#each orderCounts}}
+              <li class="d-flex mb-4 pb-1">
+                <div class="avatar flex-shrink-0 me-3">
+                  <img class="rounded" />
+                </div>
+                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                  <div class="me-2">
+                    <h5 class="text-muted d-block mb-1">{{this._id}}</h5>
+                  </div>
+                  <div class="user-progress d-flex align-items-center gap-1">
+                    <h6 class="mb-0">{{this.count}}</h6>
+                    <span class="text-muted"></span>
+                  </div>
+                </div>
+              </li>
+              {{/each}}
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!--/ Transactions -->
+      {{!-- <!-- Expense Overview -->
       <div class="col-md-6 col-lg-4 order-1 mb-4">
         <div class="card h-100">
           <div class="card-header">
@@ -264,7 +266,7 @@
           </div>
         </div>
       </div>
-      <!--/ Expense Overview -->
+      <!--/ Expense Overview --> --}}
 
       <!-- Transactions -->
       <div class="col-md-6 col-lg-4 order-2 mb-4">
@@ -297,12 +299,12 @@
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
-                    <small class="text-muted d-block mb-1">Paypal</small>
+                    <small class="text-muted d-block mb-1">RazorPay</small>
                     <h6 class="mb-0">Send money</h6>
                   </div>
                   <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0">+82.6</h6>
-                    <span class="text-muted">USD</span>
+                    <h6 class="mb-0">+{{payments.0.totalAmount}}</h6>
+                    <span class="text-muted">INR</span>
                   </div>
                 </div>
               </li>
@@ -313,11 +315,11 @@
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
                     <small class="text-muted d-block mb-1">Wallet</small>
-                    <h6 class="mb-0">Mac'D</h6>
+                    <h6 class="mb-0">Balance</h6>
                   </div>
                   <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0">+270.69</h6>
-                    <span class="text-muted">USD</span>
+                    <h6 class="mb-0">+{{payments.1.totalAmount}}</h6>
+                    <span class="text-muted">INR</span>
                   </div>
                 </div>
               </li>
@@ -327,12 +329,12 @@
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
-                    <small class="text-muted d-block mb-1">Transfer</small>
+                    <small class="text-muted d-block mb-1">Bank Transfer</small>
                     <h6 class="mb-0">Refund</h6>
                   </div>
                   <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0">+637.91</h6>
-                    <span class="text-muted">USD</span>
+                    <h6 class="mb-0">0</h6>
+                    <span class="text-muted">INR</span>
                   </div>
                 </div>
               </li>
@@ -343,11 +345,11 @@
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
                     <small class="text-muted d-block mb-1">Credit Card</small>
-                    <h6 class="mb-0">Ordered Food</h6>
+                    <h6 class="mb-0">UPI</h6>
                   </div>
                   <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0">-838.71</h6>
-                    <span class="text-muted">USD</span>
+                    <h6 class="mb-0">0</h6>
+                    <span class="text-muted">INR</span>
                   </div>
                 </div>
               </li>
@@ -357,30 +359,16 @@
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
-                    <small class="text-muted d-block mb-1">Wallet</small>
-                    <h6 class="mb-0">Starbucks</h6>
+                    <small class="text-muted d-block mb-1">COD</small>
+                    <h6 class="mb-0">In Hand</h6>
                   </div>
                   <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0">+203.33</h6>
-                    <span class="text-muted">USD</span>
+                    <h6 class="mb-0">+{{payments.1.totalAmount}}</h6>
+                    <span class="text-muted">INR</span>
                   </div>
                 </div>
               </li>
-              <li class="d-flex">
-                <div class="avatar flex-shrink-0 me-3">
-                  <img src="/admin/assets/img/icons/unicons/cc-warning.png" alt="User" class="rounded" />
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <small class="text-muted d-block mb-1">Mastercard</small>
-                    <h6 class="mb-0">Ordered Food</h6>
-                  </div>
-                  <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0">-92.45</h6>
-                    <span class="text-muted">USD</span>
-                  </div>
-                </div>
-              </li>
+              
             </ul>
           </div>
         </div>
