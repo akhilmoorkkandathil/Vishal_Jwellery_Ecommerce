@@ -18,8 +18,7 @@ module.exports = {
               path: 'item.productId',
               select: 'images name price stock',
           });
-          console.log("+++++++++++++");
-          console.log(cart);
+          
       } else {
         
           cart = await cartModel.findOne({ sessionId: sessionId }).populate({
@@ -153,14 +152,12 @@ module.exports = {
 },
 
 updateQuantity : async (req,res) => {
-   const { productId, newQuantity ,cartId } = req.body;
+   const { productId, newQuantity  } = req.body;
    try {
-    // Find the cart based on cartId
-    const sessionId = req.session.sessionId;
+   
     const userId = req.session.userId;
     const cart = await cartModel.findOne({ userId: userId });
-    console.log(cart);
-    console.log("==================");
+    
 
     if (!cart) {
        return res.status(404).json({ error: 'Cart not found' });
@@ -184,7 +181,6 @@ updateQuantity : async (req,res) => {
 
     // Recalculate the total for the entire cart
     cart.total = cart.item.reduce((acc, item) => acc + item.total, 0);
-    console.log(cart);
     // Save the updated cart to the database
     await cart.save();
 

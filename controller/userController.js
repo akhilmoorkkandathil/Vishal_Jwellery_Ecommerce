@@ -26,18 +26,18 @@ let objectId = require('mongodb').ObjectId
 
 
 
-const createOrder = (req, res) => {
-  const { amount } = req.body;
-
-  razorpayInstance.orders.create({ amount, currency: 'INR' }, (err, order) => {
-     if (!err) {
-        res.json(order);
-        console.log(order);
-     } else {
-        res.status(500).send(err);
-     }
-  });
-};
+const createOrder = async (req, res) => {
+  console.log('body:', req.body);
+  var options = {
+      amount: 500,
+      currency: "INR",
+      receipt: "order_rcpt"
+  };
+  instance.orders.create(options, function (err, order) {
+      console.log("order1 :", order);
+      res.send({ orderId: order.id})
+    })
+}
 
 //@desc Home page
 //@router Get /
@@ -666,7 +666,7 @@ const editPage = async (req, res) => {
     console.log(user);
     console.log(user.address[index])
     req.session.isAuth=true
-    await res.render('./user/updateAddress', { login: true, address:user.address[index],index}); // Pass 'index' to the render function if needed
+     res.render('./user/updateAddress', { login: true, address:user.address[index],index}); // Pass 'index' to the render function if needed
   } catch (error) {
     console.log("Error:", error);
     // Handle errors accordingly
@@ -694,24 +694,25 @@ const updateAddress = async (req, res) => {
     
     const userId = req.session.userId;
     console.log(userId);
-    const update=await userModel.updateOne(
+    const update = await userModel.updateOne(
       { _id: userId },
       {
         $set: {
-          'address.${index}.fname': fname,
-          'address.${index}.lname': lname,
-          'address.${index}.pincode': pincode,
-          'address.${index}.locality': locality,
-          'address.${index}.address': address,
-          'address.${index}.altphone': altphone,
-          'address.${index}.city': city,
-          'address.${index}.state': state,
-          'address.${index}.country': country,
-          'address.${index}.phone': phone,
-          'address.${index}.landmark': landmark
+          [`address.${index}.fname`]: fname,
+          [`address.${index}.lname`]: lname,
+          [`address.${index}.pincode`]: pincode,
+          [`address.${index}.locality`]: locality,
+          [`address.${index}.address`]: address,
+          [`address.${index}.altphone`]: altphone,
+          [`address.${index}.city`]: city,
+          [`address.${index}.state`]: state,
+          [`address.${index}.country`]: country,
+          [`address.${index}.phone`]: phone,
+          [`address.${index}.landmark`]: landmark
         }
       }
     );
+        
     console.log(update);
     const user = await userModel.findById(userId);
     req.session.user=user;

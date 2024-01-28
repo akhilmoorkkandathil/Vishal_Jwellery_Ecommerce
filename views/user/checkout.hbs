@@ -175,7 +175,7 @@
 						
 						<tr>
 							<td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
-							<td class="text-black">₹ {{cartItems.total}}</td>
+							<td id="cartotal" class="text-black">{{cartItems.total}}</td>
 						</tr>
 						<tr>
 							<td class="text-black font-weight-bold"><strong>Order Total</strong></td>
@@ -186,32 +186,25 @@
 					
 					
 				</div>
-				<form action="/placeorder" method="post">
+				<form id="orderForm">
 					<div class="card-header py-3">
 						<h5 class="mb-0">Payment Method</h5>
 					</div>
-					<input type="text" name="userId" id="" value="{{user._id}}" hidden>
-					<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-						<div class="m-3">
-						<strong>Cash on delivery</strong>
-
-						</div>
-						<div class="m-3">
-							<span> <input type="radio" name="paymentMethod" value="COD" required></span>
-						</div>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-						<div class="m-3">
-						<strong>Resopay</strong><br>
+					<label>
+							  <input type="radio" name="paymentOption" value="COD" id="paymentOption1" onchange="updateHiddenField(this)">
+							 Cash On Delivery
+							</label><br>
 						
-						</div>
-						<div class="m-3">
-							<span> <input type="radio" name="paymentMethod" value="Resopay"></span>
-						</div>
-					</li>
+							<label>
+							  <input type="radio" name="paymentOption" value="Razorpay" id="paymentOption2" onchange="updateHiddenField(this)">
+							  Razorpay
+							</label><br>
+
+							<br><br>
+							<input type="hidden" name="selectedPaymentOption" id="selectedPaymentOption">
 					<div class="form-group">
-						<button class="btn btn-black btn-lg py-3 btn-block">Place Order</button>
-					</div>
+							<button class="btn btn-black btn-lg py-3 btn-block" type="button" onclick="razorpay()">Place Order</button>
+							</div>
 					</form>
 					</div>
 				</div>
@@ -224,63 +217,108 @@
 		</div>
 
 <!-- Add this script at the end of your HTML body or in the head section -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-// Function to make an AJAX request to the server and fetch the order details
-function fetchOrder() {
-fetch('/placeorder') // Update the endpoint to match your server-side route
-	.then(response => response.json())
-	.then(order => {
-			console.log("clent side",order)
+			
+			function updateHiddenField(selectedRadio) {
+            document.getElementById('selectedPaymentOption').value = selectedRadio.value;
+			}
+			</script>
 
-	// Configure the Razorpay options with the fetched order details
-	var options = {
-		"key": "rzp_test_pLc9MoYbVxqB7b", // Enter the Key ID generated from the Dashboard
-		"amount": order.amount.toString(), // Convert amount to string
-		"currency": order.currency,
+<script>
+	async function  razorpay(){
+		let amountToPay=document.getElementById('cartotal').innerText;
+		var pay=document.querySelector('input[name="paymentOption"]:checked');
+
+		if(!pay){
+			Swal.fire({
+			text: 'please select a payment option',
+			icon: 'error',
+			confirmButtonText: 'OK',
+			customClass: {
+				title: 'text-danger',
+				popup: 'swal2-popup-custom',
+				confirmButton: 'btn btn-danger'
+			},
+			showCancelButton: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: false,
+			timer: 3000 
+			});
+
+		}else if(pay.value=='Razorpay'){
+		console.log("upi total","ppppppp");
+		console.log(amountToPay)
+
+		var options = {
+		"key": "rzp_test_pLc9MoYbVxqB7b",
+		"amount": (amountToPay*100).toString(),
 		"name": "Vishal",
 		"description": "Test Transaction",
 		"image": "https://example.com/your_logo",
-		"order_id": order.id, // Use the order ID obtained from the server
-		"handler": function (response) {
+		"order_id": orderId, 
+		"handler": function (response){
 		alert(response.razorpay_payment_id);
-		alert(response.razorpay_order_id);
-		alert(response.razorpay_signature);
-		verifyPayment(response,order);
-		},
+		document.getElementById('orderForm').action = '/placeOrder';
+		document.getElementById('orderForm').method = 'post'; 
+
+		// Submit the form
+		document.getElementById('orderForm').submit();
+        },
 		"theme": {
-		"color": "#3399cc"
-		}
-	};
-	var rzp1 = new Razorpay(options);
-	rzp1.on('payment.failed', function (response) {
-		alert(response.error.code);
-		alert(response.error.description);
-		alert(response.error.source);
-		alert(response.error.step);
-		alert(response.error.reason);
-		alert(response.error.metadata.order_id);
-		alert(response.error.metadata.payment_id);
-	});
-
-	rzp1.open();
-	})
-	.catch(error => console.error('Error fetching order:', error));
-}
-
-// Call the fetchOrder function when the script runs
-fetchOrder();
-
-verifyPayment(response,order){
-	$.ajax({
-		url:'verify_payment',
-		data:{
-			response,
-			order
+		"color": "orange"
 		},
-		methode:'post'
+		};
+		console.log(options);
+		var rzp1 = new Razorpay(options);
+		rzp1.on('payment.failed', function (response){
+				alert(response.error.code);
+				alert(response.error.description);
+				alert(response.error.source);
+				alert(response.error.step);
+				alert(response.error.reason);
+				alert(response.error.metadata.order_id);
+				alert(response.error.metadata.payment_id);
+		});
+			rzp1.open();
 
-	})
-}
+
+    		e.preventDefault();
+
+
+            var orderId;
+			$(document).ready(function(){
+				var settings = {
+			"url": "/createOrder",
+			"method": "POST",
+			"timeout": 0,
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"data": JSON.stringify({
+				"amount": amountToPay*100
+			}),
+			};
+			
+
+			$.ajax(settings).done(function (response) {
+
+			orderId=response.orderId;
+			console.log(orderId);
+			$("button").show();
+			});
+			});
+
+                
+            }else{
+				document.getElementById('orderForm').action = '/placeOrder';
+				document.getElementById('orderForm').method = 'post'; // Replace with your actual URL
+				document.getElementById('orderForm').submit();
+			}
+	}
 </script>
+
+

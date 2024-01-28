@@ -200,12 +200,11 @@ const orders = async(req,res)=>{
   console.log(orders);
   req.session.isadAuth = true;
     await res.render('./admin/orderList',{Admin:true,orders:obj});
-}
+};
+
 const products = async(req,res)=>{
-    
-    
     await res.render('./admin/productList',{Admin:true});
-  }
+};
 
 //@desc login a admin
 //@router Post admin/login
