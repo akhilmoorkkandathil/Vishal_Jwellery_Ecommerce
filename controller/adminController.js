@@ -5,15 +5,7 @@ const orderModel=require('../model/orderModel')
 
 
 const dashboard = async(req, res)=> {
-<<<<<<< HEAD
-  const admin = await adminModel.find()
-  const adminName = admin.name;
 
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-    await res.render('./admin/dashboard',{Admin:true,adminName:adminName})
-=======
   const admin = await adminModel.find({})
   let adminName = admin[0].name;
   console.log(adminName);
@@ -21,9 +13,7 @@ const dashboard = async(req, res)=> {
         console.log(ordersCount);
 
         const payments = await orderModel.aggregate([
-            // Match orders with status "Delivered"
             { $match: { status: "Delivered" } },
-            // Group by payment method and calculate total amount received
             {
                 $group: {
                     _id: "$paymentMethod",
@@ -31,13 +21,19 @@ const dashboard = async(req, res)=> {
                     count: { $sum: 1 }
                 }
             },
-            // Project to rename fields
             {
                 $project: {
                     paymentMethod: "$_id",
                     totalAmount: 1,
                     count: 1,
                     _id: 0
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: "$totalAmount" }, // Summing totalAmount across all payment methods
+                    payments: { $push: "$$ROOT" } // Pushing the previous computed payments
                 }
             }
         ]);
@@ -56,7 +52,7 @@ const dashboard = async(req, res)=> {
             },
             {
               $lookup: {
-                from: "products", // Assuming your product collection is named "products"
+                from: "products", 
                 localField: "items.productId",
                 foreignField: "_id",
                 as: "product"
@@ -76,9 +72,10 @@ const dashboard = async(req, res)=> {
           const totalOrdersByCategory = await orderModel.aggregate(pipeline);
           console.log(payments,orderCounts);
           console.log(totalOrdersByCategory);
+          let total = parseInt(payments[0].totalAmount/1000)
 
-    await res.render('./admin/dashboard',{Admin:true,adminName,ordersCount,payments:payments,orderCounts:orderCounts,totalOrdersByCategory:totalOrdersByCategory})
->>>>>>> af604681647e859649f366e026bbbe9223d3d695
+    await res.render('./admin/dashboard',{Admin:true,adminName,ordersCount,payments:payments[0].payments,total:total,orderCounts:orderCounts,totalOrdersByCategory:totalOrdersByCategory})
+
 }
 
 

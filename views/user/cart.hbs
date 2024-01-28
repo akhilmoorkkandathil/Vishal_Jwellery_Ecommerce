@@ -54,7 +54,7 @@
                               <div class="input-group-prepend">
                               <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.price}}, 'quantity-amount-{{@index}}')" type="button">-</button>
                               </div>
-                              <input type="text" disabled class="form-control text-center quantity-amount" value="{{this.quantity}}"  aria-label="Example text with button addon" aria-describedby="button-addon1">
+                              <input type="text" disabled class="form-control text-center " id="{{this.productId}}" value="{{this.quantity}}"  aria-label="Example text with button addon" aria-describedby="button-addon1">
                               <div class="input-group-append">
                               <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.price}}, 'quantity-amount-{{@index}}')" type="button">+</button>
                               </div>
@@ -63,7 +63,8 @@
                           </td>
                           <td>
                             <div  >
-                              <input disabled type="text" class="total-price" value="{{this.total}}">
+                              {{!-- <input disabled type="text" class="total-price" value="{{this.total}}"> --}}
+                              <span> ₹<span id="total{{this.productId}}"> {{total}}</span></span>
                             </div>
                           </td>
                           <td><a href="rfcart/{{@index}}" class="btn btn-black btn-sm">X</a></td>
@@ -126,9 +127,10 @@
          return response.json();
       })
       .then(data => {
+        
          // Update the quantity on the page after successful update
-         document.querySelector('.quantity-amount').value = newQuantity;
-         document.querySelector('.total-price').value = total;
+         document.getElementById(productId).value = newQuantity;
+         document.getElementById('total'+productId).innerHTML = total;
       })
       .catch(error => {
          console.error('Error updating quantity:', error);
@@ -138,7 +140,7 @@
    function incrementProduct(productId, cartId,price) {
       // Get the current quantity
       console.log("here")
-      var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
+      var currentQuantity = parseInt(document.getElementById(productId).value)
 
       // Increment the quantity
       var newQuantity = currentQuantity + 1;
@@ -149,7 +151,7 @@
 
    function decrementProduct(productId, cartId,price) {
       // Get the current quantity
-      var currentQuantity = parseInt(document.querySelector('.quantity-amount').value);
+      var currentQuantity = parseInt(document.getElementById(productId).value)
 
       // Ensure the quantity doesn't go below 1
       if (currentQuantity > 1) {
