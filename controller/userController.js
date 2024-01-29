@@ -69,21 +69,62 @@ const home = async(req,res)=>{
       arr.push(val)
 
       })
-      const productsByCategory = await Promise.all(categories.map(async (category) => {
-      const products = await productModel.find({ category: category.name }).limit(4);
-      return { category, products };
-      }));
+      const products = await productModel.aggregate([
+        {
+          $group: {
+            _id: "$category",
+            products: { $push: "$$ROOT" } // Pushing all fields of each document into the products array
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            products: { $slice: ["$products", 4] } // Taking only the first four products in each category
+          }
+        },
+        {
+          $project: {
+            category: "$_id",
+            products: {
+              $map: {
+                input: "$products",
+                as: "product",
+                in: {
+                  _id:"$$product._id",
+                  name: "$$product.name",
+                  price: "$$product.price",
+                  images: "$$product.images",
+                  category:"$$product.category"
+                }
+              }
+            }
+          }
+        }
+      ])
+      console.log(products);
+      let obj = [];
+      products.map((iteam)=>{
+        let test={
+          "category":iteam.category,
+          "products":iteam.products,
+          
+        }
+        obj.push(test)
+        })
+        console.log(obj);
       if(req.session.isAuth ===true){
      
-      await res.render('./user/home',{login:true,newproducts:newobj,categories:arr})
+      await res.render('./user/home',{login:true,newproducts:newobj,categories:arr,products:obj})
       }else{
-      await res.render('./user/home',{newproducts:newobj,categories:arr})
+      await res.render('./user/home',{newproducts:newobj,categories:arr,products:obj})
       }   
       
     } catch (error) {
       return res.status(500).json({ message: "Internal server error" });
     } 
 }
+
+
 
 //@desc Login page
 //@router Get /login
@@ -497,7 +538,6 @@ const shopProduct = async (req,res)=>{
               a.push(i)
             }
           const category = await categoryModel.find()
-          console.log(category);
           let arr=[]
           let map = category.map((item)=>{
             let test = {

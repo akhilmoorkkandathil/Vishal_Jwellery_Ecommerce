@@ -7,7 +7,7 @@
 							<div class="col">
 								<ul class="list-unstyled">
 									{{#each categories}}
-									<li><a href="category/{{this.name}}" style="text-decoration: none; font-weight: bold; font-size: 15PX;">{{this.name}}</a></li>
+									<li><a href="shop?category={{this.name}}" style="text-decoration: none; font-weight: bold; font-size: 15PX;">{{this.name}}</a></li>
 									{{/each}}
 								</ul>
 							</div>
@@ -62,37 +62,43 @@
 		<!-- Start Product Section -->
 
 		<!-- Start Dining catagory Section -->
-		{{#each category}}
+		
+		
 		<div class="untree_co-section product-section before-footer-section">
 		<div class="container">
+			{{#each products}}
 			<div class="row mb-5">
 				<div class="col-md-6">
-					<h2 class="section-title">{{this.name}}</h2>
+					<h2 class="section-title">{{this.category}}</h2>
 				</div>
 				<div class="col-md-6 text-start text-md-end">
-					<a href="{{this.name}}" class="more">View All Products</a>
+					<a href="shop?category={{this.name}}" class="more">View All Products</a>
 				</div>
 			</div>
 
 			<div class="row">
 				<!-- Start Column 1 -->
+				{{#each this.products}}
 				<div class="col-12 col-md-4 col-lg-3 mb-5">
-					<a href="/{{this._id}}" class="product-link">
+					<a href="{{this._id}}" class="product-link">
 					<div class="product-item">
-						<img src="/{{this.images.[0]}}" class=img-fluid product-thumbnail">
+						<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
 						<h3 class="product-title">{{this.name}}</h3>
-						<strong class="product-price"> From ${{this.price}}</strong>
+						<strong class="product-price"> Only {{this.price}}/-</strong>
 					</div>
 					</a>
 				</div> 
+				{{/each}}
 				<!-- End Column 1 -->
 				
 			</div>
+	    {{/each}}
 		</div>
 		
 		</div>
+		
         </div>
-		{{/each}}
+		
 		<!-- Start Dining catagory Section -->
 
 		</section>

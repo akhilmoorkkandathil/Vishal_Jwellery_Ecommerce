@@ -220,7 +220,7 @@ myOrders: async (req, res) => {
         }
         obj.push(test)
     })
-    if(req.session.userAuth){
+    if(req.session.user){
         res.render('./user/eachOrderProducts',{orderedProducts:obj}); // Corrected typo in the redirect URL
     }else{
         res.render('./admin/eachOrderProducts',{orderedProducts:obj,Admin:true}); // Corrected typo in the redirect URL

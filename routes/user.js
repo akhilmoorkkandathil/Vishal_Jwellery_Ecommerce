@@ -58,7 +58,6 @@ router.get('/verify_payment',userSession.userAuth,orderController.verifyPayment)
 router.get('/orderSuccess',userSession.userAuth,orderController.orderSuccess)
 router.get('/myOrders/:id',userSession.userAuth,orderController.myOrders)
 
-router.get('/category/:name',userSession.userAuth,catController.catPage)
 
 router.get('/logout',userController.logOut);
 router.get('/error',userController.errorPage);

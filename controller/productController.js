@@ -81,6 +81,7 @@ const productAdded = async (req, res) => {
 const productList = async (req, res) => {
     try {
         const products = await productModel.find()
+        console.log(products);
         let obj=[]
         let maps =products.map((item)=>{
             let test={
