@@ -17,7 +17,7 @@ router.get("/products", Session.adisAuth, productController.productList);
 router.get("/addproductpage", Session.adisAuth, productController.addProduct);
 router.post(
   "/addproduct",
-  upload.array("image", 6),
+  upload.array("image", 10),
   productController.productAdded
 );
 router.get(
@@ -34,7 +34,7 @@ router.get("/editproduct/:id", Session.adisAuth, productController.editProduct);
 router.post(
   "/updateproduct/:id",
   Session.adisAuth,
-  upload.array("image", 6),
+  upload.array("image", 10),
   productController.updateProduct
 );
 router.get(

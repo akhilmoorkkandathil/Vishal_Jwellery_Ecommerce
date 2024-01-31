@@ -4,19 +4,50 @@ const errorHandler = (err,req,res,next)=>{
     const statusCode = res.statusCode?res.statusCode :500
     switch (statusCode) {
         case constants.VALIDATION_ERROR:
-            res.json({ title:"Not Found", message:err.message,stackTrace:err.stack})
+            if(req.session.isAuth){
+                res.render('./user/error',{statusCode:statusCode})
+            }else if (req.session.isadAuth){
+                res.render('./admin/error',{statusCode:statusCode})
+            }else{
+
+            }
+            
             break;
         case constants.NOT_FOUND:
-            res.json({ title:"Validation Error", message:err.message,stackTrace:err.stack})
+            if(req.session.isAuth){
+                res.render('./user/error',{statusCode:statusCode})
+            }else if (req.session.isadAuth){
+                res.render('./admin/error',{statusCode:statusCode})
+            }else{
+                
+            }
             break;            
         case constants.SERVER_ERROR:
-            res.json({ title:"Server Error", message:err.message,stackTrace:err.stack})
+            if(req.session.isAuth){
+                res.render('./user/error',{statusCode:statusCode})
+            }else if (req.session.isadAuth){
+                res.render('./admin/error',{statusCode:statusCode})
+            }else{
+                
+            }
             break;
         case constants.FORBIDDEN:
-            res.json({ title:"Forbidden Error", message:err.message,stackTrace:err.stack})
+            if(req.session.isAuth){
+                res.render('./user/error',{statusCode:statusCode})
+            }else if (req.session.isadAuth){
+                res.render('./admin/error',{statusCode:statusCode})
+            }else{
+                
+            }
             break;
         case constants.UNAUTHORIZED:
-            res.json({ title:"Unauthorized Error", message:err.message,stackTrace:err.stack})
+            if(req.session.isAuth){
+                res.render('./user/error',{statusCode:statusCode})
+            }else if (req.session.isadAuth){
+                res.render('./admin/error',{statusCode:statusCode})
+            }else{
+                
+            }
             break;
 
 
@@ -27,3 +58,4 @@ const errorHandler = (err,req,res,next)=>{
     
 }
 module.exports = errorHandler
+

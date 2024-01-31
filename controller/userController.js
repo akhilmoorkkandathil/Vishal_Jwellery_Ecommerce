@@ -859,12 +859,12 @@ const checkoutPage = async (req, res) => {
     const userId = user._id;
     console.log(req.body);
     const quantity = req.body.quantity || 1;
-    console.log(userId);
 
     const cartItems = await cartModel.findOne({ userId: userId }).populate({
       path: 'item.productId',
-      select: 'name price stock',
+      select: '_id name price stock',
   }).lean();
+  console.log(cartItems);
 req.session.checkout=true;
   
     await res.render('./user/checkout',{user:user,cartItems:cartItems,login:req.session.user});

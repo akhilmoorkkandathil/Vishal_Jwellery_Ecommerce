@@ -189,6 +189,28 @@ updateQuantity : async (req,res) => {
     console.error('Error updating quantity:', error);
     res.redirect('/error');
  }
+},
+productQuantity : async (req,res) => {
+  const { productId} = req.body;
+  try {
+  
+   
+   const product = await productModel.findOne({ _id: productId });
+   
+   console.log("========",product.stock);
+   if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+   }
+   console.log(product);
+   
+   res.json({ success: true, product });
+   
+
+   
+} catch (error) {
+   console.error('Error updating quantity:', error);
+   res.redirect('/error');
+}
 }
 
 }

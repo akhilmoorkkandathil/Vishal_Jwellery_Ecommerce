@@ -44,6 +44,7 @@ router.get('/add-to-cart/:id',userSession.userAuth,userSession.userAuth,cartCont
 router.get('/rfcart/:index',userSession.userAuth,cartController.removeProduct)
 router.post('/update-product',userSession.userAuth,cartController.updateProduct)
 router.post('/updateQuantity',userSession.userAuth,cartController.updateQuantity)
+router.post('/productQuantity',cartController.productQuantity)
 
 router.get('/checkout',userSession.userAuth,userController.checkoutPage)
 router.get('/new-Del-Add/:index',userSession.userAuth,userController.newDeliveryAddrres)
@@ -64,4 +65,5 @@ router.get('/error',userController.errorPage);
 router.get('/:id',userController.productPage);
 
 module.exports = router;
+
 

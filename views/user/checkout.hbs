@@ -168,8 +168,13 @@
 						<tbody>
 						{{#each cartItems.item}}
 						<tr>
-							<td>{{this.productId.name}}<strong class="mx-2">x</strong> {{this.quantity}}</td>
-							<td>{{this.productId.price}}</td>
+							<td class="d-flex">
+								<p>{{this.productId.name}}</p><strong class="mx-2">x</strong> 
+								<p class="d-none" id="proId">{{this.productId._id}}</p>
+								<p id="proQunatity">{{this.stock}}</p></td>
+							<td>{{this.productId.price}}
+
+							</td>
 						</tr>
 						{{/each}}
 						
@@ -232,8 +237,63 @@
 	async function  razorpay(){
 		let amountToPay=document.getElementById('cartotal').innerText;
 		var pay=document.querySelector('input[name="paymentOption"]:checked');
+		var quantity=document.getElementById('proQunatity').innerText;
+		let proId = document.getElementById('proId').innerText;
+		console.log("Quantity:"+quantity+" "+proId)
 
-		if(!pay){
+		fetch('/productQuantity', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            productId: proId,
+			
+            
+         }),
+      })
+      .then(response => {
+		console.log(":::RSPONSE============")
+         if (!response.ok) {
+            throw new Error('Network response was not ok');
+         }
+         return response.json();
+      })
+      .then(data => {
+		const stockQuantity = data.product.stock;
+  console.log("Stock Quantity:", stockQuantity);
+        if(stockQuantity==0){
+			Swal.fire({
+			text: 'This product is not available',
+			icon: 'error',
+			confirmButtonText: 'OK',
+			customClass: {
+				title: 'text-danger',
+				popup: 'swal2-popup-custom',
+				confirmButton: 'btn btn-danger'
+			},
+			showCancelButton: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: false,
+			timer: 3000 
+			});
+		}else if(stockQuantity < quantity){
+			Swal.fire({
+			text: 'Only less quantity of products are available',
+			icon: 'error',
+			confirmButtonText: 'OK',
+			customClass: {
+				title: 'text-danger',
+				popup: 'swal2-popup-custom',
+				confirmButton: 'btn btn-danger'
+			},
+			showCancelButton: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: false,
+			timer: 3000 
+			});
+		}else{
+			if(!pay){
 			Swal.fire({
 			text: 'please select a payment option',
 			icon: 'error',
@@ -318,6 +378,15 @@
 				document.getElementById('orderForm').method = 'post'; // Replace with your actual URL
 				document.getElementById('orderForm').submit();
 			}
+		}
+        
+      })
+      .catch(error => {
+         console.error('Error updating quantity:', error);
+      });
+   
+
+		
 	}
 </script>
 

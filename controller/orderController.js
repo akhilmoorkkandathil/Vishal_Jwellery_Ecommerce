@@ -162,7 +162,7 @@ viewOrderdProducts: async (req,res) => {
             }
             obj.push(test)
         })
-        res.render('./user/orderedProducts',{order:orders})
+        res.render('./user/orderedProducts',{order:orders,login:req.session.user})
     } catch (error) {
         console.log(error);
     }
@@ -201,6 +201,7 @@ myOrders: async (req, res) => {
             orderId: 1,
             userName: 1,
             productName: "$productDetails.name",
+            images:"$productDetails.images",
             price: "$productDetails.price",
             quantity: "$items.quantity",
             purchaseDate: "$createdAt",
@@ -217,11 +218,12 @@ myOrders: async (req, res) => {
             "status":item.status,
             "quantity":item.quantity,
             "purchaseDate":item.purchaseDate.toString().substring(0, 10),
+            "image":item.images[0],
         }
         obj.push(test)
     })
     if(req.session.user){
-        res.render('./user/eachOrderProducts',{orderedProducts:obj}); // Corrected typo in the redirect URL
+        res.render('./user/eachOrderProducts',{orderedProducts:obj,login:req.session.user}); // Corrected typo in the redirect URL
     }else{
         res.render('./admin/eachOrderProducts',{orderedProducts:obj,Admin:true}); // Corrected typo in the redirect URL
     }
@@ -243,7 +245,7 @@ verifyPayment: async (req,res) => {
 
 orderSuccess : async (req,res) => {
     try {
-        res.render('./user/orderSuccess')
+        res.render('./user/orderSuccess',{login:req.session.user})
     } catch (error) {
         
     }
