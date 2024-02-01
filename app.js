@@ -11,10 +11,12 @@ const session = require('express-session')
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash')
 const cacheControl = require('cache-control');
+const handlebarsHelpers = require('handlebars-helpers')();
+
 
 const app = express();
 
-
+app.locals.helpers = handlebarsHelpers;
 const port = process.env.PORT || '3000';
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

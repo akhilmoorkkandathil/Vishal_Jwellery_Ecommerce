@@ -42,9 +42,14 @@
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="shipped/{{this.orderId}}"
-                                ><i class="bx bx-edit-alt me-1"></i> {{this.status}}</a
-                              >
+                              <a class="dropdown-item" href="shipped/{{this.orderId}}">
+                              {{#if (eq this.status 'pending')}}
+                              <i class="bx bx-edit-alt me-1"></i> Shipped
+                              {{else if (eq this.status 'Shipped')}}
+                              <i class="bx bx-edit-alt me-1"></i> Delivered
+                              
+                              {{/if}}
+                              </a>
                              
                               
                               <a class="dropdown-item" href="/admin/myOrders/{{this.orderId}}"

@@ -52,13 +52,23 @@
                                 <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="cancelOrder/{{this.orderId}}">
-                                    <i class="bx bx-edit-alt me-1"></i> Cancel
-                                </a>
-                                <a class="dropdown-item" href="myOrders/{{this.orderId}}">
-                                    <i class="bx bx-trash me-1"></i> View
-                                </a>
-                            </div>
+                        {{#if (eq this.status 'pending')}}
+                            <a class="dropdown-item" href="cancelOrder/{{this.orderId}}">
+                                <i class="bx bx-edit-alt me-1"></i> Cancel
+                            </a>
+                        {{else if (eq this.status 'Shipped')}}
+                            <a class="dropdown-item" href="cancelOrder/{{this.orderId}}">
+                                <i class="bx bx-edit-alt me-1"></i> Cancel
+                            </a>
+                        {{else if (eq this.status 'Delivered')}}
+                            <a class="dropdown-item" href="returnOrder/{{this.orderId}}">
+                                <i class="bx bx-trash me-1"></i> Return
+                            </a>
+                        {{/if}}
+                        <a class="dropdown-item" href="myOrders/{{this.orderId}}">
+                            <i class="bx bx-info-circle me-1"></i> View
+                        </a>
+                    </div>
                         </div>
                     </div>
                 </div>

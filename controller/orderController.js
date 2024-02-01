@@ -113,28 +113,40 @@ delAdress: async (req,res) => {
 cacelOrder: async (req,res) => {
     try {
         const orderId = req.params.orderId;
-        const filter = { orderId: orderId };
-        const update = { status: "Cancelled" };
-
-        await orderModel.updateOne(filter, update);
+        console.log(orderId);
+        const orders = await orderModel.find({orderId:orderId})
+        console.log(orders);
+        console.log("==============");
+    if(orders[0].status==="pending" || orders[0].status==="Shipped"){
+        const filter = { orderId: orderId};
+        const update = { status: "Cancel" };
+        await orderModel.updateOne(filter, { $set: update });
         await res.redirect('/orders')
+    }else if(orders[0].status==="Delivered"){
+        const filter = { orderId: orderId };
+        const update = { status: "Return" };
+        await orderModel.updateOne(filter, { $set: update });
+        await res.redirect('/orders');
+    }else{
+        await res.redirect('/orders');
+    }
     } catch (error) {
         console.log(error);
     }
 },
-
 orderShipped: async (req,res) => {
 try {
     const orderId = req.params.id;
-    const orderbtTheId = await orderModel.find({orderId: orderId})
-if(orderbtTheId[0].status==="pending"){
+    const order = await orderModel.find({orderId: orderId})
+if(order[0].status==="pending"){
     const filter = { orderId: orderId};
     const update = { status: "Shipped" };
     await orderModel.updateOne(filter, { $set: update });
     await res.redirect('/admin/orders')
-}else if(orderbtTheId[0].status==="Shipped"){
+}else if(order[0].status==="Shipped"){
     const filter = { orderId: orderId };
     const update = { status: "Delivered" };
+    req.session.returnOrder=true;
     await orderModel.updateOne(filter, { $set: update });
     await res.redirect('/admin/orders');
 }else{
