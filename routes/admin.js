@@ -30,7 +30,7 @@ router.get(
   Session.adisAuth,
   productController.deleteProduct
 );
-router.get("/editproduct/:id", Session.adisAuth, productController.editProduct);
+router.get("/editproduct", Session.adisAuth, productController.editProduct);
 router.post(
   "/updateproduct/:id",
   Session.adisAuth,
@@ -79,7 +79,10 @@ router.get("/blockuser/:id", Session.adisAuth, adminController.blockUser);
 router.get("/orders", Session.adisAuth, adminController.orders);
 router.get("/shipped/:id", Session.adisAuth, orderController.orderShipped);
 router.get('/myOrders/:id',orderController.myOrders)
+router.post('/salesReport',orderController.salesReport)
 
+
+router.get('/addCoupen',coupenCountroller.addCoupen)
 //logout
 router.get("/logout", Session.adisAuth, adminController.logOut);
 

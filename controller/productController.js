@@ -40,25 +40,19 @@ const addProduct = async(req,res)=>{
 const productAdded = async (req, res) => {
   try {
     const files = req.files;
-    console.log(files);
     const uploadedImages = [];
     for (const file of files) {
-      
-
-      // Resize the image using sharp before uploading to Cloudinary
       const resizedImageBuffer = await sharp(file.path)
           .resize({ width: 300, height: 300 }) // Set your desired dimensions
           .toFile(file.path+"a")
-      // console.log(file.buff);
       const result = await cloudinary.uploader.upload(file.path+"a");
       uploadedImages.push(result.url); // Store the secure URL of the uploaded image
     }
-    console.log(uploadedImages);
     const { product, category, price, stock, description } = req.body;
-    const upcat=category.toUpperCase()
+    
     const newProduct = new productModel({
       name: product,
-      category: upcat, // Assuming 'category' is the ID of the associated category
+      category: category,
       price: price,
       stock: stock,
       description: description,
@@ -72,9 +66,7 @@ const productAdded = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.redirect('/admin/error')
-  }
-
-  
+  }  
 };
 
 
@@ -105,7 +97,6 @@ const productList = async (req, res) => {
     }
 };
 
-// product unlisting 
 const unlistProduct = async (req, res) => {
     try {
       const id = req.params.id;
@@ -138,7 +129,8 @@ const unlistProduct = async (req, res) => {
 
   const editProduct = async (req, res) => {
     try {
-      const id = req.params.id;
+      const id = req.query.id || req.session.proId;
+      req.session.proId=id
       const product = await productModel.findById(id);
       const pr=[product]
       req.session.prodId = id
@@ -190,7 +182,7 @@ const unlistProduct = async (req, res) => {
 
 
       req.session.isadAuth = true;
-    res.redirect('/admin/products')
+    res.redirect('/admin/editproduct')
       
     } catch (error) {
       console.error(error);

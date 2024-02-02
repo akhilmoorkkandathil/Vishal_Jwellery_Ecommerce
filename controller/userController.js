@@ -488,7 +488,7 @@ const loginHome= async (req, res) => {
 
 const shopProduct = async (req,res)=>{
   try {
-    let limit =4;
+    let limit =8;
    let pageNUmber = req.query.page-1 || 0;
    let skip = pageNUmber*limit;
 

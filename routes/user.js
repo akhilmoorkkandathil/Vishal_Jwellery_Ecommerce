@@ -55,7 +55,6 @@ router.post('/placeorder',orderController.placeOrder)
 router.get('/cancelorder/:orderId',userSession.userAuth,orderController.cacelOrder)
 router.get('/orderedProducts/:orderId',userSession.userAuth,orderController.viewOrderdProducts)
 router.post('/createOrder',userController.createOrder)
-router.get('/verify_payment',userSession.userAuth,orderController.verifyPayment)
 router.get('/orderSuccess',userSession.userAuth,orderController.orderSuccess)
 router.get('/myOrders/:id',userSession.userAuth,orderController.myOrders)
 

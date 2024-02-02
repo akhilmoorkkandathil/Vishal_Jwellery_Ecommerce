@@ -92,14 +92,29 @@
                     >
                       <i class="bx bx-dots-vertical-rounded"></i>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                      <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                      <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                    <div class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="cardOpt6">
+                      <h3>Sales Report</h3>
+                      <form id="reportForm" action="salesReport" method="post">
+                      <label for="startDate">Start Date:</label>
+                      <input type="date" id="startDate" name="startDate">
+
+                      <label for="endDate">End Date:</label>
+                      <input type="date" id="endDate" name="endDate">
+
+                     <button class="btn btn-warning mt-2" type="submit" style="margin-left: 0;">Download Report</button>
+
+                    </form>
                     </div>
                   </div>
                 </div>
                 <span>Sales</span>
-                <h3 class="card-title text-nowrap mb-1">11</h3>
+                <h3 class="card-title text-nowrap mb-1">
+                  {{#each orderCounts}}
+                      {{#if (eq _id 'Delivered')}}
+                          {{count}}
+                      {{/if}}
+                  {{/each}}
+                </h3>
                 <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +28.42%</small>
               </div>
             </div>

@@ -6,6 +6,10 @@ const moment = require("moment");
 let date = moment();
 const Razorpay = require('razorpay');
 const productModel = require('../model/productSchema');
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const puppeteer = require("puppeteer");
 
 const razorpayInstance = new Razorpay({ 
 
@@ -119,7 +123,7 @@ cacelOrder: async (req,res) => {
         console.log("==============");
     if(orders[0].status==="pending" || orders[0].status==="Shipped"){
         const filter = { orderId: orderId};
-        const update = { status: "Cancel" };
+        const update = { status: "Cancelled" };
         await orderModel.updateOne(filter, { $set: update });
         await res.redirect('/orders')
     }else if(orders[0].status==="Delivered"){
@@ -242,18 +246,9 @@ myOrders: async (req, res) => {
      
     } catch (error) {
       console.error(error);
-      res.redirect('/error');
+      res.redirect('/admin/error');
     }
-  }
-  ,
-
-verifyPayment: async (req,res) => {
-    try {
-        console.log(req.body);
-    } catch (error) {
-        res.redirect('/error')
-    }
-},
+  },
 
 orderSuccess : async (req,res) => {
     try {
@@ -261,5 +256,167 @@ orderSuccess : async (req,res) => {
     } catch (error) {
         
     }
+},
+salesReport : async (req,res)=> {
+    try {
+        const { startDate, endDate } = req.body;
+    
+        console.log(req.body);
+          
+         
+        const category = await orderModel.aggregate([
+          {
+            $match: {
+              createdAt: {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate),
+              },
+            },
+          },
+          {
+            $unwind: "$items"
+          },
+          {
+            $lookup: {
+              from: "products", 
+              localField: "items.productId",
+              foreignField: "_id",
+              as: "product"
+            }
+          },
+          {
+            $unwind: "$product"
+          },
+          {
+            $group: {
+              _id: "$product.category",
+              totalOrders: { $sum: 1 }
+            }
+          }
+        ]);
+        const status = await orderModel.aggregate([
+            {
+              $match: {
+                createdAt: {
+                  $gte: new Date(startDate),
+                  $lte: new Date(endDate),
+                }
+              },
+            },
+            {
+                $group: {
+                  _id: "$status",
+                  count: { $sum: 1 }
+                }
+              }
+          ]);
+    
+        const htmlContent = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Sales Report</title>
+                    <style>
+                        body {
+                            margin-left: 20px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h2 align="center"> Sales Report</h2>
+                    Start Date: ${startDate}<br>
+                    End Date: ${endDate}<br> 
+                    <center>
+                    <h3>Total Sales</h3>
+                        <table style="border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="border: 1px solid #000; padding: 8px;">Sl N0</th>
+                                    <th style="border: 1px solid #000; padding: 8px;">Category</th>
+                                    <th style="border: 1px solid #000; padding: 8px;">Total Orders</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${category
+                                  .map(
+                                    (item, index) => `
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px;">${
+                                          index + 1
+                                        }</td>
+                                        <td style="border: 1px solid #000; padding: 8px;">${
+                                          item._id
+                                        }</td>
+                                        <td style="border: 1px solid #000; padding: 8px;">${
+                                          item.totalOrders
+                                        }</td>
+                                    </tr>`
+                                  )
+                                  }
+                                    
+                            </tbody>
+                        </table>
+                    </center>
+                    <center>
+                    <h3>Order Status</h3>
+                        <table style="border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="border: 1px solid #000; padding: 8px;">Sl N0</th>
+                                    <th style="border: 1px solid #000; padding: 8px;">Status</th>
+                                    <th style="border: 1px solid #000; padding: 8px;">Total Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${status
+                                  .map(
+                                    (item, index) => `
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 8px;">${
+                                          index + 1
+                                        }</td>
+                                        <td style="border: 1px solid #000; padding: 8px;">${
+                                          item._id
+                                        }</td>
+                                        <td style="border: 1px solid #000; padding: 8px;">${
+                                          item.count
+                                        }</td>
+                                    </tr>`
+                                  )
+                                  }
+                                    
+                            </tbody>
+                        </table>
+                    </center>
+                    
+                </body>
+                </html>
+            `;
+    
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(htmlContent);
+    
+        
+        const pdfBuffer = await page.pdf();
+    
+        await browser.close();
+    
+        const downloadsPath = path.join(os.homedir(), "Downloads");
+        const pdfFilePath = path.join(downloadsPath, "sales.pdf");
+    
+       
+        fs.writeFileSync(pdfFilePath, pdfBuffer);
+    
+        res.setHeader("Content-Length", pdfBuffer.length);
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", "attachment; filename=sales.pdf");
+        res.status(200).end(pdfBuffer);
+      } catch (err) {
+        console.log(err);
+        res.redirect('/admin/error')
+      }
 }
 }
