@@ -70,5 +70,9 @@ confirmpasswordValid:(confirmpassword,password)=>{
 },
 
 }
-
+// alphanumValid,
+//     onlyNumbers,
+//     zerotonine,
+//     uppercaseAlphanumValid,
+//     isFutureDate
 

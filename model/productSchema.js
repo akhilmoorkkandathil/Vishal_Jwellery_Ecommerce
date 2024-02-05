@@ -7,9 +7,9 @@ const proschema=new mongoose.Schema({
         required:true,
     },
     category: {
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: 'categories', 
-      
+        required: true,
   },
     price:{
         type:Number,

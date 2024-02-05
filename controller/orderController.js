@@ -49,15 +49,14 @@ orderPage: async(req,res)=>{
 
 placeOrder: async(req,res) => {
     try {
-        const payMethode = req.body.paymentOption;
+        const {selectedPaymentOption,amountToPay} = req.body;
+        console.log("Amount to Pay "+amountToPay);
         const userId = req.session.userId;
         const user = req.session.user;
         const username = user.username;
         const uid = new ShortUniqueId();
         const selectedAddress = user.address[0];
         const cartProducts = await cartModel.find({userId:userId});
-        let total=cartProducts[0].total
-        console.log(total);
         const orderId=uid.randomUUID(6)
         
             const order = new orderModel({
@@ -65,9 +64,9 @@ placeOrder: async(req,res) => {
                 userId: req.session.userId,
                 userName: username,
                 items: cartProducts[0].item,
-                totalPrice: cartProducts[0].total,
+                totalPrice: amountToPay,
                 shippingAddress: selectedAddress,
-                paymentMethod: payMethode,
+                paymentMethod: selectedPaymentOption,
                 updatedAt: date.format("YYYY-MM-DD HH:mm"),
                 createdAt: date.format("YYYY-MM-DD HH:mm"),
                 status: "pending",
@@ -75,10 +74,9 @@ placeOrder: async(req,res) => {
                 });
                 await order.save();
                 await cartModel.updateOne({ userId: userId }, { $set: { item: [] } });
-                const cart = await cartModel.find({userId:userId});
                 
                 console.log("Order"+order);
-        if(payMethode==="COD"){
+        if(selectedPaymentOption==="COD"){
         res.redirect('/orderSuccess')
 
         }else{

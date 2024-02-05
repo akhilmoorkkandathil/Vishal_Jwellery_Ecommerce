@@ -1,6 +1,7 @@
 const express = require("express");
 const adminController = require("../controller/adminController");
 const productController = require("../controller/productController");
+const coupenCountroller = require('../controller/coupenCountroller')
 const Session = require("../middlewares/isAadAuth");
 const router = express.Router();
 const multer = require("multer");
@@ -44,7 +45,6 @@ router.get(
 );
 
 //coupen routers
-router.get("/coupens", Session.adisAuth, adminController.coupen);
 router.get("/addcoupen", Session.adisAuth, adminController.addCoupen);
 
 //category routers
@@ -82,10 +82,18 @@ router.get('/myOrders/:id',orderController.myOrders)
 router.post('/salesReport',orderController.salesReport)
 
 
-router.get('/addCoupen',coupenCountroller.addCoupen)
+router.get('/coupens',coupenCountroller.CoupenPage)
+router.post('/addCoupen',coupenCountroller.addCoupen)
+router.get('/editCoupen',coupenCountroller.editCoupenPage)
+router.post('/editCoupen',coupenCountroller.editCoupen)
+router.get('/unlistCoupen',coupenCountroller.unlistCoupen)
+router.get('/deleteCoupen',coupenCountroller.deleteCoupen)
+
+
 //logout
 router.get("/logout", Session.adisAuth, adminController.logOut);
 
 router.get("/error", adminController.errorPage);
 
 module.exports = router;
+

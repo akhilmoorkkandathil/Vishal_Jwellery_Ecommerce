@@ -5,7 +5,8 @@ const userSession = require('../middlewares/isAuth');
 const session = require('express-session');
 const cartController = require('../controller/cartController');
 const catController = require('../controller/catagoryController')
-const orderController = require('../controller/orderController')
+const orderController = require('../controller/orderController');
+const coupenCountroller = require('../controller/coupenCountroller');
 
 
 router.get('/',userController.home);
@@ -23,8 +24,6 @@ router.post('/resetpassword',userController.verifyNumber);
 router.get('/forgototpverify',userController.optPage);
 router.get('/newpassword',userController.newPassword);
 router.post('/setpassword',userController.setNewPassword);
-
-
 router.get('/resendotp',userController.resendOtp);
 
 
@@ -58,6 +57,8 @@ router.post('/createOrder',userController.createOrder)
 router.get('/orderSuccess',userSession.userAuth,orderController.orderSuccess)
 router.get('/myOrders/:id',userSession.userAuth,orderController.myOrders)
 
+router.post('/applyCoupon',coupenCountroller.applyCoupon)
+router.post('/revokeCoupon',coupenCountroller.revokeCoupon)
 
 router.get('/logout',userController.logOut);
 router.get('/error',userController.errorPage);

@@ -18,7 +18,8 @@ const {
   } = require("../utils/Validator");
 const usersModel = require('../model/userSchema');
 const cartModel = require('../model/cartSchema')
-let objectId = require('mongodb').ObjectId
+let objectId = require('mongodb').ObjectId;
+const coupenModel=require('../model/coupenSchema')
 
 
 //const errorHandler = require('../middlewares/errorhandlerMiddleware')
@@ -71,41 +72,54 @@ const home = async(req,res)=>{
       })
       const products = await productModel.aggregate([
         {
+          $lookup: {
+            from: "categories",
+            localField: "category",
+            foreignField: "_id",
+            as: "categoryDetails"
+          }
+        },
+        {
+          $unwind: "$categoryDetails"
+        },
+        {
           $group: {
             _id: "$category",
-            products: { $push: "$$ROOT" } // Pushing all fields of each document into the products array
+            categoryName: { $first: "$categoryDetails.name" },
+            products: { $push: "$$ROOT" }
           }
         },
         {
           $project: {
             _id: 1,
-            products: { $slice: ["$products", 4] } // Taking only the first four products in each category
+            categoryName: 1,
+            products: { $slice: ["$products", 4] }
           }
         },
         {
           $project: {
             category: "$_id",
+            categoryName: 1,
             products: {
               $map: {
                 input: "$products",
                 as: "product",
                 in: {
-                  _id:"$$product._id",
+                  _id: "$$product._id",
                   name: "$$product.name",
-                  price: "$$product.price",
                   images: "$$product.images",
-                  category:"$$product.category"
+                  price: "$$product.price"
                 }
               }
             }
           }
         }
-      ])
+      ]);
       console.log(products);
       let obj = [];
       products.map((iteam)=>{
         let test={
-          "category":iteam.category,
+          "category":iteam.categoryName,
           "products":iteam.products,
           
         }
@@ -437,10 +451,6 @@ const loginUser = async (req, res) => {
           req.flash("error", "Invalid username or Password");
           return res.redirect('/login')
         }
-
-        
-        const dproduct = await productModel.find({status:true,category:"Dining"}).limit(4)
-        
           req.session.isAuth = true;
           req.session.user = user;
           req.session.userId=user._id
@@ -592,7 +602,7 @@ const productPage =async (req,res)=>{
                     "name":item.name,
                     "price":item.price,
                     "category":item.category,
-                    "images":item.images,
+                    "images":item.images.slice(0, 6),
                     "stock":item.stock,
                     "status":item.status,
                     "description":item.description
@@ -865,9 +875,12 @@ const checkoutPage = async (req, res) => {
       select: '_id name price stock',
   }).lean();
   console.log(cartItems);
+  const availableCoupons = await coupenModel.find().lean();
+  console.log(availableCoupons);
+
 req.session.checkout=true;
   
-    await res.render('./user/checkout',{user:user,cartItems:cartItems,login:req.session.user});
+    await res.render('./user/checkout',{user:user,cartItems:cartItems,login:req.session.user,availableCoupons:availableCoupons});
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -889,6 +902,9 @@ const newDeliveryAddrres = async (req,res) =>{
     res.redirect('/error')
   }
 }
+
+
+
 
 
 module.exports = {registerUser,

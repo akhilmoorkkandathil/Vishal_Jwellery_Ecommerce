@@ -36,8 +36,8 @@ const couponSchema=new mongoose.Schema({
 })
 
 
-couponSchema.index({expiry:1},{expireAfterSeconds:0})
+couponSchema.index({expiry:1},{expireAfterSeconds:0});
 
-const couponModel=new mongoose.model("coupons",couponSchema)
+const couponModel=new mongoose.model("coupons",couponSchema);
 
 module.exports=couponModel

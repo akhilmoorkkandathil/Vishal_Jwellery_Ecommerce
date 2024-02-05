@@ -46,7 +46,9 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false,
         required:true
-    }
+    },
+    usedCoupons:
+     [{ type: String }],
 })
 
 const usersModel= mongoose.model("Users",userSchema);

@@ -17,7 +17,7 @@ cloudinary.config({
 const addProduct = async(req,res)=>{
   try {
     // Assuming productModel.find() returns an array of objects
-    const categories = await categoryModel.find({})
+    const categories = await categoryModel.find({status:true})
      console.log(categories);
     let obj=[]
     let maps =categories.map((item)=>{
@@ -72,25 +72,35 @@ const productAdded = async (req, res) => {
 
 const productList = async (req, res) => {
     try {
-        const products = await productModel.find()
-        console.log(products);
-        let obj=[]
-        let maps =products.map((item)=>{
-            let test={
-                "_id":item._id,
-                "name":item.name,
-                "price":item.price,
-                "category":item.category,
-                "images":item.images,
-                "stock":item.stock,
-                "status":item.status,
-                "description":item.description
-            }
-            obj.push(test)
-        })
-        
+      const products = await productModel.aggregate([
+        {
+          $lookup: {
+            from: "categories", // The name of the collection to perform the lookup
+            localField: "category", // The field from the input documents (products collection)
+            foreignField: "_id", // The field from the documents of the "categories" collection
+            as: "categoryDetails" // The alias for the output field
+          }
+        },
+        {
+          $unwind: "$categoryDetails" // Unwind the array created by $lookup (assuming each product has exactly one category)
+        },
+        {
+          $project: {
+            "_id": 1,
+            "name": 1,
+            "price": 1,
+            "images": 1,
+            "stock": 1,
+            "status": 1,
+            "description": 1,
+            "categoryName": "$categoryDetails.name", // Include the category name in the output
+           
+          }
+        }
+      ])
        
-        await res.render("./admin/productList", { obj, Admin: true });
+       console.log(products);
+        await res.render("./admin/productList", { obj:products, Admin: true });
     } catch (err) {
         console.log(err);
         res.redirect('/admin/error')
