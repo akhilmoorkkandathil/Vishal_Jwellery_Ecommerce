@@ -10,6 +10,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const puppeteer = require("puppeteer");
+const walletModel=require('../model/walletSchema')
 
 const razorpayInstance = new Razorpay({ 
 
@@ -243,6 +244,56 @@ myOrders: async (req, res) => {
     } catch (error) {
       console.error(error);
       res.redirect('/admin/error');
+    }
+  },
+  
+  returnOrder:async(req,res)=>{
+    try {
+      const userId = req.session.userId;
+  
+      const id = req.params.id;
+      const update = await orderModel.updateOne(
+        { orderId: id },
+        { status: "Returned" }
+      );
+      const order = await orderModel.findOne({ orderId: id });
+      const user = await walletModel.findOne({ userId: userId });
+  
+      const refund = order.totalPrice;
+      console.log("refundAmount", refund);
+  
+      const currentWallet = user.wallet;
+      const newWallet = currentWallet + refund;
+      const amountUpdate = await walletModel.updateOne(
+        { userId: userId },
+        {
+          $set: { wallet: newWallet },
+          $push: {
+            walletTransactions: {
+              date: new Date(),
+              type: "Credited",
+              amount: refund,
+            },
+          },
+        }
+      );
+  
+      const result = await orderModel.findOne({ orderId: id });
+  
+      const items = result.items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      }));
+      for (const item of items) {
+        const product = await productModel.findOne({ _id: item.productId });
+        product.stock += item.quantity;
+        await product.save();
+      }
+  
+      res.redirect("/orders");
+    } catch (err) {
+      console.log(err);
+      res.render("/error");
     }
   },
 

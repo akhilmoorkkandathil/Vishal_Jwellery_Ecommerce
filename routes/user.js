@@ -7,6 +7,7 @@ const cartController = require('../controller/cartController');
 const catController = require('../controller/catagoryController')
 const orderController = require('../controller/orderController');
 const coupenCountroller = require('../controller/coupenCountroller');
+const walletController = require('../controller/walletController')
 
 
 router.get('/',userController.home);
@@ -56,6 +57,11 @@ router.get('/orderedProducts/:orderId',userSession.userAuth,orderController.view
 router.post('/createOrder',userController.createOrder)
 router.get('/orderSuccess',userSession.userAuth,orderController.orderSuccess)
 router.get('/myOrders/:id',userSession.userAuth,orderController.myOrders)
+router.get('/returnOrder/:id',orderController.returnOrder)
+
+router.get('/wallet',walletController.walletPage)
+router.post('/createWallet',walletController.createWallet)
+router.post('/walletTopup',walletController.addToWallet)
 
 router.post('/applyCoupon',coupenCountroller.applyCoupon)
 router.post('/revokeCoupon',coupenCountroller.revokeCoupon)
