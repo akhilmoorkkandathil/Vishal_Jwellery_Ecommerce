@@ -200,6 +200,7 @@ module.exports = {
                   }
                   
                   console.log(price);
+                  req.session.price=price
       
                   const user=await userModel.findByIdAndUpdate(
                     userId,
@@ -248,6 +249,7 @@ module.exports = {
                     { $pull: { usedCoupons: couponCode } },
                     { new: true }
                   );
+                  req.session.price=price
                   res.json({ success: true, dicprice, price });
               } else {
                   res.json({ success: false, message: "Invalid Coupon" });

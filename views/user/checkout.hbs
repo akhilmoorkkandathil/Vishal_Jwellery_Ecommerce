@@ -234,7 +234,7 @@
 						
 						<tr>
 							<td class="text-black font-weight-bold"><strong>Amout to Pay</strong></td>
-							<td id="cartotal" value="{{cartItems.total}}" class="text-black font-weight-bold"><strong>{{cartItems.total}}</strong></td>
+							<td id="cartotal"  class="text-black font-weight-bold"><strong>{{cartItems.total}}</strong></td>
 						</tr>
 						
 						</tbody>
@@ -258,8 +258,7 @@
 
 							<br><br>
 							<input type="hidden" name="selectedPaymentOption" id="selectedPaymentOption">
-							<input type="hidden" name="amountToPay" id="amountToPay">
-
+							
 					<div class="form-group">
 							<button class="btn btn-black btn-lg py-3 btn-block" type="button" onclick="razorpay()">Place Order</button>
 							</div>
@@ -337,8 +336,11 @@ function couponApply() {
 			document.getElementById('dicprice').innerText="-"+data.dicprice
            document.getElementById('cartotal').innerText=data.price
 		   document.getElementById('carttotal').value=data.price
-		   document.getElementById('amountToPay').value=data.price
+		   console.log(data.price)
+		   const inputElement = document.getElementById('totalPay');
+		   console.log("-------"+inputElement)
 
+		   inputElement.innerText = data.price;
 
        
         } else {
@@ -369,6 +371,7 @@ function couponApply() {
 	const couponCode = document.getElementById('c_code').value;
 	const subtotal=document.getElementById('totalcart').innerText;
 
+
     fetch('/revokeCoupon', {
         method: "POST",
         headers: {
@@ -382,7 +385,10 @@ function couponApply() {
 			document.getElementById('dicprice').innerText=0
            document.getElementById('cartotal').innerText=data.price
 		   document.getElementById('carttotal').value=data.price
-		   document.getElementById('amountToPay').value=data.price
+		   const inputElement = document.getElementById('totalPay');
+
+		   inputElement.innerText = data.price
+		   
        
         } else {
 			Swal.fire({

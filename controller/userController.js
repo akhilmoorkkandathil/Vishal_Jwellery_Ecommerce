@@ -47,7 +47,7 @@ const home = async(req,res)=>{
   
     try {
       const newProducts = await productModel.find({ status: true })
-      .sort({ createdAt: -1 }) // Sort in descending order based on createdAt field
+      .sort({ _id: -1 }) // Sort in descending order based on createdAt field
       .limit(3); // Limit the results to 3
       let newobj=[]
       let newmaps =newProducts.map((iteam)=>{
@@ -453,7 +453,7 @@ const loginUser = async (req, res) => {
         }
           req.session.isAuth = true;
           req.session.user = user;
-          req.session.userId=user._id
+          req.session.userId=user._id;
           res.redirect('/')
         
     } catch (error) {
@@ -509,11 +509,8 @@ const shopProduct = async (req,res)=>{
      sortOption = { price: sortOrder };
    }
 
-   // Filtering options
-   let filterOption = {};
-   if (req.query.category) {
-     filterOption = { category: req.query.category };
-   }
+   
+
    let searchQuery = {};
     if (req.query.search) {
       searchQuery = {
@@ -524,7 +521,11 @@ const shopProduct = async (req,res)=>{
         ],
       };
     }
-
+    // Filtering options
+   let filterOption = {};
+   if (req.query.category) {
+     filterOption = { category: req.query.category };
+   }
     const product = await productModel
     .find({ status: true, ...filterOption, ...searchQuery })
     .skip(skip)

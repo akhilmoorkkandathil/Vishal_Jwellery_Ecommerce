@@ -12,8 +12,8 @@ module.exports = {
   
       let cart;
 
-      if (userId) {
-          cart = await cartModel.findOne({ userId: userId })
+      if (!userId) {
+          cart = await cartModel.findOne({ sessionId: sessionId })
           .populate({
               path: 'item.productId',
               select: 'images name price stock',
@@ -21,10 +21,11 @@ module.exports = {
           
       } else {
         
-          cart = await cartModel.findOne({ sessionId: sessionId }).populate({
+          cart = await cartModel.findOne({ userId: userId }).populate({
               path: 'item.productId',
               select: '_id images name price',
           });
+          console.log(cart+"=================");
       }
 
       

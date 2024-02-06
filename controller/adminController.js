@@ -47,30 +47,41 @@ const dashboard = async(req, res)=> {
         ])
         //facet
         const pipeline = [
-            {
+          {
               $unwind: "$items"
-            },
-            {
+          },
+          {
               $lookup: {
-                from: "products", 
-                localField: "items.productId",
-                foreignField: "_id",
-                as: "product"
+                  from: "products",
+                  localField: "items.productId",
+                  foreignField: "_id",
+                  as: "product"
               }
-            },
-            {
+          },
+          {
               $unwind: "$product"
-            },
-            {
-              $group: {
-                _id: "$product.category",
-                totalOrders: { $sum: 1 }
+          },
+          {
+              $lookup: {
+                  from: "categories",
+                  localField: "product.category",
+                  foreignField: "_id",
+                  as: "category"
               }
-            }
-          ];
+          },
+          {
+              $unwind: "$category"
+          },
+          {
+              $group: {
+                  _id: "$category.name", // Group by category name
+                  totalOrders: { $sum: 1 } // Count the number of orders in each category
+              }
+          }
+      ];
+      
           
           const totalOrdersByCategory = await orderModel.aggregate(pipeline);
-          console.log(payments,orderCounts);
           console.log(totalOrdersByCategory);
           let total = parseInt(payments[0].totalAmount/1000)
 

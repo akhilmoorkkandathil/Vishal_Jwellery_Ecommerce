@@ -49,8 +49,7 @@ orderPage: async(req,res)=>{
 
 placeOrder: async(req,res) => {
     try {
-        const {selectedPaymentOption,amountToPay} = req.body;
-        console.log("Amount to Pay "+amountToPay);
+        const {selectedPaymentOption} = req.body;
         const userId = req.session.userId;
         const user = req.session.user;
         const username = user.username;
@@ -64,7 +63,7 @@ placeOrder: async(req,res) => {
                 userId: req.session.userId,
                 userName: username,
                 items: cartProducts[0].item,
-                totalPrice: amountToPay,
+                totalPrice: req.session.price,
                 shippingAddress: selectedAddress,
                 paymentMethod: selectedPaymentOption,
                 updatedAt: date.format("YYYY-MM-DD HH:mm"),
@@ -75,14 +74,13 @@ placeOrder: async(req,res) => {
                 await order.save();
                 await cartModel.updateOne({ userId: userId }, { $set: { item: [] } });
                 
-                console.log("Order"+order);
         if(selectedPaymentOption==="COD"){
         res.redirect('/orderSuccess')
 
         }else{
             console.log("Rasorpay payment started");
             var options = {
-                amount: total,  // amount in the smallest currency unit
+                amount: req.session.price,  // amount in the smallest currency unit
                 currency: "INR",
                 receipt: orderId,
                 };
@@ -262,7 +260,7 @@ salesReport : async (req,res)=> {
         console.log(req.body);
           
          
-        const category = await orderModel.aggregate([
+        const payments = await orderModel.aggregate([
           {
             $match: {
               createdAt: {
@@ -272,25 +270,14 @@ salesReport : async (req,res)=> {
             },
           },
           {
-            $unwind: "$items"
-          },
-          {
-            $lookup: {
-              from: "products", 
-              localField: "items.productId",
-              foreignField: "_id",
-              as: "product"
-            }
-          },
-          {
-            $unwind: "$product"
-          },
-          {
+            $match: { status: 'Delivered' }
+        },
+        {
             $group: {
-              _id: "$product.category",
-              totalOrders: { $sum: 1 }
+                _id: '$paymentMethod',
+                totalAmount: { $sum: '$totalPrice' }
             }
-          }
+        }
         ]);
         const status = await orderModel.aggregate([
             {
@@ -308,7 +295,6 @@ salesReport : async (req,res)=> {
                 }
               }
           ]);
-    
         const htmlContent = `
                 <!DOCTYPE html>
                 <html lang="en">
@@ -332,12 +318,12 @@ salesReport : async (req,res)=> {
                             <thead>
                                 <tr>
                                     <th style="border: 1px solid #000; padding: 8px;">Sl N0</th>
-                                    <th style="border: 1px solid #000; padding: 8px;">Category</th>
-                                    <th style="border: 1px solid #000; padding: 8px;">Total Orders</th>
+                                    <th style="border: 1px solid #000; padding: 8px;">PaymentMethode</th>
+                                    <th style="border: 1px solid #000; padding: 8px;">Amount Recieved</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${category
+                                ${payments
                                   .map(
                                     (item, index) => `
                                     <tr>
@@ -348,7 +334,7 @@ salesReport : async (req,res)=> {
                                           item._id
                                         }</td>
                                         <td style="border: 1px solid #000; padding: 8px;">${
-                                          item.totalOrders
+                                          item.totalAmount
                                         }</td>
                                     </tr>`
                                   )
