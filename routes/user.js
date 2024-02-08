@@ -59,9 +59,11 @@ router.get('/orderSuccess',userSession.userAuth,orderController.orderSuccess)
 router.get('/myOrders/:id',userSession.userAuth,orderController.myOrders)
 router.get('/returnOrder/:id',orderController.returnOrder)
 
+
 router.get('/wallet',walletController.walletPage)
 router.post('/createWallet',walletController.createWallet)
 router.post('/walletTopup',walletController.addToWallet)
+router.post('/walletTransaction',walletController.walletTransaction)
 
 router.post('/applyCoupon',coupenCountroller.applyCoupon)
 router.post('/revokeCoupon',coupenCountroller.revokeCoupon)

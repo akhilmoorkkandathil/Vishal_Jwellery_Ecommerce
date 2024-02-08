@@ -134,7 +134,7 @@ const home = async(req,res)=>{
       }   
       
     } catch (error) {
-      return res.status(500).json({ message: "Internal server error" });
+      res.redirect('/error')
     } 
 }
 
@@ -499,8 +499,8 @@ const loginHome= async (req, res) => {
 const shopProduct = async (req,res)=>{
   try {
     let limit =8;
-   let pageNUmber = req.query.page-1 || 0;
-   let skip = pageNUmber*limit;
+   let page = req.query.page-1 || 0;
+   let skip = page*limit;
 
    // Sorting options
    let sortOption = {};
@@ -542,12 +542,8 @@ const shopProduct = async (req,res)=>{
                 }
                 obj.push(test)
             })
-            const products = await productModel.find({status:true, ...filterOption, ...searchQuery }).count()
-            let pageCount=parseInt((products/limit)+1)
-            let a=[]
-            for(let i=1;i<=pageCount;i++){
-              a.push(i)
-            }
+            const length = await productModel.find({status:true, ...filterOption, ...searchQuery }).count()
+            
           const category = await categoryModel.find()
           let arr=[]
           let map = category.map((item)=>{
@@ -555,10 +551,17 @@ const shopProduct = async (req,res)=>{
               "name":item.name
             }
             arr.push(test);
-          })
-         
+          })      
+    let i=1
+    let pages=[]
+    while(i<=(Math.ceil(length/limit))){
+      pages.push(i)
+      i++
+    }
+    page>1?prev=page-1:prev=1
+    page<Math.ceil(length/limit)?next=page+2:next=Math.ceil(length/limit)
           
-    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages:a,pageNUmber,category:arr})
+    await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages,category:arr,prev,next})
   } catch (error) {
     res.redirect('/error')
     console.log(error);

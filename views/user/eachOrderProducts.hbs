@@ -3,7 +3,7 @@
   <h2 class="mb-4">Ordered Products</h2>
   
   <div class="row">
-    <table class="table table-hover" id="table" style="background-color: white;">
+    <table class="table" id="table" style="background-color: white;">
                    
                     <tbody class="table-border-bottom-0">
                       {{#each orderedProducts}}
@@ -14,11 +14,10 @@
                         <td class="my-auto"> <strong>{{productName}}</strong></td>
                         <td>Q: {{quantity}}</td>
                         
-                        <td>{{this.price}}</td>
+                        <td>{{this.price}}/-</td>
                         <td>{{purchaseDate}}</td>
                         <td>{{status}}</td>
                         <td><button>Return</button></td>
-                        
                       </tr>
                       {{/each}}
                     </tbody>

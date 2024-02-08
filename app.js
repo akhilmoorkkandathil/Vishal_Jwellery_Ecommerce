@@ -57,11 +57,13 @@ connectDb();
 
 
 app.use(express.static(path.join(__dirname, 'public/userAssets')));
+app.use('/admin/myOrders',express.static(path.join(__dirname, 'public/adminAssets')));
 app.use('/admin',express.static(path.join(__dirname, 'public/adminAssets')));
 app.use("/category",express.static(path.join(__dirname, 'public/userAssets')));
 app.use("/editAddress",express.static(path.join(__dirname, 'public/userAssets')));
+
 app.use("/myOrders",express.static(path.join(__dirname, 'public/userAssets')));
-app.use('/admin/myOrders',express.static(path.join(__dirname, 'public/adminAssets')));
+
 //myOrders
 
 

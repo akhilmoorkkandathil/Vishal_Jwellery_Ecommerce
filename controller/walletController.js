@@ -21,7 +21,7 @@ module.exports = {
             res.render("./user/wallet", {  wallet:wallet });
           } catch (err) {
             console.log(err);
-            res.render("users/serverError");
+            res.redirect('/error')
           }
     },
     addToWallet:async(req,res)=>{
@@ -62,5 +62,39 @@ module.exports = {
             console.log(err);
             res.redirect('/error')
           }
+    },
+    walletTransaction : async (req, res) => {
+      try {
+        console.log("iiiiide ethi mwone..........")
+         const userId=req.session.userId
+         const amount=req.body.amount 
+         const user=await walletModel.findOne({userId:userId})
+         console.log("user",user)
+         console.log("amount",amount);
+         const wallet=user.wallet
+         console.log("wallet",wallet);
+    
+         if(user.wallet>=amount){
+          user.wallet-=amount
+          await user.save();
+    
+          const wallet=await walletModel.findOne({userId:userId})
+          
+          
+              wallet.walletTransactions.push({type:"Debited",
+              amount:amount,
+              date:new Date()})
+              await wallet.save();
+          
+          res.json({success:true})
+         }
+         else{
+          res.json({success:false,message:"don't have enought money"})
+         }
+      }  catch (err) {
+        console.log(err);
+        res.redirect('/error')
     }
+    }
+    
 }

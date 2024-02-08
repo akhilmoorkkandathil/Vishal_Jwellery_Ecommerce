@@ -31,7 +31,7 @@ const addProduct = async(req,res)=>{
     await res.render('./admin/addProduct',{obj,Admin:true,category:obj})
 } catch (err) {
     console.log(err);
-    res.send("Error Occurred");
+    res.redirect('/admin/error')
 }
     
 }
@@ -72,35 +72,55 @@ const productAdded = async (req, res) => {
 
 const productList = async (req, res) => {
     try {
+      let page=req.query.page-1 || 0
+      let limit=7;
+      let skip=page*limit;
+      
       const products = await productModel.aggregate([
         {
-          $lookup: {
-            from: "categories", // The name of the collection to perform the lookup
-            localField: "category", // The field from the input documents (products collection)
-            foreignField: "_id", // The field from the documents of the "categories" collection
-            as: "categoryDetails" // The alias for the output field
-          }
+            $lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "categoryDetails"
+            }
         },
         {
-          $unwind: "$categoryDetails" // Unwind the array created by $lookup (assuming each product has exactly one category)
+            $unwind: "$categoryDetails"
         },
         {
-          $project: {
-            "_id": 1,
-            "name": 1,
-            "price": 1,
-            "images": 1,
-            "stock": 1,
-            "status": 1,
-            "description": 1,
-            "categoryName": "$categoryDetails.name", // Include the category name in the output
-           
-          }
+            $project: {
+                "_id": 1,
+                "name": 1,
+                "price": 1,
+                "images": 1,
+                "stock": 1,
+                "status": 1,
+                "description": 1,
+                "categoryName": "$categoryDetails.name"
+            }
+        },
+        {
+            $skip: skip // Your skip value here
+        },
+        {
+            $limit: limit // Your limit value here
         }
-      ])
+    ]);
+    
        
        console.log(products);
-        await res.render("./admin/productList", { obj:products, Admin: true });
+       const length = await productModel.find().count()
+      
+    let i=1
+    let pages=[]
+    while(i<=(Math.ceil(length/limit))){
+      pages.push(i)
+      i++
+    }
+    page>1?prev=page-1:prev=1
+    page<Math.ceil(length/limit)?next=page+2:next=Math.ceil(length/limit)
+        await res.render("./admin/productList", { obj:products, Admin: true,pages:pages,prev,next });
     } catch (err) {
         console.log(err);
         res.redirect('/admin/error')
@@ -121,7 +141,7 @@ const unlistProduct = async (req, res) => {
       res.redirect("/admin/products");
     } catch (error) {
       console.error(error);
-      res.status(500).send("Internal Server Error");
+      res.redirect('/admin/error')
     }
   };
   
@@ -172,7 +192,7 @@ const unlistProduct = async (req, res) => {
     const uploadedImages=req.session.uploadedImages
       
      
-      res.render("./admin/updateProduct", { product:arr[0],category:obj,uploadedImages, Admin: true });
+      res.render("./admin/updateProduct", { product:arr[0],category:obj,uploadedImages, Admin: true,pages:[1,2,3,4,5] });
     } catch (error) {
       console.log(error);
       res.redirect('/admin/error')

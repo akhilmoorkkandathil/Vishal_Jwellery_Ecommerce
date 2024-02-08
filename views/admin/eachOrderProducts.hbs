@@ -1,25 +1,28 @@
 <section>
     <div class="container mt-5">
   <h2 class="mb-4">Ordered Products</h2>
-  
-  <div class="row">
-    {{#each orderedProducts}}
-      <div class="col-md-4 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <div>
-              <img src={{image}} alt="">
-            </div>
-            <h5 class="card-title">{{productName}}</h5>
-            <p class="card-text">Price: {{price}}/-</p>
-            <p class="card-text">Quantity: {{quantity}}</p>
-            <p class="card-text">Purchase Date: {{purchaseDate}}</p>
-            <p class="card-text">Status: {{status}}</p>
-          </div>
-        </div>
-      </div>
-    {{/each}}
+   <div class="row">
+    <table class="table" id="table" style="background-color: white;">
+                   
+                    <tbody class="table-border-bottom-0">
+                      {{#each orderedProducts}}
+                      <tr class="d-flex align-items-center justify-content-around">
+                        <td>
+                              <img style="border-radius: 0; width: 200px; height: 200px;" src="{{image}}" alt="Product Image">
+                        </td>
+                        <td class="my-auto"> <strong>{{productName}}</strong></td>
+                        <td>Q: {{quantity}}</td>
+                        
+                        <td>{{price}}/-</td>
+                        <td>{{purchaseDate}}</td>
+                        <td>{{status}}</td>
+                        <td>{{reason}}</td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+   
   </div>
-
+  
 </div>
 </section>

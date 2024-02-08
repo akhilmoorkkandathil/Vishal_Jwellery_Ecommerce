@@ -10,6 +10,7 @@
           <ul class="list-group">
             <li class="list-group-item"><a href="address">My Address</a></li>
             <li class="list-group-item"><a href="orders">My Orders</a></li>
+            <li class="list-group-item"><a href="wallet">My Wallet</a></li>
             <li class="list-group-item"><a href="logout">Logout</a></li>
           </ul>
         </div>
@@ -53,18 +54,18 @@
                             </button>
                             <div class="dropdown-menu">
                         {{#if (eq this.status 'pending')}}
-                            <a class="dropdown-item" href="cancelOrder/{{this.orderId}}">
-                                <i class="bx bx-edit-alt me-1"></i> Cancel
-                            </a>
-                        {{else if (eq this.status 'Shipped')}}
-                            <a class="dropdown-item" href="cancelOrder/{{this.orderId}}">
-                                <i class="bx bx-edit-alt me-1"></i> Cancel
-                            </a>
-                        {{else if (eq this.status 'Delivered')}}
-                            <a class="dropdown-item" href="returnOrder/{{this.orderId}}">
-                                <i class="bx bx-trash me-1"></i> Return
-                            </a>
-                        {{/if}}
+    <a class="dropdown-item" href="#" onclick="cancelOrder('{{this.orderId}}')">
+        <i class="bx bx-edit-alt me-1"></i> Cancel
+    </a>
+{{else if (eq this.status 'Shipped')}}
+    <a class="dropdown-item" href="#" onclick="cancelOrder('{{this.orderId}}')">
+        <i class="bx bx-edit-alt me-1"></i> Cancel
+    </a>
+{{else if (eq this.status 'Delivered')}}
+    <a class="dropdown-item" href="#" onclick="returnOrder('{{this.orderId}}')">
+        <i class="bx bx-trash me-1"></i> Return
+    </a>
+{{/if}}
                         <a class="dropdown-item" href="myOrders/{{this.orderId}}">
                             <i class="bx bx-info-circle me-1"></i> View
                         </a>
@@ -78,6 +79,42 @@
         {{/if}}
     </div>
 </div>
+{{#if pages}}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Start Column 1 -->
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    
+                                    <li class="page-item d-flex">
+                                        <a class="page-link" href="orders?page={{prev}}" >
+                                            <div class="page-box"> < </div>
+                                            
+                                        </a>
+                                        {{#each pages}}
+                                        <a class="page-link" href="orders?page={{this}}" data-page="{{this}}">
+                                            
+                                            
+                                            <div class="page-box">{{this}}</div>
+                                            
+                                        </a>
+                                        {{/each}}
+                                        <a class="page-link" href="orders?page={{next}}" >
+                                            <div class="page-box"> > </div>
+                                            
+                                        </a>
+                                        
+                                    </li>
+                                    
+                                   
+                                </ul>
+                            </nav>
+                            <!-- End Column 1 -->
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
 
 
       <!-- Button to add new address -->
@@ -88,3 +125,20 @@
   </div>
 </div>
 </section>
+<script>
+    function cancelOrder(orderId) {
+        const reason = prompt("Please enter the reason for canceling the order:");
+        if (reason !== null) {
+            // User clicked OK, handle canceling order
+            window.location.href = `cancelOrder/${orderId}?reason=${encodeURIComponent(reason)}`;
+        }
+    }
+
+    function returnOrder(orderId) {
+        const reason = prompt("Please enter the reason for returning the order:");
+        if (reason !== null) {
+            // User clicked OK, handle returning order
+            window.location.href = `returnOrder/${orderId}?reason=${encodeURIComponent(reason)}`;
+        }
+    }
+</script>

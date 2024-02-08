@@ -47,6 +47,9 @@ const orderschema=mongoose.Schema({
         },
         updatedAt:{
             type:Date,
+        },
+        reason:{
+            type:String
         }
 });
 

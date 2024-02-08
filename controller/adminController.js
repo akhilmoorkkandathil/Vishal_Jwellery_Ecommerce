@@ -6,7 +6,8 @@ const orderModel=require('../model/orderModel')
 
 const dashboard = async(req, res)=> {
 
-  const admin = await adminModel.find({})
+  try {
+    const admin = await adminModel.find({})
   let adminName = admin[0].name;
   console.log(adminName);
         const ordersCount = await orderModel.find({}).count();
@@ -86,27 +87,41 @@ const dashboard = async(req, res)=> {
           let total = parseInt(payments[0].totalAmount/1000)
 
     await res.render('./admin/dashboard',{Admin:true,adminName,ordersCount,payments:payments[0].payments,total:total,orderCounts:orderCounts,totalOrdersByCategory:totalOrdersByCategory})
+  } catch (error) {
+    res.redirect('/admin/error')
+  }
 
 }
 
 
 
 const adminLogin = async(req,res)=>{
-    await res.render('./admin/adminLogin',{Single:true})
+    try {
+      await res.render('./admin/adminLogin',{Single:true})
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 
 const addCoupen = async(req,res)=>{
-    await res.render('./admin/addCoupen',{Admin:true})
+    try {
+      await res.render('./admin/addCoupen',{Admin:true})
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 
 const coupen = async (req,res)=>{
-    await res.render('./admin/coupenList',{Admin:true})
+    try {
+      await res.render('./admin/coupenList',{Admin:true})
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 const logOut = (req, res) => {
-  console.log("Logging out");
   
   // Clear the session variable
   req.session.isadAuth = false;
@@ -121,20 +136,27 @@ const logOut = (req, res) => {
       res.clearCookie('myCookie');
       
       // Redirect to the logout page or wherever you want after logout
-      res.redirect("/admin/");
+      res.redirect("/admin");
     }
   });
 };
 
 const errorPage = async (req,res) => {
-  await res.render('./admin/errorPage',{Single:true})
+  try {
+    await res.render('./admin/errorPage',{Single:true})
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 
 
 const userList = async(req,res)=>{
   try {
-    const users = await userModel.find();
+    let page=req.query.page-1 || 0
+      let limit=7;
+      let skip=page*limit;
+    const users = await userModel.find().skip(skip).limit(limit);
     // console.log(users);
     let obj=[]
         let maps =users.map((item)=>{
@@ -150,10 +172,20 @@ const userList = async(req,res)=>{
         console.log(obj);
        
         req.session.isadAuth = true;
-    res.render("./admin/customerList", { users: obj,Admin:true });
+        const length = await userModel.find().count()
+        page>1?prev=page-1:prev=1
+        page<Math.ceil(length/limit)?next=page+2:next=Math.ceil(length/limit)
+    let i=1
+    let pages=[]
+    while(i<=(Math.ceil(length/limit))){
+      pages.push(i)
+      i++
+    }
+    res.render("./admin/customerList", { users: obj,Admin:true,pages:pages,next,prev });
+    //res.json
 } catch (error) {
   console.log(error);
-  res.send(error);
+  res.redirect('/error')
 }
 }
 
@@ -161,14 +193,12 @@ const userList = async(req,res)=>{
 ///delete user
 const deleteUser = async (req, res) => {
   try {
-    console.log("=====================1");
     const id = req.params.id;
     await userModel.deleteOne({ _id: id });
     res.redirect("/admin/customers");
   } catch (error) {
-    console.log("=====================1");
     console.log(error);
-    res.send(error);
+    res.redirect('/admin/error');
   }
 };
 
@@ -189,12 +219,17 @@ const blockUser = async (req, res) => {
     res.redirect("/admin/customers");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.redirect('/admin/error')
   }
 };
 
 const orders = async(req,res)=>{
-  const orders = await orderModel.find().sort({ createdAt: -1, orderId: -1 })
+  let page=req.query.page-1 || 0
+      let limit=5;
+      let skip=page*limit;
+      
+      
+  const orders = await orderModel.find().sort({ createdAt: -1, orderId: -1 }).skip(skip).limit(limit)
   let obj=[]
         let maps =orders.map((item)=>{
             let test={
@@ -208,13 +243,22 @@ const orders = async(req,res)=>{
             }
             obj.push(test)
         })
-  console.log(orders);
+        const length = await orderModel.find().count()
+  let i=1
+    let pages=[]
+    while(i<=(Math.ceil(length/limit))){
+      pages.push(i)
+      i++
+    }
+    page>1?prev=page-1:prev=1
+    page<Math.ceil(length/limit)?next=page+2:next=Math.ceil(length/limit)
+
   req.session.isadAuth = true;
-    await res.render('./admin/orderList',{Admin:true,orders:obj});
+    await res.render('./admin/orderList',{Admin:true,orders:obj,pages:pages,prev:prev,next:next});
 };
 
 const products = async(req,res)=>{
-    await res.render('./admin/productList',{Admin:true});
+    await res.render('./admin/productList',{Admin:true,pages:[1,2,3,4,5]});
 };
 
 //@desc login a admin

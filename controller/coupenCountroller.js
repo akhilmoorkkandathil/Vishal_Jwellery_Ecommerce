@@ -31,7 +31,7 @@ module.exports = {
             })
             res.render('./admin/coupenList',{Admin:true,coupens:obj})
         } catch (error) {
-            res.Redirect('/admin/error')
+            res.redirect('/admin/error')
         }
     },
 
@@ -218,7 +218,7 @@ module.exports = {
           
         } catch (err) {
           console.log(err);
-          res.render("users/serverError")
+          res.redirect('/admin/error')
       }
       },
       
@@ -262,7 +262,7 @@ module.exports = {
         }
         catch (err) {
           console.log(err);
-          res.render("users/serverError")
+          res.redirect('/admin/error')
       }
     }
 }

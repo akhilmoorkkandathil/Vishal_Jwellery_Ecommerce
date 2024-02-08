@@ -133,7 +133,7 @@ module.exports = {
     res.redirect('/cart')
 
   } catch (error) {
-    
+    res.redirect('/admin/error')
   }
 } ,
 
@@ -148,7 +148,7 @@ module.exports = {
 
   } catch (error) {
     console.log(error);
-    res.redirect('/')
+    res.redirect('/admin/error')
   }
 },
 
@@ -188,7 +188,7 @@ updateQuantity : async (req,res) => {
     res.json({ success: true, cart });
  } catch (error) {
     console.error('Error updating quantity:', error);
-    res.redirect('/error');
+    res.redirect('/admin/error')
  }
 },
 productQuantity : async (req,res) => {
@@ -210,7 +210,7 @@ productQuantity : async (req,res) => {
    
 } catch (error) {
    console.error('Error updating quantity:', error);
-   res.redirect('/error');
+   res.redirect('/admin/error')
 }
 }
 

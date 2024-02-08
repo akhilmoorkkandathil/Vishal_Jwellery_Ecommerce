@@ -255,6 +255,10 @@
 							  <input type="radio" name="paymentOption" value="Razorpay" id="paymentOption2" onchange="updateHiddenField(this)">
 							  Razorpay
 							</label><br>
+							<label>
+							  <input type="radio" name="paymentOption" value="Wallet" id="paymentOption2" onchange="updateHiddenField(this)">
+							  Walet
+							</label><br>
 
 							<br><br>
 							<input type="hidden" name="selectedPaymentOption" id="selectedPaymentOption">
@@ -277,6 +281,207 @@
 		<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+	async function  razorpay(){
+		let amountToPay=document.getElementById('cartotal').innerText; //document.getElementById('cartotal').innerText;
+		var pay=document.querySelector('input[name="paymentOption"]:checked');
+		var quantity=document.getElementById('proQunatity').innerText;
+		let proId = document.getElementById('proId').innerText;
+		console.log("Quantity:"+quantity+" "+proId)
+		console.log("======sfsf========"+amountToPay)
+
+		fetch('/productQuantity', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            productId: proId,
+         }),
+      })
+      .then(response => {
+		console.log(":::RSPONSE============")
+         if (!response.ok) {
+            throw new Error('Network response was not ok');
+         }
+         return response.json();
+      })
+      .then(data => {
+		const stockQuantity = data.product.stock;
+  console.log("Stock Quantity:", stockQuantity);
+        if(stockQuantity==0){
+			Swal.fire({
+			text: 'This product is not available',
+			icon: 'error',
+			confirmButtonText: 'OK',
+			customClass: {
+				title: 'text-danger',
+				popup: 'swal2-popup-custom',
+				confirmButton: 'btn btn-danger'
+			},
+			showCancelButton: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: false,
+			timer: 3000 
+			});
+		}else if(stockQuantity < quantity){
+			Swal.fire({
+			text: 'Only less quantity of products are available',
+			icon: 'error',
+			confirmButtonText: 'OK',
+			customClass: {
+				title: 'text-danger',
+				popup: 'swal2-popup-custom',
+				confirmButton: 'btn btn-danger'
+			},
+			showCancelButton: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: false,
+			timer: 3000 
+			});
+		}else{
+			if(!pay){
+			Swal.fire({
+			text: 'please select a payment option',
+			icon: 'error',
+			confirmButtonText: 'OK',
+			customClass: {
+				title: 'text-danger',
+				popup: 'swal2-popup-custom',
+				confirmButton: 'btn btn-danger'
+			},
+			showCancelButton: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: false,
+			timer: 3000 
+			});
+
+		}else if(pay.value=='Wallet'){
+			try{
+				fetch('/walletTransaction', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            amount: amountToPay,
+         }),
+      })
+      .then(response => {
+		console.log(":::RSPONSE============")
+         if (!response.ok) {
+            throw new Error('Network response was not ok');
+         }
+         return response.json();
+      })
+      .then(data => {
+		if (data.success) {
+        console.log(pay.value, "000000");
+        document.getElementById('orderForm').action = '/placeOrder';
+        document.getElementById('orderForm').method = 'post';
+        document.getElementById('orderForm').submit();
+      } else {
+        console.log("cccc");
+        Swal.fire({
+          text: "You Don't have Enough money in Wallet",
+          icon: 'error',
+          confirmButtonText: 'OK',
+          customClass: {
+            title: 'text-danger',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-danger'
+          },
+          showCancelButton: false,
+          showCloseButton: true,
+          showLoaderOnConfirm: false,
+          timer: 3000
+        });
+        console.log("came else but....");
+      }
+	  })
+				//==================================================================================================================================//
+			}catch{
+				console.error("An error occurred during wallet transaction:", error);
+			}
+		}else if(pay.value=='Razorpay'){
+		console.log("upi total","ppppppp");
+		console.log(amountToPay)
+
+		var options = {
+		"key": "rzp_test_pLc9MoYbVxqB7b",
+		"amount": (amountToPay*100).toString(),
+		"name": "Vishal",
+		"description": "Test Transaction",
+		"image": "https://example.com/your_logo",
+		"order_id": orderId, 
+		"handler": function (response){
+		alert(response.razorpay_payment_id);
+		document.getElementById('orderForm').action = '/placeOrder';
+		document.getElementById('orderForm').method = 'post'; 
+
+		// Submit the form
+		document.getElementById('orderForm').submit();
+        },
+		"theme": {
+		"color": "orange"
+		},
+		};
+		console.log(options);
+		var rzp1 = new Razorpay(options);
+		rzp1.on('payment.failed', function (response){
+				alert(response.error.code);
+				alert(response.error.description);
+				alert(response.error.source);
+				alert(response.error.step);
+				alert(response.error.reason);
+				alert(response.error.metadata.order_id);
+				alert(response.error.metadata.payment_id);
+		});
+			rzp1.open();
+
+
+    		e.preventDefault();
+
+
+            var orderId;
+			$(document).ready(function(){
+				var settings = {
+			"url": "/createOrder",
+			"method": "POST",
+			"timeout": 0,
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"data": JSON.stringify({
+				"amount": amountToPay*100
+			}),
+			};
+			
+
+			$.ajax(settings).done(function (response) {
+
+			orderId=response.orderId;
+			console.log(orderId);
+			$("button").show();
+			});
+			});
+
+                
+            }else{
+				document.getElementById('orderForm').action = '/placeOrder';
+				document.getElementById('orderForm').method = 'post'; // Replace with your actual URL
+				document.getElementById('orderForm').submit();
+			}
+		}
+        
+      })
+      .catch(error => {
+         console.error('Error updating quantity:', error);
+      });
+}
+</script>
+
 <script>
 			function openModal() {
 			  var modal = document.getElementById('couponModal');
@@ -422,157 +627,5 @@ function couponApply() {
 			}
 			</script>
 
-<script>
-	async function  razorpay(){
-		let amountToPay=document.getElementById('cartotal').innerText; //document.getElementById('cartotal').innerText;
-		var pay=document.querySelector('input[name="paymentOption"]:checked');
-		var quantity=document.getElementById('proQunatity').innerText;
-		let proId = document.getElementById('proId').innerText;
-		console.log("Quantity:"+quantity+" "+proId)
-		console.log("======sfsf========"+amountToPay)
-
-		fetch('/productQuantity', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
-            productId: proId,
-         }),
-      })
-      .then(response => {
-		console.log(":::RSPONSE============")
-         if (!response.ok) {
-            throw new Error('Network response was not ok');
-         }
-         return response.json();
-      })
-      .then(data => {
-		const stockQuantity = data.product.stock;
-  console.log("Stock Quantity:", stockQuantity);
-        if(stockQuantity==0){
-			Swal.fire({
-			text: 'This product is not available',
-			icon: 'error',
-			confirmButtonText: 'OK',
-			customClass: {
-				title: 'text-danger',
-				popup: 'swal2-popup-custom',
-				confirmButton: 'btn btn-danger'
-			},
-			showCancelButton: false,
-			showCloseButton: true,
-			showLoaderOnConfirm: false,
-			timer: 3000 
-			});
-		}else if(stockQuantity < quantity){
-			Swal.fire({
-			text: 'Only less quantity of products are available',
-			icon: 'error',
-			confirmButtonText: 'OK',
-			customClass: {
-				title: 'text-danger',
-				popup: 'swal2-popup-custom',
-				confirmButton: 'btn btn-danger'
-			},
-			showCancelButton: false,
-			showCloseButton: true,
-			showLoaderOnConfirm: false,
-			timer: 3000 
-			});
-		}else{
-			if(!pay){
-			Swal.fire({
-			text: 'please select a payment option',
-			icon: 'error',
-			confirmButtonText: 'OK',
-			customClass: {
-				title: 'text-danger',
-				popup: 'swal2-popup-custom',
-				confirmButton: 'btn btn-danger'
-			},
-			showCancelButton: false,
-			showCloseButton: true,
-			showLoaderOnConfirm: false,
-			timer: 3000 
-			});
-
-		}else if(pay.value=='Razorpay'){
-		console.log("upi total","ppppppp");
-		console.log(amountToPay)
-
-		var options = {
-		"key": "rzp_test_pLc9MoYbVxqB7b",
-		"amount": (amountToPay*100).toString(),
-		"name": "Vishal",
-		"description": "Test Transaction",
-		"image": "https://example.com/your_logo",
-		"order_id": orderId, 
-		"handler": function (response){
-		alert(response.razorpay_payment_id);
-		document.getElementById('orderForm').action = '/placeOrder';
-		document.getElementById('orderForm').method = 'post'; 
-
-		// Submit the form
-		document.getElementById('orderForm').submit();
-        },
-		"theme": {
-		"color": "orange"
-		},
-		};
-		console.log(options);
-		var rzp1 = new Razorpay(options);
-		rzp1.on('payment.failed', function (response){
-				alert(response.error.code);
-				alert(response.error.description);
-				alert(response.error.source);
-				alert(response.error.step);
-				alert(response.error.reason);
-				alert(response.error.metadata.order_id);
-				alert(response.error.metadata.payment_id);
-		});
-			rzp1.open();
-
-
-    		e.preventDefault();
-
-
-            var orderId;
-			$(document).ready(function(){
-				var settings = {
-			"url": "/createOrder",
-			"method": "POST",
-			"timeout": 0,
-			"headers": {
-				"Content-Type": "application/json"
-			},
-			"data": JSON.stringify({
-				"amount": amountToPay*100
-			}),
-			};
-			
-
-			$.ajax(settings).done(function (response) {
-
-			orderId=response.orderId;
-			console.log(orderId);
-			$("button").show();
-			});
-			});
-
-                
-            }else{
-				document.getElementById('orderForm').action = '/placeOrder';
-				document.getElementById('orderForm').method = 'post'; // Replace with your actual URL
-				document.getElementById('orderForm').submit();
-			}
-		}
-        
-      })
-      .catch(error => {
-         console.error('Error updating quantity:', error);
-      });
-}
-</script>
 
 

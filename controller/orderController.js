@@ -26,11 +26,12 @@ key_secret: process.env.RZP_KEY_SECRET
 module.exports = {
 orderPage: async(req,res)=>{
     try {
+      let page=req.query.page-1 || 0
+      let limit=5;
+      let skip=page*limit;
         const userId = req.session.userId;
 
-        const orders = await orderModel.find({userId:userId}).sort({ createdAt: -1 , orderId: -1 })
-        console.log(orders);
-        console.log(orders[0].items);
+        const orders = await orderModel.find({userId:userId}).sort({ createdAt: -1 , orderId: -1 }).skip(skip).limit(limit)
         let obj=[]
     let maps =orders.map((item)=>{
         let test={
@@ -42,9 +43,19 @@ orderPage: async(req,res)=>{
         }
         obj.push(test)
     })
-        await res.render('./user/orderDetails',{login:req.session.user,orders:obj})
+    const length = await orderModel.find({userId:userId}).count()
+    let i=1
+    let pages=[]
+    while(i<=(Math.ceil(length)/limit)){
+      pages.push(i)
+      i++
+    }
+    page>1?prev=page-1:prev=1
+        page<Math.ceil(length/limit)?next=page+2:next=Math.ceil(length/limit)
+        await res.render('./user/orderDetails',{login:req.session.user,orders:obj,pages:pages,prev,next})
     } catch (error) {
         console.log("Orders:",error);
+        res.redirect('/error')
     }
 },
 
@@ -64,7 +75,7 @@ placeOrder: async(req,res) => {
                 userId: req.session.userId,
                 userName: username,
                 items: cartProducts[0].item,
-                totalPrice: req.session.price,
+                totalPrice: req.session.price || cartProducts[0].total,
                 shippingAddress: selectedAddress,
                 paymentMethod: selectedPaymentOption,
                 updatedAt: date.format("YYYY-MM-DD HH:mm"),
@@ -75,13 +86,13 @@ placeOrder: async(req,res) => {
                 await order.save();
                 await cartModel.updateOne({ userId: userId }, { $set: { item: [] } });
                 
-        if(selectedPaymentOption==="COD"){
+        if(selectedPaymentOption==="COD" || selectedPaymentOption==="Wallet"){
         res.redirect('/orderSuccess')
 
         }else{
             console.log("Rasorpay payment started");
             var options = {
-                amount: req.session.price,  // amount in the smallest currency unit
+                amount: req.session.price || cartProducts[0].total,  // amount in the smallest currency unit
                 currency: "INR",
                 receipt: orderId,
                 };
@@ -109,30 +120,40 @@ delAdress: async (req,res) => {
         res.redirect('/checkout')
     } catch (error) {
         console.log(error);
+        res.redirect('/error')
     }
 },
 cacelOrder: async (req,res) => {
     try {
         const orderId = req.params.orderId;
-        console.log(orderId);
+        const reason = req.query.reason; 
+        console.log(orderId,reason);
         const orders = await orderModel.find({orderId:orderId})
         console.log(orders);
         console.log("==============");
+        const options = { upsert: true };
     if(orders[0].status==="pending" || orders[0].status==="Shipped"){
         const filter = { orderId: orderId};
-        const update = { status: "Cancelled" };
+        const update = { 
+          status: "Cancelled",
+          reason: req.query.reason 
+      };
         await orderModel.updateOne(filter, { $set: update });
         await res.redirect('/orders')
     }else if(orders[0].status==="Delivered"){
         const filter = { orderId: orderId };
-        const update = { status: "Return" };
-        await orderModel.updateOne(filter, { $set: update });
+        const update = { 
+          status: "Cancelled",
+          reason: req.query.reason
+      };
+        await orderModel.updateOne(filter,  update ,options);
         await res.redirect('/orders');
     }else{
         await res.redirect('/orders');
     }
     } catch (error) {
         console.log(error);
+        res.redirect('/error')
     }
 },
 orderShipped: async (req,res) => {
@@ -156,6 +177,7 @@ if(order[0].status==="pending"){
     
     } catch (error) {
         console.log(error);
+        res.redirect('/admin/error')
     }
 },
 
@@ -178,6 +200,7 @@ viewOrderdProducts: async (req,res) => {
         res.render('./user/orderedProducts',{order:orders,login:req.session.user})
     } catch (error) {
         console.log(error);
+        res.redirect('/admin/error')
     }
 },
 
@@ -219,6 +242,7 @@ myOrders: async (req, res) => {
             quantity: "$items.quantity",
             purchaseDate: "$createdAt",
             status: "$status",
+            reason:"$reason"
           },
         },
       ]);
@@ -232,6 +256,7 @@ myOrders: async (req, res) => {
             "quantity":item.quantity,
             "purchaseDate":item.purchaseDate.toString().substring(0, 10),
             "image":item.images[0],
+            "reason":item.reason
         }
         obj.push(test)
     })
@@ -247,14 +272,17 @@ myOrders: async (req, res) => {
     }
   },
   
+
   returnOrder:async(req,res)=>{
     try {
       const userId = req.session.userId;
-  
       const id = req.params.id;
+      const reason = req.query.reason; 
+      console.log(reason);
       const update = await orderModel.updateOne(
         { orderId: id },
-        { status: "Returned" }
+        { status: "Returned",reason:reason },
+        {upsert:true}
       );
       const order = await orderModel.findOne({ orderId: id });
       const user = await walletModel.findOne({ userId: userId });
@@ -301,7 +329,7 @@ orderSuccess : async (req,res) => {
     try {
         res.render('./user/orderSuccess',{login:req.session.user})
     } catch (error) {
-        
+      res.redirect('/error')
     }
 },
 salesReport : async (req,res)=> {

@@ -73,6 +73,42 @@
                   </table>
                 </div>
               </div>
+              {{#if pages}}
+                <div class="containe m-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Start Column 1 -->
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    
+                                    <li class="page-item d-flex">
+                                        <a class="page-link" href="products?page={{prev}}" >
+                                            <div class="page-box"> < </div>
+                                            
+                                        </a>
+                                        {{#each pages}}
+                                        <a class="page-link text-primary" href="products?page={{this}}" data-page="{{this}}">
+                                            
+                                            
+                                            <div class="page-box">{{this}}</div>
+                                            
+                                        </a>
+                                        {{/each}}
+                                        <a class="page-link" href="products?page={{next}}" >
+                                            <div class="page-box"> > </div>
+                                            
+                                        </a>
+                                        
+                                    </li>
+                                    
+                                   
+                                </ul>
+                            </nav>
+                            <!-- End Column 1 -->
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
               <!--/ Hoverable Table rows -->
 
               <hr class="my-5" />
