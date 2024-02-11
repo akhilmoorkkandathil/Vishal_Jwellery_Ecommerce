@@ -47,7 +47,7 @@
 					{{#each newproducts}}
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
 						
-						<a class="product-item" href="/{{this._id}}">
+						<a class="product-item" href="productPage/{{this._id}}">
 							<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
 							<h3 class="product-title">{{this.name}}</h3>
 							<strong class="product-price">Only {{this.price}}/-</strong>
@@ -80,7 +80,7 @@
 				<!-- Start Column 1 -->
 				{{#each this.products}}
 				<div class="col-12 col-md-4 col-lg-3 mb-5">
-					<a href="{{this._id}}" class="product-link">
+					<a href="productPage/{{this._id}}" class="product-link">
 					<div class="product-item">
 						<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
 						<h3 class="product-title">{{this.name}}</h3>

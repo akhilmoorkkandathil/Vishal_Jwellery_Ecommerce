@@ -2,12 +2,11 @@
 
               <!-- Hoverable Table rows -->
               <div class="card mx-4">
-                <h5 class="card-header">Currently active coupens</h5>
+                <h5 class="card-header">Categories</h5>
                 <div class="table-responsive text-nowrap">
                   <table class="table table-hover">
                     <thead>
                       <tr>
-                        <th>Sl.No</th>
                         <th> Category Name</th>
                         <th>Description</th>
                         <th>status</th>
@@ -17,7 +16,6 @@
                     <tbody class="table-border-bottom-0">
                       {{#each obj}}
                       <tr>
-                        <td>1</td>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{this.name}}</strong></td>
                         <td>{{this.description}}</td>
                         <td>

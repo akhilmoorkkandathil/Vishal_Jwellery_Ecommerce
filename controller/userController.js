@@ -148,7 +148,7 @@ const login = async(req,res)=>{
      
       await res.render('./user/login',{Single:true})
     } catch (error) {
-      return res.status(500).json({ message: "Internal server error" });
+      res.redirect('/error')
     }
 }
 
@@ -169,7 +169,7 @@ const optPage =async (req, res) => {
     try {
         res.render("./user/otpVerification",{Single:true});
     } catch {
-      res.status(200).send("error occured");
+      res.redirect('/error')
     }
   };
 
@@ -186,19 +186,23 @@ const sendOTP = async (phoneNumber, otp) => {
     try {
         const message = await twilioClient.messages.create({
             body: `Your OTP for verification is: ${otp}`,
-            from: '+1 912 228 4094',
+            from: '+16592448308',
             to: "+91 8590948623"
         });
         console.log("sended"+message.sid); // Log the message SID upon successful sending
     } catch (error) {
         console.error(error); // Handle error if message sending fails
-        throw new Error("Failed to send OTP");
+        res.redirect('/error')
     }
 };
 
 
 const phonePage=async(req,res)=>{
-  res.render('./user/phonePage',{Single:true})
+  try {
+    res.render('./user/phonePage',{Single:true})
+  } catch (error) {
+    res.redirect('/error')
+  }
 }
 
 const verifyNumber = async(req,res)=>{
@@ -233,7 +237,7 @@ const verifyNumber = async(req,res)=>{
             res.redirect("/forgototpverify");
     }
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    res.redirect('/error')
   }
 }
 
@@ -261,7 +265,7 @@ const resendOtp=async(req,res)=>{
           await sendOTP(number, otp);
           res.render("./user/otpVerification",{Single:true});
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    res.redirect('/error')
   }
 }
 
@@ -301,10 +305,12 @@ const registerUser = async (req, res) => {
         } else if (!iscpasswordValid) {
           req.flash("error", "Password and Confirm password should match");
           return res.redirect('/register')
-        } else if (numberExist) {
-          req.flash("error", "This number already have an account");
-          return res.redirect('/register')
-        } else if (emailExist) {
+        } 
+        // else if (numberExist) {
+        //   req.flash("error", "This number already have an account");
+        //   return res.redirect('/register')
+        // } 
+        else if (emailExist) {
           req.flash("error", "This email already have an account");
           return res.redirect('/register')
         } else {
@@ -343,7 +349,7 @@ const registerUser = async (req, res) => {
         } 
       }catch (err) {
         console.error("Error:", err);
-        res.send("error");
+        res.redirect('/error')
       }
     
 };
@@ -387,7 +393,7 @@ const verifyotp = async (req, res) => {
      
     } catch (error) {
       console.log(err);
-      res.status(500).send("error occured");
+      res.redirect('/error')
     }
   };
 
@@ -420,7 +426,7 @@ const verifyotp = async (req, res) => {
 
     }
     } catch (error) {
-      console.log(error);
+      res.redirect('/error')
     }
   }
 
@@ -457,7 +463,7 @@ const loginUser = async (req, res) => {
           res.redirect('/')
         
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+      res.redirect('/error')
     }
 };
 
@@ -491,7 +497,7 @@ const loginHome= async (req, res) => {
         
         await res.render('./user/home',{login:true,newproducts:newobj})
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+      res.redirect('/error')
     }
 };
 
@@ -617,6 +623,7 @@ const productPage =async (req,res)=>{
   await res.render('./user/productPage',{products:obj})
   } catch (error) {
     console.log(error);
+    res.redirect('/error')
   }
 }
 
@@ -629,7 +636,7 @@ const logOut = async (req, res) => {
     
   } catch (error) {
     console.log("error");
-    res.send("Error Occured");
+    res.redirect('/error')
   }
 };
 const errorPage = async (req,res) => {
@@ -708,7 +715,7 @@ const toAddAddress =async (req,res)=>{
     }
   } catch (error) {
     console.log("Some errors");
-    return res.redirect('/error')
+     res.redirect('/error')
   }
 }
 
@@ -723,6 +730,7 @@ const editPage = async (req, res) => {
      res.render('./user/updateAddress', { login: true, address:user.address[index],index}); // Pass 'index' to the render function if needed
   } catch (error) {
     console.log("Error:", error);
+    res.redirect('/error')
     // Handle errors accordingly
   }
 };

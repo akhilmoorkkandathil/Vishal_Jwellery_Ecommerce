@@ -16,6 +16,14 @@ const handlebarsHelpers = require('handlebars-helpers')();
 
 const app = express();
 
+app.use(express.static('public', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
+
 app.locals.helpers = handlebarsHelpers;
 const port = process.env.PORT || '3000';
 // view engine setup
@@ -61,9 +69,9 @@ app.use('/admin/myOrders',express.static(path.join(__dirname, 'public/adminAsset
 app.use('/admin',express.static(path.join(__dirname, 'public/adminAssets')));
 app.use("/category",express.static(path.join(__dirname, 'public/userAssets')));
 app.use("/editAddress",express.static(path.join(__dirname, 'public/userAssets')));
-
+app.use("/productPage",express.static(path.join(__dirname, 'public/userAssets')));
 app.use("/myOrders",express.static(path.join(__dirname, 'public/userAssets')));
-
+//productPage
 //myOrders
 
 

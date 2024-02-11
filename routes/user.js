@@ -38,9 +38,10 @@ router.post('/updateUserAddress',userSession.userAuth,userController.updateUserA
 router.get('/deleteAddress/:index',userSession.userAuth,userController.deleteAddress)
 
 router.get('/shop',userController.shopProduct);
+router.get('/productPage/:id',userController.productPage);
 
-router.get('/cart',userSession.userAuth,cartController.cartProducts);
-router.get('/add-to-cart/:id',userSession.userAuth,userSession.userAuth,cartController.addToCart);
+router.get('/cart',cartController.cartProducts);
+router.get('/add-to-cart/:id',userSession.userAuth,cartController.addToCart);
 router.get('/rfcart/:index',userSession.userAuth,cartController.removeProduct)
 router.post('/update-product',userSession.userAuth,cartController.updateProduct)
 router.post('/updateQuantity',userSession.userAuth,cartController.updateQuantity)
@@ -68,9 +69,10 @@ router.post('/walletTransaction',walletController.walletTransaction)
 router.post('/applyCoupon',coupenCountroller.applyCoupon)
 router.post('/revokeCoupon',coupenCountroller.revokeCoupon)
 
+
 router.get('/logout',userController.logOut);
 router.get('/error',userController.errorPage);
-router.get('/:id',userController.productPage);
+
 
 module.exports = router;
 

@@ -257,9 +257,6 @@ const orders = async(req,res)=>{
     await res.render('./admin/orderList',{Admin:true,orders:obj,pages:pages,prev:prev,next:next});
 };
 
-const products = async(req,res)=>{
-    await res.render('./admin/productList',{Admin:true,pages:[1,2,3,4,5]});
-};
 
 //@desc login a admin
 //@router Post admin/login
@@ -284,4 +281,4 @@ const adminLogined = async (req, res) => {
   }
 };
 
-module.exports = {dashboard,adminLogin,addCoupen,coupen,userList,deleteUser,products,orders,logOut,blockUser,adminLogined,errorPage}
+module.exports = {dashboard,adminLogin,addCoupen,coupen,userList,deleteUser,orders,logOut,blockUser,adminLogined,errorPage}

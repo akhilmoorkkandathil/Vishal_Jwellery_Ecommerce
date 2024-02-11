@@ -49,6 +49,9 @@ const userSchema = new mongoose.Schema({
     },
     usedCoupons:
      [{ type: String }],
+    referelCode:{
+        type:String
+    }
 })
 
 const usersModel= mongoose.model("Users",userSchema);
