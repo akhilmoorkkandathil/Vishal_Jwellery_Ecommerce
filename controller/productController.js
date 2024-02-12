@@ -48,7 +48,7 @@ const productAdded = async (req, res) => {
       const result = await cloudinary.uploader.upload(file.path+"a");
       uploadedImages.push(result.url); // Store the secure URL of the uploaded image
     }
-    const { product, category, price, stock, description } = req.body;
+    const { product, category, price, stock, description, offerPrice ,discount} = req.body;
     
     const newProduct = new productModel({
       name: product,
@@ -56,7 +56,9 @@ const productAdded = async (req, res) => {
       price: price,
       stock: stock,
       description: description,
-      images:uploadedImages
+      images:uploadedImages,
+      offerPrice:offerPrice,
+      discount:discount
     });
 
     await newProduct.save();
@@ -97,8 +99,12 @@ const productList = async (req, res) => {
                 "stock": 1,
                 "status": 1,
                 "description": 1,
-                "categoryName": "$categoryDetails.name"
+                "categoryName": "$categoryDetails.name",
+                "offerPrice":1
             }
+        },
+        {
+            $sort: { "_id": -1 } // Sort by _id field in descending order
         },
         {
             $skip: skip // Your skip value here
@@ -165,7 +171,6 @@ const unlistProduct = async (req, res) => {
       const pr=[product]
       req.session.prodId = id
       req.session.uploadedImages=product.images;
-      console.log(req.session.uploadedImages);
       let arr=[]
         let maps =pr.map((item)=>{
             let test={
@@ -176,10 +181,13 @@ const unlistProduct = async (req, res) => {
                 "images":item.images,
                 "stock":item.stock,
                 "status":item.status,
-                "description":item.description
+                "description":item.description,
+                "offerPrice":item.offerPrice,
+                "discount":item.discount
             }
             arr.push(test)
         })
+        console.log(arr);
         const categories = await categoryModel.find({})
     let obj=[]
     let map =categories.map((item)=>{
@@ -222,7 +230,7 @@ const unlistProduct = async (req, res) => {
 
 
 const updatePdt = (proId,productDetails,uploadedImages)=>{
-  
+  console.log(productDetails);
   return new Promise((resolve,reject)=>{
     productModel.updateOne({_id:proId},{
       $set: {
@@ -231,7 +239,10 @@ const updatePdt = (proId,productDetails,uploadedImages)=>{
         stock:productDetails.stock,
         images:uploadedImages,
         category:productDetails.category,
-        description:productDetails.description
+        description:productDetails.description,
+        discount:productDetails.discount,
+        offerPrice:productDetails.offerPrice
+
       }
     }).then((response)=>{
       resolve()
@@ -257,6 +268,7 @@ const updateProduct = async (req, res) => {
     const img=req.session.uploadedImages.concat(uploadedImages)
     updatePdt(id,req.body,img).then(()=>{
       const product = productModel.findById(id);
+      console.log(product);
       req.session.uploadedImages = uploadedImages;
       req.session.isadAuth = true;
       res.redirect("/admin/products");

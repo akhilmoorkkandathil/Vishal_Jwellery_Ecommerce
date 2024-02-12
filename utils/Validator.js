@@ -4,7 +4,7 @@ module.exports = {
 
  // name validation 
  nameValid:(username)=>{
-    usernameRegex=/^[A-Za-z]+$/
+    usernameRegex = /^[A-Za-z ]+$/;
     return username.length >1 && usernameRegex.test(username)
 },
 

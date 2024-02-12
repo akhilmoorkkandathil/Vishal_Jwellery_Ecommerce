@@ -48,23 +48,41 @@
                           <td class="product-name">
                             <h2 class="h5 text-black">{{this.name}}</h2>
                           </td>
-                          <td class="current-price">{{this.price}}</td>
+                          {{#if this.offerPrice}}
+            <td class="current-price">{{this.offerPrice}}</td>
+            {{else}}
+            <td class="current-price">{{this.price}}</td>
+            {{/if}}
+                          
                           <td >
                             <div class="input-group mb-3 ml-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                              <div class="input-group-prepend">
-                              <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.price}}, 'quantity-amount-{{@index}}')" type="button">-</button>
-                              </div>
-                              <input type="text" disabled class="form-control text-center " id="{{this.productId}}" value="{{this.quantity}}"  aria-label="Example text with button addon" aria-describedby="button-addon1">
-                              <div class="input-group-append">
-                              <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.price}}, 'quantity-amount-{{@index}}')" type="button">+</button>
-                              </div>
+                              {{#if this.offerPrice}}
+                                <div class="input-group-prepend">
+                                                  <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.offerPrice}}, 'quantity-amount-{{@index}}')" type="button">-</button>
+                                                  </div>
+                                {{else}}
+                                <div class="input-group-prepend">
+                                                  <button class="btn btn-outline-black" onclick="decrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.price}}, 'quantity-amount-{{@index}}')" type="button">-</button>
+                                                  </div>
+                                {{/if}}
+                                                  
+                                                  <input type="text" disabled class="form-control text-center " id="{{this.productId}}" value="{{this.quantity}}"  aria-label="Example text with button addon" aria-describedby="button-addon1">
+                                                  {{#if this.offerPrice}}
+                                <div class="input-group-append">
+                                                  <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.offerPrice}}, 'quantity-amount-{{@index}}')" type="button">+</button>
+                                                  </div>
+                                {{else}}
+                                <div class="input-group-append">
+                                                  <button class="btn btn-outline-black" onclick="incrementProduct('{{this.productId}}', '{{this.cartId}}',{{this.price}}, 'quantity-amount-{{@index}}')" type="button">+</button>
+                                                  </div>
+                                {{/if}} 
                             </div>
         
                           </td>
                           <td>
                             <div  >
-                              {{!-- <input disabled type="text" class="total-price" value="{{this.total}}"> --}}
-                              <span> ₹<span id="total{{this.productId}}"> {{total}}</span></span>
+                           <span> ₹<span id="total{{this.productId}}"> {{this.total}}</span></span>
+                              
                             </div>
                           </td>
                           <td><a href="rfcart/{{@index}}" class="btn btn-black btn-sm">X</a></td>

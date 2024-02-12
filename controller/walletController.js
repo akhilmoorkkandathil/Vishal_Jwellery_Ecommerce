@@ -3,8 +3,19 @@ const walletModel = require('../model/walletSchema')
 module.exports = {
     walletPage:async(req,res)=>{
         const userId= req.session.userId;
-        const wallet = await walletModel.findOne({ userId: userId });
-        res.render('./user/walletPage',{login:req.session.user,wallet:wallet.wallet})
+        let wallet = await walletModel.findOne({ userId: userId });
+        console.log(wallet);
+        if (!wallet) {
+          wallet = await walletModel.findOneAndUpdate(
+            { userId: userId },
+            { $setOnInsert: { userId: userId, wallet: 0 } }, // Initial balance of 0
+            { upsert: true, new: true });
+            
+            res.render('./user/walletPage', { wallet: wallet });
+        } else {
+          // Wallet already exists, render the wallet page with the existing wallet
+          res.render('./user/walletPage', { wallet: wallet });
+        }
     },
     createWallet:async(req,res)=>{
         try {

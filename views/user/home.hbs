@@ -84,7 +84,11 @@
 					<div class="product-item">
 						<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
 						<h3 class="product-title">{{this.name}}</h3>
-						<strong class="product-price"> Only {{this.price}}/-</strong>
+						{{#if this.offerPrice}}
+            <strong class="product-price"> Only {{this.offerPrice}}/-</strong>
+            {{else}}
+            <strong class="product-price"> Only {{this.price}}/-</strong>
+            {{/if}}
 					</div>
 					</a>
 				</div> 

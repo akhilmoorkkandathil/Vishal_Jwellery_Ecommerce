@@ -56,6 +56,7 @@ const home = async(req,res)=>{
         "name":iteam.name,
         "price":iteam.price,
         "images":iteam.images,
+        "offerPrice":iteam.offerPrice
       }
       newobj.push(test)
       })
@@ -108,7 +109,8 @@ const home = async(req,res)=>{
                   _id: "$$product._id",
                   name: "$$product.name",
                   images: "$$product.images",
-                  price: "$$product.price"
+                  price: "$$product.price",
+                  offerPrice:"$$product.offerPrice"
                 }
               }
             }
@@ -187,7 +189,7 @@ const sendOTP = async (phoneNumber, otp) => {
         const message = await twilioClient.messages.create({
             body: `Your OTP for verification is: ${otp}`,
             from: '+16592448308',
-            to: "+91 8590948623"
+            to: "+91"+phoneNumber,
         });
         console.log("sended"+message.sid); // Log the message SID upon successful sending
     } catch (error) {
@@ -237,7 +239,8 @@ const verifyNumber = async(req,res)=>{
             res.redirect("/forgototpverify");
     }
   } catch (error) {
-    res.redirect('/error')
+    console.log(error);
+    res.redirect('/error');
   }
 }
 
@@ -545,6 +548,7 @@ const shopProduct = async (req,res)=>{
                     "name":iteam.name,
                     "price":iteam.price,
                     "images":iteam.images,
+                    "offerPrice":iteam.offerPrice
                 }
                 obj.push(test)
             })
@@ -615,7 +619,8 @@ const productPage =async (req,res)=>{
                     "images":item.images.slice(0, 6),
                     "stock":item.stock,
                     "status":item.status,
-                    "description":item.description
+                    "description":item.description,
+                    "offerPrice":item.offerPrice
                 }
                 obj.push(test)
             })
@@ -884,8 +889,9 @@ const checkoutPage = async (req, res) => {
 
     const cartItems = await cartModel.findOne({ userId: userId }).populate({
       path: 'item.productId',
-      select: '_id name price stock',
+      select: '_id name price offerPrice stock',
   }).lean();
+
   console.log(cartItems);
   const availableCoupons = await coupenModel.find().lean();
   console.log(availableCoupons);

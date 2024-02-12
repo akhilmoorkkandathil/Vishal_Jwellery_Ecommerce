@@ -46,12 +46,45 @@
           <input
             type="number"
             class="form-control"
-            id="productPrice"
+            id="price"
             name="price"
             value="{{product.price}}"
           />
         </div>
-
+        <div class="mb-3">
+                          <label class="form-label" for="basic-icon-default-email">Percentage Discount</label>
+                          <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bx bx-heart"></i></span>
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="discount"
+                              name="discount"
+                              aria-label="john.doe"
+                              value="{{product.discount}}"
+                              aria-describedby="basic-icon-default-email2"
+                              onchange="calculateTotalPrice()"
+                              
+                            />
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-icon-default-email">Offer Price</label>
+                          <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bx bx-bx bx-dollar"></i></span>
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="finalprice"
+                              name="offerPrice"
+                              aria-label="john.doe"
+                              value="{{product.offerPrice}}"
+                              aria-describedby="basic-icon-default-email2"
+                              min="0" max="80" step="1"
+                              readonly
+                            />
+                          </div>
+                        </div>
         <div class="mb-3">
           <label class="form-label" for="productStock">Quantity</label>
           <input
@@ -93,3 +126,15 @@
     </div>
   </div>
 </div>
+<script>
+function calculateTotalPrice() {
+  const price = parseFloat(document.getElementById('price').value);
+  const discount = parseFloat(document.getElementById('discount').value);
+  const totalPrice = price - (price * discount / 100);
+  if (discount > 80) {
+    alert("Discount cannot exceed 80%");
+    discountInput.value = 80; // Set the value back to 80 if it exceeds
+  }
+  document.getElementById('finalprice').value = totalPrice.toFixed(2);
+}
+</script>

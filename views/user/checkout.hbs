@@ -208,7 +208,7 @@
 					<table class="table site-block-order-table mb-5">
 						<thead>
 						<th>Product</th>
-						<th>Total</th>
+						<th>Price</th>
 						</thead>
 						<tbody>
 						{{#each cartItems.item}}
@@ -217,9 +217,8 @@
 								<p>{{this.productId.name}}</p><strong class="mx-2">x</strong> 
 								<p class="d-none" id="proId">{{this.productId._id}}</p>
 								<p id="proQunatity">{{this.quantity}}</p></td>
-							<td>{{this.productId.price}}
-
-							</td>
+								
+            <td>{{this.price}}</td>
 						</tr>
 						{{/each}}
 						<tr>

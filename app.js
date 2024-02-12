@@ -13,7 +13,6 @@ const flash = require('express-flash')
 const cacheControl = require('cache-control');
 const handlebarsHelpers = require('handlebars-helpers')();
 
-
 const app = express();
 
 app.use(express.static('public', {

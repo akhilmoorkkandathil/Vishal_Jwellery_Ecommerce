@@ -16,14 +16,14 @@ module.exports = {
           cart = await cartModel.findOne({ sessionId: sessionId })
           .populate({
               path: 'item.productId',
-              select: 'images name price stock',
+              select: 'images name price stock offerPrice',
           });
           
       } else {
         
           cart = await cartModel.findOne({ userId: userId }).populate({
               path: 'item.productId',
-              select: '_id images name price',
+              select: '_id images name price offerPrice',
           });
           console.log(cart+"=================");
       }
@@ -47,6 +47,7 @@ module.exports = {
                 "name":item.productId.name,
                 "price":item.productId.price,
                 "images":item.productId.images,
+                "offerPrice":item.productId.offerPrice,
                 "stock":item.stock,
                 "quantity":item.quantity,
                 "userId":item.userId,
@@ -55,7 +56,7 @@ module.exports = {
             }
             obj.push(test)
           });
-          //console.log(obj);
+          console.log(obj);
           req.session.isAuth=true;
           res.render('./user/cart', { products:obj , login:req.session.user});
     
@@ -68,8 +69,10 @@ module.exports = {
     try {
       const pid = req.params.id;
       const product = await productModel.findOne({ _id: pid });
+      console.log(product);
       const userid = req.session.userId;
-      const price = product.price;
+      console.log(product.price,product.offerPrice);
+      const price = product.offerPrice || product.price;
       const stock = product.stock;
       const quantity = 1;
   

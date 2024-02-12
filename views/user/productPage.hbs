@@ -36,7 +36,13 @@
                 <div class="product-details">
                     <h2>{{this.name}}</h2>
                     <p class="product-description">{{this.description}}</p>
-                    <p class="product-price">Price: {{this.price}}</p>
+                    {{#if this.offerPrice}}
+            <strong class="product-price">
+                 Only <del>{{this.price}} </del> {{this.offerPrice}}/-
+            </strong>
+            {{else}}
+            <p class="product-price">Price: {{this.price}}/- Only</p>
+            {{/if}}
                     <div class="coupon-offers">
                         <h4>Available Coupons</h4>
                         <ul>
