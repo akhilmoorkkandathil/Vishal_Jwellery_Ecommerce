@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
     },
     usedCoupons:
      [{ type: String }],
-    referelCode:{
+    referelCode:{ 
         type:String
     }
 })

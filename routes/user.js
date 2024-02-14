@@ -58,16 +58,16 @@ router.get('/orderedProducts/:orderId',userSession.userAuth,orderController.view
 router.post('/createOrder',userController.createOrder)
 router.get('/orderSuccess',userSession.userAuth,orderController.orderSuccess)
 router.get('/myOrders/:id',userSession.userAuth,orderController.myOrders)
-router.get('/returnOrder/:id',orderController.returnOrder)
+router.get('/returnOrder/:id',userSession.userAuth,orderController.returnOrder)
 
 
-router.get('/wallet',walletController.walletPage)
-router.post('/createWallet',walletController.createWallet)
-router.post('/walletTopup',walletController.addToWallet)
-router.post('/walletTransaction',walletController.walletTransaction)
+router.get('/wallet',userSession.userAuth,walletController.walletPage)
+router.post('/createWallet',userSession.userAuth,walletController.createWallet)
+router.post('/walletTopup',userSession.userAuth,walletController.addToWallet)
+router.post('/walletTransaction',userSession.userAuth,walletController.walletTransaction)
 
-router.post('/applyCoupon',coupenCountroller.applyCoupon)
-router.post('/revokeCoupon',coupenCountroller.revokeCoupon)
+router.post('/applyCoupon',userSession.userAuth,coupenCountroller.applyCoupon)
+router.post('/revokeCoupon',userSession.userAuth,coupenCountroller.revokeCoupon)
 
 
 router.get('/logout',userController.logOut);

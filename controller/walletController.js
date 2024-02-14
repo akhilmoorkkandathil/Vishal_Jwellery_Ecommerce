@@ -1,22 +1,25 @@
+const usersModel = require('../model/userSchema');
 const walletModel = require('../model/walletSchema')
 
 module.exports = {
-    walletPage:async(req,res)=>{
-        const userId= req.session.userId;
-        let wallet = await walletModel.findOne({ userId: userId });
-        console.log(wallet);
-        if (!wallet) {
-          wallet = await walletModel.findOneAndUpdate(
-            { userId: userId },
-            { $setOnInsert: { userId: userId, wallet: 0 } }, // Initial balance of 0
-            { upsert: true, new: true });
-            
-            res.render('./user/walletPage', { wallet: wallet });
-        } else {
-          // Wallet already exists, render the wallet page with the existing wallet
-          res.render('./user/walletPage', { wallet: wallet });
-        }
-    },
+  walletPage: async (req, res) => {
+    console.log("===================");
+    const userId = req.session.userId;
+    console.log(userId);
+    const user= await usersModel.findOne({_id:userId}).lean
+    let wallet = await walletModel.findOne({ userId: userId });
+    if (!wallet) {
+      wallet = await walletModel.findOneAndUpdate(
+        { userId: userId },
+        { $setOnInsert: { userId: userId, wallet: 0 } }, // Initial balance of 0
+        { upsert: true, new: true }
+      ).lean;
+    }
+    console.log(wallet);
+    console.log(user); // Make sure user is defined here
+    res.render('./user/walletPage', { wallet: wallet, user: user,login:req.session.userId });
+  }
+  ,
     createWallet:async(req,res)=>{
         try {
             const userId = req.session.userId;
@@ -41,31 +44,15 @@ module.exports = {
             const Amount = parseFloat(req.body.Amount);
             console.log(Amount);
             const wallet = await walletModel.findOne({ userId: userId });
-            if (!wallet) {
-               await walletModel.create({ 
-                userId: userId,
-                wallet:Amount,
-                walletTransactions:[
-                    {
-                        type: "Credited",
-                        amount: Amount,
-                        date: new Date(),
-                      }
-                ]
-             });
-            }else{
-                const wallet = await walletModel.findOne({ userId: userId });
-
-    wallet.wallet += Amount;
-    wallet.walletTransactions.push({
-      type: "Credited",
-      amount: Amount,
-      date: new Date(),
-    });
+                wallet.wallet += Amount;
+                wallet.walletTransactions.push({
+                  type: "Credited",
+                  amount: Amount,
+                  date: new Date(),
+                });
 
     
     await wallet.save();
-            }
             
         
             res.redirect("/wallet");

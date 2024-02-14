@@ -20,6 +20,7 @@ const usersModel = require('../model/userSchema');
 const cartModel = require('../model/cartSchema')
 let objectId = require('mongodb').ObjectId;
 const coupenModel=require('../model/coupenSchema')
+const walletModel=require('../model/walletSchema')
 
 
 //const errorHandler = require('../middlewares/errorhandlerMiddleware')
@@ -192,7 +193,7 @@ const sendOTP = async (phoneNumber, otp) => {
         const message = await twilioClient.messages.create({
             body: `Your OTP for verification is: ${otp}`,
             from: '+16592448308',
-            to: "+91"+phoneNumber,
+            to: "+918590948623",
         });
         console.log("sended"+message.sid); // Log the message SID upon successful sending
     } catch (error) {
@@ -276,6 +277,14 @@ const resendOtp=async(req,res)=>{
 }
 
 
+function generateReferralCode(length = 6) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let referralCode = '';
+  for (let i = 0; i < length; i++) {
+    referralCode += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return referralCode;
+}
 //@desc signup a user
 //@router Post /register
 //@access public
@@ -286,6 +295,22 @@ const registerUser = async (req, res) => {
         const phone = req.body.phone;
         const password = req.body.password;
         const cpassword = req.body.confirm_password;
+        const refcode = req.body.referalcode
+        
+        if(refcode){
+          const referal = await userModel.findOne({ referelCode: refcode })
+          .then(user => {
+            if (user) {
+              walletModel.findOneAndUpdate(
+                { userId: user._id },
+                { $inc: { wallet: 200 }, $push: { walletTransactions: { date: new Date(), type: 'Referral Bonus', amount: 200 } } },
+                { new: true, upsert: true }
+              )
+          
+        }
+      })
+      console.log(referal);
+    }
     
         const isusernameValid = nameValid(username);
         const isEmailValid = emailValid(email);
@@ -321,13 +346,27 @@ const registerUser = async (req, res) => {
           return res.redirect('/register')
         } else {
           const hashedpassword = await bcrypt.hash(password, 10);
+          const referralCode = generateReferralCode();
           const user = new userModel({
             username: username,
             email: email,
             phone: phone,
             password: hashedpassword,
-            status:true
+            status:true,
+            referelCode: referralCode
           });
+          console.log(user._id);
+          await walletModel.create({ 
+            userId: user._id,
+            wallet:0,
+            walletTransactions:[
+                {
+                    type: "Credited",
+                    amount: 0,
+                    date: new Date(),
+                  }
+            ]
+         });
            req.session.user = user;
            req.session.signup = true;
            req.session.forgot = false;
@@ -397,7 +436,7 @@ const verifyotp = async (req, res) => {
         }
      
     } catch (error) {
-      console.log(err);
+      console.log(error);
       res.redirect('/error')
     }
   };
