@@ -66,6 +66,7 @@ const home = async(req,res)=>{
       let arr=[]
       let map =categories.map((cat)=>{
       let val={
+      _id:cat._id,
       name:cat.name
       }
       arr.push(val)
@@ -128,11 +129,12 @@ const home = async(req,res)=>{
         obj.push(test)
         })
         console.log(obj);
-      if(req.session.isAuth ===true){
+      if(req.session.isAuth || req.session.signup){
      
-      await res.render('./user/home',{login:true,newproducts:newobj,categories:arr,products:obj})
+       res.render('./user/home',{login:true,newproducts:newobj,categories:arr,products:obj})
+       req.session.signup=false;
       }else{
-      await res.render('./user/home',{newproducts:newobj,categories:arr,products:obj})
+       res.render('./user/home',{newproducts:newobj,categories:arr,products:obj})
       }   
       
     } catch (error) {
@@ -169,6 +171,7 @@ const register = async(req,res)=>{
 
 const optPage =async (req, res) => {
     try {
+      
         res.render("./user/otpVerification",{Single:true});
     } catch {
       res.redirect('/error')
@@ -193,7 +196,7 @@ const sendOTP = async (phoneNumber, otp) => {
         });
         console.log("sended"+message.sid); // Log the message SID upon successful sending
     } catch (error) {
-        console.error(error); // Handle error if message sending fails
+        console.error("==================="+error+"==================="); // Handle error if message sending fails
         res.redirect('/error')
     }
 };
@@ -290,7 +293,7 @@ const registerUser = async (req, res) => {
         const ispasswordValid = passwordValid(password);
         const iscpasswordValid = confirmpasswordValid(cpassword, password);
 
-        const numberExist = await userModel.findOne({ phone: phone });
+        //const numberExist = await userModel.findOne({ phone: phone });
         const emailExist = await userModel.findOne({ email: email });
 //put it as function
         if (!isusernameValid) {
@@ -328,10 +331,10 @@ const registerUser = async (req, res) => {
            req.session.user = user;
            req.session.signup = true;
            req.session.forgot = false;
-           console.log(req.session.user);
 
           const otp = generateotp();
           console.log(otp);
+          req.session.otp=otp;
           const currentTimestamp = Date.now();
           const expiryTimestamp = currentTimestamp + 60 * 1000;
           const filter = { phone: phone };
@@ -380,7 +383,6 @@ const verifyotp = async (req, res) => {
             if (req.session.signup) {
               console.log(req.session.signup);
               await userModel.create(user);
-              req.session.signup = false;
               res.redirect("/");
             } else if (req.session.forgot) {
               console.log(req.session.forgot);

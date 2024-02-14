@@ -74,7 +74,7 @@
                         <div class="mb-3">
                           <label class="form-label" for="basic-icon-default-email">Final Price</label>
                           <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="bx bx-bx bx-dollar"></i></span>
+                            <span class="input-group-text">INR</span>
                             <input
                               type="number"
                               class="form-control"
@@ -133,10 +133,14 @@
 function calculateTotalPrice() {
   const price = parseFloat(document.getElementById('price').value);
   const discount = parseFloat(document.getElementById('discount').value);
-  const totalPrice = price - (price * discount / 100);
+  const totalPrice = price - (price * discount / 100)
   if (discount > 80) {
     alert("Discount cannot exceed 80%");
-    discountInput.value = 80; // Set the value back to 80 if it exceeds
+    document.getElementById('discount').value=80 // Set the value back to 80 if it exceeds
+  }
+  if (discount < 0) {
+    alert("Discount should above 0%");
+     document.getElementById('discount').value=0 // Set the value back to 80 if it exceeds
   }
   document.getElementById('finalprice').value = totalPrice.toFixed(2);
 }

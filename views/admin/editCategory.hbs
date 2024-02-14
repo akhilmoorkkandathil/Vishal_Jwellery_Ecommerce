@@ -25,13 +25,30 @@
                               type="text"
                               class="form-control"
                               id="basic-icon-default-fullname"
-                              name="catname"
+                              name="catName"
                               aria-label="John Doe"
                               aria-describedby="basic-icon-default-fullname2"
                               value="{{category.name}}"
                             />
                           </div>
                         </div>
+                        <div class="mb-3">
+                        <label class="form-label" for="basic-icon-default-email">Category Discount</label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="bx bx-heart"></i></span>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="discount"
+                            name="catDiscount"
+                            aria-label="john.doe"
+                            value="{{category.discount}}"
+                            aria-describedby="basic-icon-default-email2"
+                            onchange="calculateTotalPrice()"
+                            
+                          />
+                        </div>
+                      </div>
                         <div class="mb-3">
                           <label class="form-label" for="basic-icon-default-company">Description</label>
                           <div class="input-group input-group-merge">
@@ -42,7 +59,7 @@
                               type="text"
                               id="basic-icon-default-company"
                               class="form-control"
-                              name="catdes"
+                              name="catDescription"
                               aria-label="ACME Inc."
                               aria-describedby="basic-icon-default-company2"
                               value="{{category.description}}"
@@ -50,9 +67,19 @@
                           </div>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure to apply the Discount to all Products in {{category.name}} category?')">Update</button>
                       </form>
                       {{/if}}
                     </div>
                   </div>
                 </div>
+<script>
+function calculateTotalPrice() {
+  const discount = parseFloat(document.getElementById('discount').value);
+  if (discount > 50) {
+    alert("Discount cannot exceed 50%");
+  }else if(discount < 50){
+    alert("Discount should above 0%");
+  }
+}
+</script>

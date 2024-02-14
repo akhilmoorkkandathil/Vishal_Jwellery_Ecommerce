@@ -49,6 +49,15 @@ const productAdded = async (req, res) => {
       uploadedImages.push(result.url); // Store the secure URL of the uploaded image
     }
     const { product, category, price, stock, description, offerPrice ,discount} = req.body;
+    const categoryDoc = await categoryModel.findById(category);
+    console.log(categoryDoc);
+
+    let finalOfferPrice
+    if(offerPrice){
+       finalOfferPrice = offerPrice; // Initialize finalOfferPrice with the provided offerPrice
+    }else if (categoryDoc && categoryDoc.discount) {
+      finalOfferPrice = price - (price * categoryDoc.discount / 100);
+    }
     
     const newProduct = new productModel({
       name: product,
@@ -57,7 +66,7 @@ const productAdded = async (req, res) => {
       stock: stock,
       description: description,
       images:uploadedImages,
-      offerPrice:offerPrice,
+      offerPrice:finalOfferPrice,
       discount:discount
     });
 
@@ -77,7 +86,9 @@ const productList = async (req, res) => {
       let page=req.query.page-1 || 0
       let limit=7;
       let skip=page*limit;
-      
+      console.log("============================");
+      const product = await productModel.find()
+      console.log(product);
       const products = await productModel.aggregate([
         {
             $lookup: {
@@ -290,23 +301,19 @@ const addCategory = async (req,res)=>{
 // admin new category adding 
 const addedCategory = async (req, res) => {
   try {
-    console.log("=================1");
-      const catName = req.body.catname;
+    const {catName,catDescription,catDiscount}=req.body;
       let upperCatName=catName.toUpperCase()
-      console.log(upperCatName);
-      const catdes = req.body.catdes;
 
       const categoryExist = await categoryModel.findOne({ name:upperCatName });
       if(categoryExist){
-        console.log("=================2");
         req.flash("error", "This category already exist");
         req.session.isadAuth = true;
         return res.redirect('/admin/addcategory')
       }else{
-        console.log("=================3");
         await categoryModel.insertMany({ 
           name: upperCatName, 
-          description: catdes,
+          description: catDescription,
+          discount:catDiscount,
           status:true 
         });
         res.redirect("/admin/categorylist");
@@ -328,7 +335,8 @@ const catList = async (req,res)=>{
               "_id":item._id,
               "name":item.name,
               "description":item.description,
-              "status":item.status
+              "status":item.status,
+              "discount":item.discount,
           }
           obj.push(test)
       })
@@ -394,7 +402,8 @@ const updatecat = async (req, res) => {
               "_id":item._id,
               "name":item.name,
               "description":item.description,
-              "status":item.status
+              "status":item.status,
+              "discount":item.discount
           }
           obj.push(test)
       })
@@ -412,19 +421,42 @@ const updatecat = async (req, res) => {
 // admin category updating
 const updateCategory = async (req, res) => {
   try {
-      const id = req.params.id;
-      const catName = req.body.catname;
-      let catNameUpper =catName.toUpperCase()
-      const catdes = req.body.catdes;
-      const categoryExist = await categoryModel.findOne({ name:catNameUpper });
-      if(categoryExist){
-        req.flash("error", "This category already exist");
-        return res.redirect('/admin/editcategory/'+id)
-      }
-      await categoryModel.updateOne(
+    const id = req.params.id;
+    const {catName,catDescription,catDiscount}=req.body;
+    let upperCatName=catName.toUpperCase()
+
+    
+      const newCategory= await categoryModel.updateOne(
         { _id: id },
-        { name: catNameUpper, description: catdes }
+        { name: upperCatName,
+           description: catDescription,
+           discount:catDiscount,
+           }
       );
+      console.log(catDiscount+"===============");
+      if (catDiscount) {
+        const discount = parseFloat(catDiscount);
+        await productModel.updateMany(
+          { category: id},
+          [
+            {
+              $set: {
+                offerPrice: {
+                  $subtract: [
+                    "$price",
+                    { $multiply: ["$price", { $divide: [discount, 100] }] }
+                  ]
+                }
+              }
+            }
+          ]
+        );
+      }else{
+        await productModel.updateMany(
+          { category: id, offerPrice: { $exists: true } },
+          { $unset: { offerPrice: "" } }
+        );
+      }
       req.session.isadAuth = true;
       res.redirect("/admin/categorylist");
     

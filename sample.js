@@ -60,3 +60,7 @@
 // let a=[5,1,3,2,3,0,4,5]
 // a.sort((a,b)=>(a===0)-(b===0))
 // console.log(a);
+let n=10
+while(n>0){
+    console.log(n++);
+}

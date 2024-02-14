@@ -8,6 +8,7 @@
                     <thead>
                       <tr>
                         <th> Category Name</th>
+                        <th>Discount</th>
                         <th>Description</th>
                         <th>status</th>
                         <th>Action</th>
@@ -17,6 +18,11 @@
                       {{#each obj}}
                       <tr>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{this.name}}</strong></td>
+                        {{#if this.discount}}
+                        <td>{{this.discount}}%</td>
+                        {{else}}
+                          <td>_</td>
+                        {{/if}}
                         <td>{{this.description}}</td>
                         <td>
                           {{#if this.status}}
@@ -31,7 +37,7 @@
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="/admin/catstatus/{{this._id}}"
+                              <a class="dropdown-item" href="/admin/catstatus/{{this._id}}" onclick="return confirm('Are you sure to change the status of {{this.name}}?')"
                                 ><i class="bx bx-edit-alt me-1"></i> Change status</a
                               >
                               <a class="dropdown-item" href="/admin/editcategory/{{this._id}}"

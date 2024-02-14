@@ -15,10 +15,12 @@ const catschema=new mongoose.Schema({
         required:true,
         default:true
 
+    },
+    discount:{
+        type:Number
     }
     
 })
-
 
 const categoryModel=new mongoose.model("categories",catschema)
 
