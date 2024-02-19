@@ -6,18 +6,51 @@ module.exports = {
     console.log("===================");
     const userId = req.session.userId;
     console.log(userId);
-    const user= await usersModel.findOne({_id:userId}).lean
+    let user= await usersModel.findOne({_id:userId})
+    user=[user]
+    let arr=[]
+    user.map((item)=>{
+      let test={
+          "referelCode":item.referelCode,
+         
+      }
+      arr.push(test)
+  })
     let wallet = await walletModel.findOne({ userId: userId });
+    wallet=[wallet]
+
     if (!wallet) {
       wallet = await walletModel.findOneAndUpdate(
         { userId: userId },
         { $setOnInsert: { userId: userId, wallet: 0 } }, // Initial balance of 0
         { upsert: true, new: true }
-      ).lean;
+      )
     }
+
+    let obj=[]
+    let maps =wallet.map((item)=>{
+        let test={
+            "wallet":item.wallet,
+        }
+        obj.push(test)
+    })
+    let obj2 = [];
+
+wallet.forEach(item => {
+    item.walletTransactions.forEach(transaction => {
+        let test = {
+            "wallet": item.wallet,
+            "date": transaction.date.toString().substring(0, 10),
+            "type": transaction.type,
+            "amount": transaction.amount
+        };
+        obj2.push(test);
+    });
+});
+    
     console.log(wallet);
     console.log(user); // Make sure user is defined here
-    res.render('./user/walletPage', { wallet: wallet, user: user,login:req.session.userId });
+    res.render('./user/walletPage', { wallet: obj[0], user: arr[0],walletHistory:obj2,login:req.session.user });
   }
   ,
     createWallet:async(req,res)=>{

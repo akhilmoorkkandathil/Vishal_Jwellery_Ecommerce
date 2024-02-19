@@ -235,6 +235,8 @@ myOrders: async (req, res) => {
           $project: {
             _id: 1,
             orderId: 1,
+            price:1,
+            totalPrice:1,
             userName: 1,
             productName: "$productDetails.name",
             images:"$productDetails.images",
@@ -250,6 +252,9 @@ myOrders: async (req, res) => {
       let obj=[]
       let maps =result.map((item)=>{
         let test={
+          "orderId":item.orderId,
+          "price":item.price,
+          "totalPrice":item.totalPrice,
             "productName":item.productName,
             "price":item.price,
             "status":item.status,
@@ -259,6 +264,7 @@ myOrders: async (req, res) => {
             "reason":item.reason
         }
         obj.push(test)
+        console.log(obj);
     })
     if(req.session.user){
         res.render('./user/eachOrderProducts',{orderedProducts:obj,login:req.session.user}); // Corrected typo in the redirect URL

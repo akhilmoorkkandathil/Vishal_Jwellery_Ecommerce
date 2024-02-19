@@ -117,13 +117,14 @@
                           </div>
                         </div>
                         <div class="mb-3">
-                          <label class="form-label" for="basic-icon-default-message">Add image</label>
-                          <div class="input-group input-group-merge">
-                            <input type="file" name="image" multiple>
-                          </div>
-                              <canvas id="croppedCanvas" style="display: none;"></canvas>
-
+                            <label class="form-label" for="basic-icon-default-message">Add image</label>
+                            <div class="input-group input-group-merge">
+                                <input type="file" name="image" id="imageInput" multiple>
+                            </div>
+                            <canvas id="croppedCanvas" style="display: none;"></canvas>
                         </div>
+
+
                         <button type="submit" class="btn btn-primary">Add</button>
                       </form>
                     </div>
@@ -144,4 +145,42 @@ function calculateTotalPrice() {
   }
   document.getElementById('finalprice').value = totalPrice.toFixed(2);
 }
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const imageInput = document.getElementById('imageInput');
+    const croppedCanvas = document.getElementById('croppedCanvas');
+
+    imageInput.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const image = new Image();
+            image.src = e.target.result;
+
+            image.onload = function () {
+                croppedCanvas.width = image.width;
+                croppedCanvas.height = image.height;
+
+                const context = croppedCanvas.getContext('2d');
+                context.drawImage(image, 0, 0, image.width, image.height);
+
+                // Show the cropping canvas
+                croppedCanvas.style.display = 'block';
+
+                // Initialize Cropper.js for the selected image
+                const cropper = new Cropper(croppedCanvas, {
+                    aspectRatio: 1, // You can set your desired aspect ratio here
+                    viewMode: 1, // Display the crop box within the canvas
+                    zoomable: false, // Disable zooming
+                });
+            };
+        };
+
+        reader.readAsDataURL(file);
+    });
+});
+
 </script>

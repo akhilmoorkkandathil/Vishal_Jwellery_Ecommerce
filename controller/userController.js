@@ -285,6 +285,7 @@ function generateReferralCode(length = 6) {
   }
   return referralCode;
 }
+
 //@desc signup a user
 //@router Post /register
 //@access public
@@ -295,22 +296,39 @@ const registerUser = async (req, res) => {
         const phone = req.body.phone;
         const password = req.body.password;
         const cpassword = req.body.confirm_password;
-        const refcode = req.body.referalcode
-        
-        if(refcode){
-          const referal = await userModel.findOne({ referelCode: refcode })
-          .then(user => {
-            if (user) {
-              walletModel.findOneAndUpdate(
-                { userId: user._id },
-                { $inc: { wallet: 200 }, $push: { walletTransactions: { date: new Date(), type: 'Referral Bonus', amount: 200 } } },
-                { new: true, upsert: true }
-              )
-          
-        }
-      })
-      console.log(referal);
-    }
+        const refcode = req.body.referalcode;
+        const user = await userModel.findOne({ referelCode: refcode });
+
+        if (user) {
+            console.log(user);
+
+            // Find or create wallet for the referred user
+            let wallet = await walletModel.findOne({ userId: user._id });
+
+            if (!wallet) {
+                // If wallet does not exist, create a new wallet
+                wallet = new walletModel({
+                    userId: user._id,
+                    wallet: 200, // Initial wallet balance for referral offer
+                    walletTransactions: [{
+                        date: new Date(),
+                        type: 'Referral Bonus',
+                        amount: 200
+                    }]
+                });
+            } else {
+                // If wallet exists, update wallet balance and add transaction
+                wallet.wallet += 200; // Add 200 rupees to wallet balance
+                wallet.walletTransactions.push({
+                    date: new Date(),
+                    type: 'Referral Bonus',
+                    amount: 200
+                });
+            }
+            await wallet.save();
+          }
+
+            
     
         const isusernameValid = nameValid(username);
         const isEmailValid = emailValid(email);

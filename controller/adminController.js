@@ -88,6 +88,7 @@ const dashboard = async(req, res)=> {
 
     await res.render('./admin/dashboard',{Admin:true,adminName,ordersCount,payments:payments[0].payments,total:total,orderCounts:orderCounts,totalOrdersByCategory:totalOrdersByCategory})
   } catch (error) {
+    console.log(error);
     res.redirect('/admin/error')
   }
 
@@ -270,6 +271,7 @@ const adminLogined = async (req, res) => {
     
     if (user) {
       req.session.isadAuth = true;
+      console.log("===========hgyjguyg");
       res.redirect("/admin/dashboard");
     } else {
       req.flash("error", "Invalid email or Password");

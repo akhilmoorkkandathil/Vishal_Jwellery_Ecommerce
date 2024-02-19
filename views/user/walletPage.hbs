@@ -27,17 +27,46 @@
                 <div class="col-md-6">
                     <!-- Display wallet amount -->
                     <p>Total Amount in Wallet: <span id="totalAmount"><strong>{{wallet.wallet}}/-</strong> INR</span></p>
+                    {{#if user}}
                     <h5>Referral Code: <strong>{{user.referelCode}}</strong></h5>
                     <p>Description: Refer and earn 200 INR</p>
+                    {{/if}}
                 </div>
                 <form id="orderForm" style="font-family: 'Arial', sans-serif;">
-            <input type="number" id="Amount" name="Amount" placeholder="Enter Amount .." style="border: 1px solid #ccc; padding: 8px; font-weight: bold; margin-right: 10px;">
-            <button onclick="RazorpayWallet(event)" style="background-color: #fff; color: #333; border: 1px solid #ccc; padding: 10px; font-weight: bold; cursor: pointer;">Add To Wallet</button>
-        </form>
-                
+                    <input type="number" id="Amount" name="Amount" placeholder="Enter Amount .." style="border: 1px solid #ccc; padding: 8px; font-weight: bold; margin-right: 10px;">
+                    <button onclick="RazorpayWallet(event)" style="background-color: #fff; color: #333; border: 1px solid #ccc; padding: 10px; font-weight: bold; cursor: pointer;">Add To Wallet</button>
+                </form>
             </div>
-        </div>
+            <div class="d-flex justify-content-center">
+    <h1>Wallet history</h1><br>
+</div>
+
+<section class="user-details-section mt-4 section-container">
+    <div class="d-flex justify-content-center">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th style="text-align: center;">Date</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each walletHistory}}
+                <tr>
+                    <td>{{this.date}}</td>
+                    <td>{{this.type}}</td>
+                    <td>{{this.amount}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
+</section>
+
+
+        </div>
+
 </div>
 
 </div>
