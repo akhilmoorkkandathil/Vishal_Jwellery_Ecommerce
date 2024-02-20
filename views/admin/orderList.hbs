@@ -42,7 +42,7 @@
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="shipped/{{this.orderId}}">
+                              <a class="dropdown-item" href="shipped/{{this.orderId}}?_method=PATCH">
                               {{#if (eq this.status 'pending')}}
                               <i class="bx bx-edit-alt me-1"></i> Shipped
                               {{else if (eq this.status 'Shipped')}}

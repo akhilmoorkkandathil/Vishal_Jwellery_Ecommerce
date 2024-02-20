@@ -4,7 +4,7 @@
       <h5 class="mb-0">Update Product</h5>
     </div>
     <div class="card-body">
-      <form action="/admin/updateproduct/{{product._id}}" method="post" enctype="multipart/form-data">
+      <form action="/admin/updateproduct/{{product._id}}?_method=PUT" method="post" enctype="multipart/form-data">
         {{#if product}}
         
         <div class="mb-3">
@@ -109,7 +109,7 @@
 {{#each product.images as |image index|}}
             <div class="mb-3">
               <img src="{{image}}" alt="" style="width: 100px; height: auto">
-              <a href="/admin/deleteImage?index={{index}}" class="btn btn-danger">Delete</a>
+              <a href="/admin/deleteImage?index={{index}}&_method=DELETE" class="btn btn-danger">Delete</a>
             </div>
           {{/each}}
         <div class="mb-3">

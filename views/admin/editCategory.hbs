@@ -14,7 +14,7 @@
                     </div>
                     <div class="card-body">
                       {{#if category}}
-                      <form action="/admin/updatecategory/{{category._id}}" method="post">
+                      <form action="/admin/updatecategory/{{category._id}}?_method=PUT" method="post">
                         <div class="mb-3">
                           <label class="form-label" for="basic-icon-default-fullname">Category Name</label>
                           <div class="input-group input-group-merge">

@@ -8,7 +8,8 @@
 
             <div class="col-md-8 col-lg-8 pb-4">
                 {{#if address}}
-              <form action="updateAddress/{{index}}" method="post">
+              <form action="updateAddress/{{index}}?_method=PUT" method="post">
+              {{!-- <input type="hidden" name="_method" value="PUT"> --}}
                 <div class="row">
                   <div class="col-6">
                     <div class="form-group">

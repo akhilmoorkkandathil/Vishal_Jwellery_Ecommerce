@@ -12,6 +12,8 @@ const cookieParser = require('cookie-parser');
 const flash = require('express-flash')
 const cacheControl = require('cache-control');
 const handlebarsHelpers = require('handlebars-helpers')();
+const methodOverride = require('method-override');
+
 const errorHandler=require('./middlewares/errorhandlerMiddleware')
 
 const app = express();
@@ -24,6 +26,7 @@ app.use(express.static('public', {
     }
   }
 }));
+
 
 app.locals.helpers = handlebarsHelpers;
 const port = process.env.PORT || '3000';
@@ -63,6 +66,21 @@ app.use(flash())
 
 connectDb();
 
+app.use(methodOverride('_method'));
+app.use( function( req, res, next ) {
+  
+  if ( req.query._method == 'DELETE' ) {
+      
+      req.method = 'DELETE';
+      req.url = req.path;
+  }    
+  if ( req.query._method == 'PATCH' ) {
+      
+    req.method = 'PATCH';
+    req.url = req.path;
+}       
+  next(); 
+});
 
 
 app.use(express.static(path.join(__dirname, 'public/userAssets')));
