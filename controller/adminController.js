@@ -96,7 +96,7 @@ const dashboard = async(req, res)=> {
 
 
 
-const adminLogin = async(req,res)=>{
+const adminLogin = async(req,res ,next)=>{
     try {
       await res.render('./admin/adminLogin',{Single:true})
     } catch (error) {
@@ -105,7 +105,7 @@ const adminLogin = async(req,res)=>{
 }
 
 
-const addCoupen = async(req,res)=>{
+const addCoupen = async(req,res ,next)=>{
     try {
       await res.render('./admin/addCoupen',{Admin:true})
     } catch (error) {
@@ -114,7 +114,7 @@ const addCoupen = async(req,res)=>{
 }
 
 
-const coupen = async (req,res)=>{
+const coupen = async (req,res ,next)=>{
     try {
       await res.render('./admin/coupenList',{Admin:true})
     } catch (error) {
@@ -142,7 +142,7 @@ const logOut = (req, res) => {
   });
 };
 
-const errorPage = async (req,res) => {
+const errorPage = async (req,res ,next) => {
   try {
     await res.render('./admin/errorPage',{Single:true})
   } catch (error) {
@@ -152,7 +152,7 @@ const errorPage = async (req,res) => {
 
 
 
-const userList = async(req,res)=>{
+const userList = async(req,res ,next)=>{
   try {
     let page=req.query.page-1 || 0
       let limit=7;
@@ -186,7 +186,8 @@ const userList = async(req,res)=>{
     //res.json
 } catch (error) {
   console.log(error);
-  res.redirect('/error')
+ error.status = 500;
+      next(error);
 }
 }
 
@@ -224,7 +225,7 @@ const blockUser = async (req, res) => {
   }
 };
 
-const orders = async(req,res)=>{
+const orders = async(req,res ,next)=>{
   let page=req.query.page-1 || 0
       let limit=5;
       let skip=page*limit;

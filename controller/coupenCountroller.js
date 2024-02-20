@@ -11,7 +11,7 @@ const {
   } = require("../utils/Validator");
 
 module.exports = {
-    CoupenPage: async(req,res) => {
+    CoupenPage: async(req,res ,next) => {
         try {
             const coupens = await coupenModel.find({})
             console.log(coupens);
@@ -35,7 +35,7 @@ module.exports = {
         }
     },
 
-    addCoupen: async (req,res) => {
+    addCoupen: async (req,res ,next) => {
         try {
             const {couponCode,minimumPrice,discount,expiry,maxRedeem,couponType}=req.body
 
@@ -94,7 +94,7 @@ module.exports = {
             res.redirect('/admin/error')
         }
     },
-    editCoupenPage: async (req,res) => {
+    editCoupenPage: async (req,res ,next) => {
         try {
             const id = req.query.id;
             req.session.coupenId=id;
@@ -121,7 +121,7 @@ module.exports = {
         }
     },
 
-    editCoupen: async (req,res) => {
+    editCoupen: async (req,res ,next) => {
         try {
             console.log("===================");
             const id = req.session.coupenId;
@@ -143,7 +143,7 @@ module.exports = {
             res.redirect('/admin/error')
           }
     },
-    unlistCoupen: async (req,res) => {
+    unlistCoupen: async (req,res ,next) => {
         try {
             const id = req.query.id;
       const coupen = await coupenModel.findById(id);
@@ -159,7 +159,7 @@ module.exports = {
             res.redirect('/admin/error');
         }
     },
-    deleteCoupen: async (req,res) => {
+    deleteCoupen: async (req,res ,next) => {
         try {
             const id = req.query.id;
       await coupenModel.deleteOne({ _id: id });
@@ -222,7 +222,7 @@ module.exports = {
       }
       },
       
-       revokeCoupon:async(req,res)=>{
+       revokeCoupon:async(req,res ,next)=>{
         try{
       
           const { couponCode, subtotal } = req.body;

@@ -53,7 +53,7 @@ wallet.forEach(item => {
     res.render('./user/walletPage', { wallet: obj[0], user: arr[0],walletHistory:obj2,login:req.session.user });
   }
   ,
-    createWallet:async(req,res)=>{
+    createWallet:async(req,res ,next)=>{
         try {
             const userId = req.session.userId;
             let user = await walletModel
@@ -68,10 +68,11 @@ wallet.forEach(item => {
             res.render("./user/wallet", {  wallet:wallet });
           } catch (err) {
             console.log(err);
-            res.redirect('/error')
+           error.status = 500;
+      next(error);
           }
     },
-    addToWallet:async(req,res)=>{
+    addToWallet:async(req,res ,next)=>{
         try {
             const userId = req.session.userId;
             const Amount = parseFloat(req.body.Amount);
@@ -91,7 +92,8 @@ wallet.forEach(item => {
             res.redirect("/wallet");
           } catch (err) {
             console.log(err);
-            res.redirect('/error')
+           error.status = 500;
+      next(error);
           }
     },
     walletTransaction : async (req, res) => {
@@ -124,7 +126,8 @@ wallet.forEach(item => {
          }
       }  catch (err) {
         console.log(err);
-        res.redirect('/error')
+       error.status = 500;
+      next(error);
     }
     }
     

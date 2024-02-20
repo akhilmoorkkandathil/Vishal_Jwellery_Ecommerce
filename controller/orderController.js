@@ -24,7 +24,7 @@ key_secret: process.env.RZP_KEY_SECRET
 
 
 module.exports = {
-orderPage: async(req,res)=>{
+orderPage: async(req,res ,next)=>{
     try {
       let page=req.query.page-1 || 0
       let limit=5;
@@ -55,11 +55,12 @@ orderPage: async(req,res)=>{
         await res.render('./user/orderDetails',{login:req.session.user,orders:obj,pages:pages,prev,next})
     } catch (error) {
         console.log("Orders:",error);
-        res.redirect('/error')
+       error.status = 500;
+      next(error);
     }
 },
 
-placeOrder: async(req,res) => {
+placeOrder: async(req,res ,next) => {
     try {
         const {selectedPaymentOption} = req.body;
         const userId = req.session.userId;
@@ -97,12 +98,8 @@ placeOrder: async(req,res) => {
                 receipt: orderId,
                 };
                 razorpayInstance.orders.create(options, function(err, order) {
-                if (err) {
-                console.error("Error in patment",err);
-                return res.redirect('/error')
-                }
+                  res.redirect('/orderSuccess')
                 
-                   res.redirect('/orderSuccess')
                 });
             
         }
@@ -110,20 +107,22 @@ placeOrder: async(req,res) => {
                 
     } catch (error) {
         console.log(error);
-        res.redirect('/error')
+       error.status = 500;
+      next(error);
     }
 },
 
-delAdress: async (req,res) => {
+delAdress: async (req,res ,next) => {
     try {
         console.log(req.body);
         res.redirect('/checkout')
     } catch (error) {
         console.log(error);
-        res.redirect('/error')
+       error.status = 500;
+      next(error);
     }
 },
-cacelOrder: async (req,res) => {
+cacelOrder: async (req,res ,next) => {
     try {
         const orderId = req.params.orderId;
         const reason = req.query.reason; 
@@ -153,10 +152,11 @@ cacelOrder: async (req,res) => {
     }
     } catch (error) {
         console.log(error);
-        res.redirect('/error')
+       error.status = 500;
+      next(error);
     }
 },
-orderShipped: async (req,res) => {
+orderShipped: async (req,res ,next) => {
 try {
     const orderId = req.params.id;
     const order = await orderModel.find({orderId: orderId})
@@ -181,7 +181,7 @@ if(order[0].status==="pending"){
     }
 },
 
-viewOrderdProducts: async (req,res) => {
+viewOrderdProducts: async (req,res ,next) => {
     try {
         const orderId = req.params.orderId;
         const userId = req.session.userId;
@@ -279,7 +279,7 @@ myOrders: async (req, res) => {
   },
   
 
-  returnOrder:async(req,res)=>{
+  returnOrder:async(req,res ,next)=>{
     try {
       const userId = req.session.userId;
       const id = req.params.id;
@@ -331,14 +331,15 @@ myOrders: async (req, res) => {
     }
   },
 
-orderSuccess : async (req,res) => {
+orderSuccess : async (req,res ,next) => {
     try {
         res.render('./user/orderSuccess',{login:req.session.user})
     } catch (error) {
-      res.redirect('/error')
+     error.status = 500;
+      next(error);
     }
 },
-salesReport : async (req,res)=> {
+salesReport : async (req,res ,next)=> {
     try {
         const { startDate, endDate } = req.body;
     

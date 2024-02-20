@@ -12,8 +12,10 @@ const cookieParser = require('cookie-parser');
 const flash = require('express-flash')
 const cacheControl = require('cache-control');
 const handlebarsHelpers = require('handlebars-helpers')();
+const errorHandler=require('./middlewares/errorhandlerMiddleware')
 
 const app = express();
+
 
 app.use(express.static('public', {
   setHeaders: (res, path) => {
@@ -77,10 +79,10 @@ app.use("/myOrders",express.static(path.join(__dirname, 'public/userAssets')));
 app.use('/admin',adminRouter)
 app.use('/',userRouter)
  
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+
+app.use(errorHandler)
+
+
 
 
 //use as middleware=========

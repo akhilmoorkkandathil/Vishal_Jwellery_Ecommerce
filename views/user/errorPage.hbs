@@ -52,8 +52,18 @@
 </head>
 <body>
     <div class="error-container">
-        <div class="error-heading">404</div>
-        <div class="error-message">Oops! The page you are looking for does not exist.</div>
+        <div class="error-heading">{{statusCode}}</div>
+        <div class="error-message">
+            {{#if statusCode}}
+                {{#if statusMessage}}
+                    {{statusMessage}}
+                {{else}}
+                    Oops! An error occurred.
+                {{/if}}
+            {{else}}
+                Oops! The page you are looking for does not exist.
+            {{/if}}
+        </div>
         <a href="/" class="back-to-login-btn">Back to Home</a>
     </div>
 </body>

@@ -41,7 +41,7 @@ const userAuth = async (req, res, next) => {
 }
 
 
-const userRegister = (req,res)=>{
+const userRegister = (req,res ,next)=>{
     if(req.session.signup){
         next()
     }else{

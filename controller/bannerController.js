@@ -1,14 +1,14 @@
 const bannerModel =  require('../model/bannerModel')
 
 module.exports = {
-    addBannerPage: (req,res)=>{
+    addBannerPage: (req,res ,next)=>{
         try {
             res.render('./user/addBanner')
         } catch (error) {
             res.redirect('/admin/error')
         }
     },
-    addBanner: async(req,res)=>{
+    addBanner: async(req,res ,next)=>{
         const files = req.files;
     const uploadedImages = [];
     for (const file of files) {

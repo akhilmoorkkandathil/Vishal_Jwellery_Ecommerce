@@ -14,7 +14,7 @@ cloudinary.config({
 });
 
 
-const addProduct = async(req,res)=>{
+const addProduct = async(req,res ,next)=>{
   try {
     // Assuming productModel.find() returns an array of objects
     const categories = await categoryModel.find({status:true})
@@ -291,10 +291,10 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const categories = async (req,res)=>{
+const categories = async (req,res ,next)=>{
     await res.render('./admin/categoryList',{Admin:true})
 }
-const addCategory = async (req,res)=>{
+const addCategory = async (req,res ,next)=>{
     await res.render('./admin/addCategory',{Admin:true})
 }
 
@@ -325,7 +325,7 @@ const addedCategory = async (req, res) => {
   }
 };
 
-const catList = async (req,res)=>{
+const catList = async (req,res ,next)=>{
   try {
 
       const categories = await categoryModel.find()

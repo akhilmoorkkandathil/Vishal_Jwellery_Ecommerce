@@ -44,7 +44,7 @@ const createOrder = async (req, res) => {
 //@desc Home page
 //@router Get /
 //@acess public
-const home = async(req,res)=>{
+const home = async(req,res ,next)=>{
   
     try {
       const newProducts = await productModel.find({ status: true })
@@ -139,7 +139,8 @@ const home = async(req,res)=>{
       }   
       
     } catch (error) {
-      res.redirect('/error')
+     error.status = 500;
+      next(error);
     } 
 }
 
@@ -148,12 +149,13 @@ const home = async(req,res)=>{
 //@desc Login page
 //@router Get /login
 //@acess public
-const login = async(req,res)=>{
+const login = async(req,res ,next)=>{
     try {
      
       await res.render('./user/login',{Single:true})
     } catch (error) {
-      res.redirect('/error')
+     error.status = 500;
+      next(error);
     }
 }
 
@@ -161,7 +163,7 @@ const login = async(req,res)=>{
 //@desc Register page
 //@router Get /register
 //@acess public
-const register = async(req,res)=>{
+const register = async(req,res ,next)=>{
     try {
       res.render('./user/register',{Single:true})
     } catch (error) {
@@ -175,7 +177,8 @@ const optPage =async (req, res) => {
       
         res.render("./user/otpVerification",{Single:true});
     } catch {
-      res.redirect('/error')
+     error.status = 500;
+      next(error);
     }
   };
 
@@ -198,20 +201,22 @@ const sendOTP = async (phoneNumber, otp) => {
         console.log("sended"+message.sid); // Log the message SID upon successful sending
     } catch (error) {
         console.error("==================="+error+"==================="); // Handle error if message sending fails
-        res.redirect('/error')
+       error.status = 500;
+      next(error);
     }
 };
 
 
-const phonePage=async(req,res)=>{
+const phonePage=async(req,res ,next)=>{
   try {
     res.render('./user/phonePage',{Single:true})
   } catch (error) {
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 }
 
-const verifyNumber = async(req,res)=>{
+const verifyNumber = async(req,res ,next)=>{
   try {
     const number=req.body.phone
     req.session.phone=number
@@ -244,11 +249,12 @@ const verifyNumber = async(req,res)=>{
     }
   } catch (error) {
     console.log(error);
-    res.redirect('/error');
+   error.status = 500;
+      next(error);;
   }
 }
 
-const resendOtp=async(req,res)=>{
+const resendOtp=async(req,res ,next)=>{
 
   try {
     const otp = generateotp();
@@ -272,7 +278,8 @@ const resendOtp=async(req,res)=>{
           await sendOTP(number, otp);
           res.render("./user/otpVerification",{Single:true});
   } catch (error) {
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 }
 
@@ -412,7 +419,8 @@ const registerUser = async (req, res) => {
         } 
       }catch (err) {
         console.error("Error:", err);
-        res.redirect('/error')
+       error.status = 500;
+      next(error);
       }
     
 };
@@ -455,16 +463,17 @@ const verifyotp = async (req, res) => {
      
     } catch (error) {
       console.log(error);
-      res.redirect('/error')
+     error.status = 500;
+      next(error);
     }
   };
 
 
-  const newPassword=async(req,res)=>{
+  const newPassword=async(req,res ,next)=>{
     res.render('./user/newPassword',{Single:true})
   }
 
-  const setNewPassword = async(req,res)=>{
+  const setNewPassword = async(req,res ,next)=>{
     try {
       const password = req.body.password;
     const cpassword = req.body.confirm_password;
@@ -488,7 +497,8 @@ const verifyotp = async (req, res) => {
 
     }
     } catch (error) {
-      res.redirect('/error')
+     error.status = 500;
+      next(error);
     }
   }
 
@@ -497,36 +507,36 @@ const verifyotp = async (req, res) => {
 //@desc login a user
 //@router Post /login
 //@access public
-const loginUser = async (req, res) => {
-    
-    try {
-    const { email, password } = req.body;
-    const user = await userModel.findOne({ email:email,status:true });
-    if (!email || !password) {
-        req.flash("error", "Enter Email & Password");
-        return res.redirect('/login')
-    }
+const loginUser = async (req, res , next) => {
+  try {
+      const { email, password } = req.body;
+      const user = await userModel.findOne({ email: email, status: true });
 
-   
-        
-        if (!user) {
-            req.flash("error", "Invalid username or Password");
-            return res.redirect('/login')
-        }
+      if (!email || !password) {
+          req.flash("error", "Enter Email & Password");
+          return res.status(400)
+      }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
+      if (!user) {
           req.flash("error", "Invalid username or Password");
-          return res.redirect('/login')
-        }
-          req.session.isAuth = true;
-          req.session.user = user;
-          req.session.userId=user._id;
-          res.redirect('/')
-        
-    } catch (error) {
-      res.redirect('/error')
-    }
+          return res.status(401)
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+          req.flash("error", "Invalid username or Password");
+          return res.status(401)
+      }
+
+      req.session.isAuth = true;
+      req.session.user = user;
+      req.session.userId = user._id;  // Corrected from users._id
+      res.redirect('/');
+  } catch (error) {
+      console.error(error);
+      error.status = 500;
+      next(error);
+  }
 };
 
 
@@ -559,12 +569,13 @@ const loginHome= async (req, res) => {
         
         await res.render('./user/home',{login:true,newproducts:newobj})
     } catch (error) {
-      res.redirect('/error')
+     error.status = 500;
+      next(error);
     }
 };
 
 
-const shopProduct = async (req,res)=>{
+const shopProduct = async (req,res ,next)=>{
   try {
     let limit =8;
    let page = req.query.page-1 || 0;
@@ -632,13 +643,14 @@ const shopProduct = async (req,res)=>{
           
     await res.render('./user/shop',{products:obj,name:"Shop",login:req.session.user,pages,category:arr,prev,next})
   } catch (error) {
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
     console.log(error);
   }
 }
 
 
-const catProduct = async (req,res)=>{
+const catProduct = async (req,res ,next)=>{
   try {
     let cat = req.params.cat;
   const product = await productModel.find({status:true,category:cat})
@@ -657,12 +669,13 @@ const catProduct = async (req,res)=>{
     await res.render('./user/shop',{products:obj,name:cat})
   } catch (error) {
     console.log(error);
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 }
 
 
-const productPage =async (req,res)=>{
+const productPage =async (req,res ,next)=>{
   try {
     const id = req.params.id;
   const user = req.session.user
@@ -687,7 +700,8 @@ const productPage =async (req,res)=>{
   await res.render('./user/productPage',{products:obj})
   } catch (error) {
     console.log(error);
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 }
 
@@ -700,23 +714,24 @@ const logOut = async (req, res) => {
     
   } catch (error) {
     console.log("error");
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 };
-const errorPage = async (req,res) => {
+const errorPage = async (req,res ,next) => {
   await res.render('./user/errorPage',{Single:true})
 }
-const addAddress = async (req,res)=>{
+const addAddress = async (req,res ,next)=>{
   await res.render('./user/addAddress',{name:"Add Address"})
 }
 
-const myAddress =async(req,res)=>{
+const myAddress =async(req,res ,next)=>{
   const user = req.session.user;
   let login = req.session.isAuth;
   await res.render('./user/myAddress',{user,login})
 }
 
-const toAddAddress =async (req,res)=>{
+const toAddAddress =async (req,res ,next)=>{
   try {
     const { fname,lname,phone,pincode,locality,address,city,state,landmark,altphone,country} = req.body;
     const fnameValid = nameValid(fname);
@@ -779,7 +794,8 @@ const toAddAddress =async (req,res)=>{
     }
   } catch (error) {
     console.log("Some errors");
-     res.redirect('/error')
+    error.status = 500;
+      next(error);
   }
 }
 
@@ -794,7 +810,8 @@ const editPage = async (req, res) => {
      res.render('./user/updateAddress', { login: true, address:user.address[index],index}); // Pass 'index' to the render function if needed
   } catch (error) {
     console.log("Error:", error);
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
     // Handle errors accordingly
   }
 };
@@ -846,22 +863,24 @@ const updateAddress = async (req, res) => {
     await res.redirect('/address');
   } catch (error) {
     console.error('Error updating address:', error);
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 };
 
-const editUserDetails =async(req,res)=>{
+const editUserDetails =async(req,res ,next)=>{
   try {
     const address=req.session.user;
     req.session.isAuth=true
     res.render('./user/editUserDetails',{address});
     
   } catch (error) {
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 }
 
-const updateUserAddress = async(req,res)=>{
+const updateUserAddress = async(req,res ,next)=>{
   try {
     const {fname,lname,email}=req.body;
     const userId = req.session.userId;
@@ -880,7 +899,8 @@ const updateUserAddress = async(req,res)=>{
     req.session.user=user;
     await res.redirect('/address');
   } catch (error) {
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 }
 
@@ -900,7 +920,8 @@ const deleteAddress = async (req, res) => {
   } catch (error) {
     console.error('Error occurred while updating user:', error);
     // Handle error
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 };
 
@@ -934,7 +955,8 @@ const searchProducts = async (req, res) => {
     res.redirect("/");
   } catch (err) {
     console.error(err);
-    res.redirect('/error');
+   error.status = 500;
+      next(error);;
   }
 };
 
@@ -961,11 +983,12 @@ req.session.checkout=true;
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 };
 
-const newDeliveryAddrres = async (req,res) =>{
+const newDeliveryAddrres = async (req,res ,next) =>{
   try {
     const index = req.params.index;
     const user = req.session.user;
@@ -976,7 +999,8 @@ const newDeliveryAddrres = async (req,res) =>{
     req.session.user=user;
     res.redirect('/checkout')
   } catch (error) {
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
   }
 }
 

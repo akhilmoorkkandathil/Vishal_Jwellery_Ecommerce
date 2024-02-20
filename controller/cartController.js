@@ -62,7 +62,8 @@ module.exports = {
     
   } catch (err) {
     console.log(err);
-    res.redirect('/error')
+   error.status = 500;
+      next(error);
 }
 },
    addToCart : async (req, res) => {
@@ -121,7 +122,7 @@ module.exports = {
     }
   },
 
- removeProduct : async(req,res)=> {
+ removeProduct : async(req,res ,next)=> {
   try {
     let index = req.params.index;
     console.log(index);
@@ -140,7 +141,7 @@ module.exports = {
   }
 } ,
 
- updateProduct : async (req,res) => {
+ updateProduct : async (req,res ,next) => {
   try {
     const { productId, newQuantity,cartId } = req.body;
     cartModel.findOneAndUpdate(
@@ -155,7 +156,7 @@ module.exports = {
   }
 },
 
-updateQuantity : async (req,res) => {
+updateQuantity : async (req,res ,next) => {
    const { productId, newQuantity  } = req.body;
    try {
    
@@ -194,7 +195,7 @@ updateQuantity : async (req,res) => {
     res.redirect('/admin/error')
  }
 },
-productQuantity : async (req,res) => {
+productQuantity : async (req,res ,next) => {
   const { productId} = req.body;
   try {
   

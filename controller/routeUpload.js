@@ -3,7 +3,7 @@ const router = express.router();
 const cloudinary = require('../utils/cloudinaryConfig');
 const upload = require("../config/multerSetup")
 
-router.post('/upload',upload.single('image'),function(req,res){
+router.post('/upload',upload.single('image'),function(req,res ,next){
     cloudinary.uploader.upload(req.file.path,function(err,result){
         if(err){
             console.log(err);
