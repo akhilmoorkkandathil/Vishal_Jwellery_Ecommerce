@@ -49,7 +49,7 @@ router.patch("/shipped/:id",Session.adisAuth,orderController.orderShipped);
 router.get('/myOrders/:id',Session.adisAuth,orderController.myOrders);
 router.post('/salesReport',Session.adisAuth,orderController.salesReport);
 
-
+//coupen routers
 router.get('/coupens',Session.adisAuth,coupenCountroller.CoupenPage);
 router.post('/addCoupen',Session.adisAuth,coupenCountroller.addCoupen);
 router.get('/editCoupen',Session.adisAuth,coupenCountroller.editCoupenPage);
@@ -57,7 +57,12 @@ router.put('/editCoupen',Session.adisAuth,coupenCountroller.editCoupen);
 router.get('/unlistCoupen',Session.adisAuth,coupenCountroller.unlistCoupen);
 router.delete('/deleteCoupen',Session.adisAuth,coupenCountroller.deleteCoupen);
 
-router.get('/addbanner',bannerController.addBannerPage)
+//banner routers
+router.get('/bannerList',Session.adisAuth,bannerController.bannerList);
+router.get('/addbanner',Session.adisAuth,bannerController.addBannerPage);
+router.post('/addbanner',Session.adisAuth,upload.array("image",10),bannerController.addBanner);
+router.get('/deleteBanner/:id',Session.adisAuth,bannerController.deleteBanner)
+
 //logout
 router.get("/logout",Session.adisAuth,adminController.logOut);
 

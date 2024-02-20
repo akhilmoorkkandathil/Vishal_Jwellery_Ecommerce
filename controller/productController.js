@@ -29,8 +29,8 @@ const addProduct = async(req,res ,next)=>{
     })
     req.session.isadAuth = true;
     await res.render('./admin/addProduct',{obj,Admin:true,category:obj})
-} catch (err) {
-    console.log(err);
+} catch (error) {
+    console.log(error);
     error.status = 500;
       next(error);
 }
@@ -75,8 +75,8 @@ const productAdded = async (req,res,next) => {
     req.session.uploadedImages = uploadedImages;
     req.session.isadAuth = true;
     res.redirect("/admin/products");
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     error.status = 500;
       next(error);
   }  
@@ -140,8 +140,8 @@ const productList = async (req,res,next) => {
     page>1?prev=page-1:prev=1
     page<Math.ceil(length/limit)?next=page+2:next=Math.ceil(length/limit)
         await res.render("./admin/productList", { obj:products, Admin: true,pages:pages,prev,next });
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
         error.status = 500;
       next(error);
     }
@@ -352,8 +352,8 @@ const catList = async (req,res ,next)=>{
       console.log(obj);
       
       await res.render('./admin/categoryList',{obj,Admin:true})
-  } catch (err) {
-      console.log(err);
+  } catch (error) {
+      console.log(error);
       error.status = 500;
       next(error);
   }

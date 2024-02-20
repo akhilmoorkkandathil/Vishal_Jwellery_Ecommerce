@@ -8,12 +8,10 @@
                       <form action="/admin/addbanner" method="post" enctype="multipart/form-data" >
                         
                         <div class="mb-3">
-                          <label class="form-label" for="basic-icon-default-message">Add image</label>
-                          <div class="input-group input-group-merge">
-                            <input type="file" name="image" multiple>
-                          </div>
-                              <canvas id="croppedCanvas" style="display: none;"></canvas>
-
+                            <label class="form-label" for="basic-icon-default-message">Add image</label>
+                            <div class="input-group input-group-merge">
+                                <input type="file" name="image" id="imageInput">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Add</button>
                       </form>

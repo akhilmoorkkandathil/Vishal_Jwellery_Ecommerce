@@ -21,6 +21,8 @@ const cartModel = require('../model/cartSchema')
 let objectId = require('mongodb').ObjectId;
 const coupenModel=require('../model/coupenSchema')
 const walletModel=require('../model/walletSchema')
+const bannerModel =  require('../model/bannerModel')
+
 
 
 //const errorHandler = require('../middlewares/errorhandlerMiddleware')
@@ -130,12 +132,23 @@ const home = async(req,res ,next)=>{
         obj.push(test)
         })
         console.log(obj);
+
+        const banners=await bannerModel.find({})
+         let obj2=[]
+         const maps = banners.map((x)=>{
+           let y={
+            _id:x._id,
+            images:x.images
+           }
+           obj2.push(y)
+         })
+         console.log(banners);
       if(req.session.isAuth || req.session.signup){
      
-       res.render('./user/home',{login:true,newproducts:newobj,categories:arr,products:obj})
+       res.render('./user/home',{login:true,newproducts:newobj,categories:arr,products:obj,image:obj2[0].images})
        req.session.signup=false;
       }else{
-       res.render('./user/home',{newproducts:newobj,categories:arr,products:obj})
+       res.render('./user/home',{newproducts:newobj,categories:arr,products:obj,image:obj2[0].images})
       }   
       
     } catch (error) {
