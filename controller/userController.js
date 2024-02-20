@@ -28,7 +28,7 @@ const walletModel=require('../model/walletSchema')
 
 
 
-const createOrder = async (req, res) => {
+const createOrder = async (req,res,next) => {
   console.log('body:', req.body);
   var options = {
       amount: 500,
@@ -172,7 +172,7 @@ const register = async(req,res ,next)=>{
 }
 
 
-const optPage =async (req, res) => {
+const optPage =async (req,res,next) => {
     try {
       
         res.render("./user/otpVerification",{Single:true});
@@ -296,7 +296,7 @@ function generateReferralCode(length = 6) {
 //@desc signup a user
 //@router Post /register
 //@access public
-const registerUser = async (req, res) => {
+const registerUser = async (req,res,next) => {
     try {
         const username = req.body.username;
         const email = req.body.email;
@@ -428,7 +428,7 @@ const registerUser = async (req, res) => {
 
 
 // otp verifying page 
-const verifyotp = async (req, res) => {
+const verifyotp = async (req,res,next) => {
     try {
         const enteredotp = req.body.otp;
         const eotp=parseInt(enteredotp)
@@ -541,7 +541,7 @@ const loginUser = async (req, res , next) => {
 
 
 
-const loginHome= async (req, res) => {
+const loginHome= async (req,res,next) => {
    try {
         
         const newProducts = await productModel.find({ status: true })
@@ -705,7 +705,7 @@ const productPage =async (req,res ,next)=>{
   }
 }
 
-const logOut = async (req, res) => {
+const logOut = async (req,res,next) => {
   try {
       req.session.isAuth = false;
       res.clearCookie('myCookie');
@@ -800,7 +800,7 @@ const toAddAddress =async (req,res ,next)=>{
 }
 
 
-const editPage = async (req, res) => {
+const editPage = async (req,res,next) => {
   try {
     let index = req.params.index; // Assuming 'index' is the parameter name you want to capture
     const user = req.session.user;
@@ -816,7 +816,7 @@ const editPage = async (req, res) => {
   }
 };
 
-const updateAddress = async (req, res) => {
+const updateAddress = async (req,res,next) => {
 
   try {
     console.log("==============");
@@ -904,7 +904,7 @@ const updateUserAddress = async(req,res ,next)=>{
   }
 }
 
-const deleteAddress = async (req, res) => {
+const deleteAddress = async (req,res,next) => {
   try {
     let userId = req.session.userId;
     let index = req.params.index;
@@ -926,7 +926,7 @@ const deleteAddress = async (req, res) => {
 };
 
 
-const searchProducts = async (req, res) => {
+const searchProducts = async (req,res,next) => {
   try {
     const searchQuery = req.body.searchProducts;
 
@@ -961,7 +961,7 @@ const searchProducts = async (req, res) => {
 };
 
 
-const checkoutPage = async (req, res) => {
+const checkoutPage = async (req,res,next) => {
   try {
     const user = req.session.user;
     const userId = user._id;

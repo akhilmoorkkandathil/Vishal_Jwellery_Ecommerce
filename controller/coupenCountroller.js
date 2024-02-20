@@ -31,7 +31,8 @@ module.exports = {
             })
             res.render('./admin/coupenList',{Admin:true,coupens:obj})
         } catch (error) {
-            res.redirect('/admin/error')
+            error.status = 500;
+      next(error);
         }
     },
 
@@ -91,7 +92,8 @@ module.exports = {
     }
         } catch (error) {
             console.log(error);
-            res.redirect('/admin/error')
+            error.status = 500;
+      next(error);
         }
     },
     editCoupenPage: async (req,res ,next) => {
@@ -117,7 +119,8 @@ module.exports = {
             console.log(obj);
             res.render('./admin/editCoupen',{Admin:true,coupen:obj})
         } catch (error) {
-            res.redirect('/admin/error');
+            error.status = 500;
+      next(error);
         }
     },
 
@@ -140,7 +143,8 @@ module.exports = {
               res.redirect("/admin/coupens");
           } catch (error) {
             console.log(error);
-            res.redirect('/admin/error')
+            error.status = 500;
+      next(error);
           }
     },
     unlistCoupen: async (req,res ,next) => {
@@ -156,7 +160,8 @@ module.exports = {
       await coupen.save();
       res.redirect("/admin/coupens");
         } catch (error) {
-            res.redirect('/admin/error');
+            error.status = 500;
+      next(error);
         }
     },
     deleteCoupen: async (req,res ,next) => {
@@ -165,10 +170,11 @@ module.exports = {
       await coupenModel.deleteOne({ _id: id });
       res.redirect("/admin/coupens");
         } catch (error) {
-            res.redirect('/admin/error');
+            error.status = 500;
+      next(error);
         }
     },
-     applyCoupon : async (req, res) => {
+     applyCoupon : async (req,res,next) => {
         try {
             console.log("=============");
           const { couponCode, subtotal } = req.body;
@@ -218,7 +224,8 @@ module.exports = {
           
         } catch (err) {
           console.log(err);
-          res.redirect('/admin/error')
+          error.status = 500;
+      next(error);
       }
       },
       
@@ -262,7 +269,8 @@ module.exports = {
         }
         catch (err) {
           console.log(err);
-          res.redirect('/admin/error')
+          error.status = 500;
+      next(error);
       }
     }
 }

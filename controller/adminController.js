@@ -4,7 +4,7 @@ const orderModel=require('../model/orderModel')
 
 
 
-const dashboard = async(req, res)=> {
+const dashboard = async(req,res,next)=> {
 
   try {
     const admin = await adminModel.find({})
@@ -89,7 +89,8 @@ const dashboard = async(req, res)=> {
     await res.render('./admin/dashboard',{Admin:true,adminName,ordersCount,payments:payments[0].payments,total:total,orderCounts:orderCounts,totalOrdersByCategory:totalOrdersByCategory})
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 
 }
@@ -122,7 +123,7 @@ const coupen = async (req,res ,next)=>{
     }
 }
 
-const logOut = (req, res) => {
+const logOut = (req,res,next) => {
   
   // Clear the session variable
   req.session.isadAuth = false;
@@ -193,19 +194,20 @@ const userList = async(req,res ,next)=>{
 
 
 ///delete user
-const deleteUser = async (req, res) => {
+const deleteUser = async (req,res,next) => {
   try {
     const id = req.params.id;
     await userModel.deleteOne({ _id: id });
     res.redirect("/admin/customers");
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error');
+    error.status = 500;
+      next(error);
   }
 };
 
 // product unlisting 
-const blockUser = async (req, res) => {
+const blockUser = async (req,res,next) => {
   try {
     const id = req.params.id;
     const user = await userModel.findById(id);
@@ -221,7 +223,8 @@ const blockUser = async (req, res) => {
     res.redirect("/admin/customers");
   } catch (error) {
     console.error(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 };
 
@@ -264,7 +267,7 @@ const orders = async(req,res ,next)=>{
 //@router Post admin/login
 //@access public
 // admin login action 
-const adminLogined = async (req, res) => {
+const adminLogined = async (req,res,next) => {
   const {email,password}=req.body;
   try {
     
@@ -280,7 +283,8 @@ const adminLogined = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 };
 

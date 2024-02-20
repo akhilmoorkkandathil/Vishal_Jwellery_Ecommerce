@@ -70,6 +70,9 @@ router.get('/orderSuccess',userSession.userAuth,orderController.orderSuccess)
 router.get('/myOrders/:id',userSession.userAuth,orderController.myOrders)
 router.get('/returnOrder/:id',userSession.userAuth,orderController.returnOrder)
 
+//Invoice Download
+router.get('/downloadInvoice/:id',orderController.downloadInvoice)
+
 // Wallet
 router.get('/wallet',userSession.userAuth,walletController.walletPage)
 router.post('/createWallet',userSession.userAuth,walletController.createWallet)

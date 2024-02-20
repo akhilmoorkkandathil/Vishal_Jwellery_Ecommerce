@@ -31,13 +31,14 @@ const addProduct = async(req,res ,next)=>{
     await res.render('./admin/addProduct',{obj,Admin:true,category:obj})
 } catch (err) {
     console.log(err);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
 }
     
 }
 
 
-const productAdded = async (req, res) => {
+const productAdded = async (req,res,next) => {
   try {
     const files = req.files;
     const uploadedImages = [];
@@ -76,12 +77,13 @@ const productAdded = async (req, res) => {
     res.redirect("/admin/products");
   } catch (err) {
     console.log(err);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }  
 };
 
 
-const productList = async (req, res) => {
+const productList = async (req,res,next) => {
     try {
       let page=req.query.page-1 || 0
       let limit=7;
@@ -140,11 +142,12 @@ const productList = async (req, res) => {
         await res.render("./admin/productList", { obj:products, Admin: true,pages:pages,prev,next });
     } catch (err) {
         console.log(err);
-        res.redirect('/admin/error')
+        error.status = 500;
+      next(error);
     }
 };
 
-const unlistProduct = async (req, res) => {
+const unlistProduct = async (req,res,next) => {
     try {
       const id = req.params.id;
       const product = await productModel.findById(id);
@@ -158,23 +161,25 @@ const unlistProduct = async (req, res) => {
       res.redirect("/admin/products");
     } catch (error) {
       console.error(error);
-      res.redirect('/admin/error')
+      error.status = 500;
+      next(error);
     }
   };
   
   // product deleting
-  const deleteProduct = async (req, res) => {
+  const deleteProduct = async (req,res,next) => {
     try {
       const id = req.params.id;
       await productModel.deleteOne({ _id: id });
       res.redirect("/admin/products");
     } catch (error) {
       console.log(error);
-      res.redirect('/admin/error')
+      error.status = 500;
+      next(error);
     }
   };
 
-  const editProduct = async (req, res) => {
+  const editProduct = async (req,res,next) => {
     try {
       const id = req.query.id || req.session.proId;
       req.session.proId=id
@@ -214,12 +219,13 @@ const unlistProduct = async (req, res) => {
       res.render("./admin/updateProduct", { product:arr[0],category:obj,uploadedImages, Admin: true,pages:[1,2,3,4,5] });
     } catch (error) {
       console.log(error);
-      res.redirect('/admin/error')
+      error.status = 500;
+      next(error);
     }
   };
 
 
-  const deleteProductImage = async (req, res) => {
+  const deleteProductImage = async (req,res,next) => {
     try {
       
     const index = req.query.index;
@@ -235,7 +241,8 @@ const unlistProduct = async (req, res) => {
       
     } catch (error) {
       console.error(error);
-      res.redirect('/admin/error')
+      error.status = 500;
+      next(error);
     }
   };
 
@@ -263,7 +270,7 @@ const updatePdt = (proId,productDetails,uploadedImages)=>{
 
 
   // updating the  product
-const updateProduct = async (req, res) => {
+const updateProduct = async (req,res,next) => {
   try {
     const uploadedImages = [];
     if(req.files){
@@ -287,7 +294,8 @@ const updateProduct = async (req, res) => {
     
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 };
 
@@ -299,7 +307,7 @@ const addCategory = async (req,res ,next)=>{
 }
 
 // admin new category adding 
-const addedCategory = async (req, res) => {
+const addedCategory = async (req,res,next) => {
   try {
     const {catName,catDescription,catDiscount}=req.body;
       let upperCatName=catName.toUpperCase()
@@ -321,7 +329,8 @@ const addedCategory = async (req, res) => {
    
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 };
 
@@ -345,7 +354,8 @@ const catList = async (req,res ,next)=>{
       await res.render('./admin/categoryList',{obj,Admin:true})
   } catch (err) {
       console.log(err);
-      res.redirect('/admin/error')
+      error.status = 500;
+      next(error);
   }
   
 }
@@ -353,7 +363,7 @@ const catList = async (req,res ,next)=>{
 
 
 // product unlisting 
-const unlistCategory = async (req, res) => {
+const unlistCategory = async (req,res,next) => {
   try {
     const id = req.params.id;
     const Category = await categoryModel.findById(id);
@@ -370,12 +380,13 @@ const unlistCategory = async (req, res) => {
     res.redirect("/admin/categorylist");
   } catch (error) {
     console.error(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 };
 
 // category deleting
-const deletingCategory = async (req, res) => {
+const deletingCategory = async (req,res,next) => {
   try {
       console.log("okay");
     const id = req.params.id;
@@ -385,13 +396,14 @@ const deletingCategory = async (req, res) => {
     console.log("okay deleted");
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 };
 
 
 // admin category update page
-const updatecat = async (req, res) => {
+const updatecat = async (req,res,next) => {
   try {
       const id = req.params.id;
       const cat = await categoryModel.findOne({ _id: id });
@@ -412,14 +424,15 @@ const updatecat = async (req, res) => {
     
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 };
 
 
 
 // admin category updating
-const updateCategory = async (req, res) => {
+const updateCategory = async (req,res,next) => {
   try {
     const id = req.params.id;
     const {catName,catDescription,catDiscount}=req.body;
@@ -462,7 +475,8 @@ const updateCategory = async (req, res) => {
     
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 };
 

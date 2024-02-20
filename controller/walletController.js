@@ -2,7 +2,7 @@ const usersModel = require('../model/userSchema');
 const walletModel = require('../model/walletSchema')
 
 module.exports = {
-  walletPage: async (req, res) => {
+  walletPage: async (req,res,next) => {
     console.log("===================");
     const userId = req.session.userId;
     console.log(userId);
@@ -96,7 +96,7 @@ wallet.forEach(item => {
       next(error);
           }
     },
-    walletTransaction : async (req, res) => {
+    walletTransaction : async (req,res,next) => {
       try {
         console.log("iiiiide ethi mwone..........")
          const userId=req.session.userId

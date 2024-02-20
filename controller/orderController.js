@@ -177,7 +177,8 @@ if(order[0].status==="pending"){
     
     } catch (error) {
         console.log(error);
-        res.redirect('/admin/error')
+        error.status = 500;
+      next(error);
     }
 },
 
@@ -200,11 +201,12 @@ viewOrderdProducts: async (req,res ,next) => {
         res.render('./user/orderedProducts',{order:orders,login:req.session.user})
     } catch (error) {
         console.log(error);
-        res.redirect('/admin/error')
+        error.status = 500;
+      next(error);
     }
 },
 
-myOrders: async (req, res) => {
+myOrders: async (req, res,next) => {
     try {
       const orderId = req.params.id;
       console.log(typeof(orderId));
@@ -274,7 +276,8 @@ myOrders: async (req, res) => {
      
     } catch (error) {
       console.error(error);
-      res.redirect('/admin/error');
+      error.status = 500;
+      next(error);
     }
   },
   
@@ -327,7 +330,8 @@ myOrders: async (req, res) => {
       res.redirect("/orders");
     } catch (err) {
       console.log(err);
-      res.render("/error");
+      error.status = 500;
+      next(error);
     }
   },
 
@@ -484,9 +488,147 @@ salesReport : async (req,res ,next)=> {
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader("Content-Disposition", "attachment; filename=sales.pdf");
         res.status(200).end(pdfBuffer);
-      } catch (err) {
-        console.log(err);
-        res.redirect('/admin/error')
+      } catch (error) {
+        console.log(error);
+        error.status = 500;
+      next(error);
       }
-}
+},
+ downloadInvoice : async (req, res, next) => {
+  try {
+    const orderId = req.params.id;
+    const order = await orderModel.findOne({ orderId: orderId });
+    console.log(order);
+    const formattedDate = order.createdAt.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const products = await orderModel.aggregate([
+      { $match: { orderId: orderId } }, // Match the order by orderId
+      { 
+        $unwind: "$items" // Deconstruct the items array
+      },
+      { 
+        $lookup: {
+          from: "products", // Collection name to lookup
+          localField: "items.productId", // Field in the current collection (order) to match
+          foreignField: "_id", // Field in the referenced collection (products) to match
+          as: "product" // Output array field name
+        }
+      },
+      {
+        $addFields: {
+          // Add product details to the item
+          "items.productDetails": { $arrayElemAt: ["$product", 0] }
+        }
+      },
+      {
+        $project: {
+          _id: 0, // Exclude _id field from output
+          orderId: 1,
+          userId: 1,
+          userName: 1,
+          "items.productId": 1,
+          "items.quantity": 1,
+          "items.total": 1,
+          "items.productDetails.name": 1,
+          "items.productDetails.price": 1,
+          "items.productDetails.offerPrice": 1
+        }
+      }
+    ]);
+    
+    console.log(products[0].items.productDetails);
+    
+    
+    // Construct HTML content for the invoice based on order details
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Order Invoice</title>
+          <style>
+              /* Your CSS styles here */
+              table {
+                width: 100%;
+                border-collapse: collapse;
+              }
+              th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+              }
+              th {
+                background-color: #f2f2f2;
+              }
+          </style>
+      </head>
+      <body>
+      <h2>Order Invoice</h2>
+      <p>Order ID: ${order.orderId}</p>
+      <p>User Name: ${order.userName}</p>
+      <p>Date of Purchase: ${formattedDate}</p>
+      <p>Total Price: ${order.totalPrice}</p>
+      <p><strong>Delivery Address</strong></p>
+      <address>
+  <p>${order.shippingAddress.fname} ${order.shippingAddress.lname}</p>
+  <p>${order.shippingAddress.address}, ${order.shippingAddress.locality}, ${order.shippingAddress.city}</p>
+  <p> ${order.shippingAddress.state} ${order.shippingAddress.pincode}, ${order.shippingAddress.country}</p>
+  <p>Phone: ${order.shippingAddress.phone}</p>
+</address>
+      
+
+<table>
+  <thead>
+    <tr>
+      <th>Product Name</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${products.map(product => `
+      <tr>
+        <td>${product.items.productDetails?.name}</td>
+        <td>${product.items.productDetails?.price}</td>
+        <td>${product.items.quantity}</td>
+        <td>${product.items.total}</td>
+      </tr>
+    `).join('')}
+  </tbody>
+</table>
+
+
+          <p>Total Price:<strong>${order.totalPrice}/-</strong> </p>
+      </body>
+      </html>
+    `;
+
+    // Launch Puppeteer and generate PDF
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlContent);
+    const pdfBuffer = await page.pdf();
+    await browser.close();
+
+    // Write PDF to file
+    const downloadsPath = path.join(os.homedir(), "Downloads");
+    const pdfFilePath = path.join(downloadsPath, "order_invoice.pdf");
+    fs.writeFileSync(pdfFilePath, pdfBuffer);
+
+    // Set response headers and send PDF as attachment
+    res.setHeader("Content-Length", pdfBuffer.length);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=order_invoice.pdf");
+    res.status(200).end(pdfBuffer);
+  } catch (error) {
+    console.log(error);
+    error.status = 500;
+    next(error);
+  }
+},
 }

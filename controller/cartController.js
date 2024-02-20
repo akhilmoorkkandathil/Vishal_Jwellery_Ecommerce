@@ -5,7 +5,7 @@ const objectId = require('mongodb').ObjectId
 
 
 module.exports = {
- cartProducts : async (req, res) => {
+ cartProducts : async (req,res,next) => {
   try {
       const userId = req.session.userId;
       const sessionId = req.session.id;
@@ -66,7 +66,7 @@ module.exports = {
       next(error);
 }
 },
-   addToCart : async (req, res) => {
+   addToCart : async (req,res,next) => {
     try {
       const pid = req.params.id;
       const product = await productModel.findOne({ _id: pid });
@@ -137,7 +137,8 @@ module.exports = {
     res.redirect('/cart')
 
   } catch (error) {
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 } ,
 
@@ -152,7 +153,8 @@ module.exports = {
 
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
   }
 },
 
@@ -192,7 +194,8 @@ updateQuantity : async (req,res ,next) => {
     res.json({ success: true, cart });
  } catch (error) {
     console.error('Error updating quantity:', error);
-    res.redirect('/admin/error')
+    error.status = 500;
+      next(error);
  }
 },
 productQuantity : async (req,res ,next) => {
@@ -214,7 +217,8 @@ productQuantity : async (req,res ,next) => {
    
 } catch (error) {
    console.error('Error updating quantity:', error);
-   res.redirect('/admin/error')
+   error.status = 500;
+      next(error);
 }
 }
 
