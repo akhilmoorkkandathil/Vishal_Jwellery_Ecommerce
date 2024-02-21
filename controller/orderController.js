@@ -489,6 +489,7 @@ if (!fs.existsSync(pdfsDirectory)) {
     fs.mkdirSync(pdfsDirectory);
 }
 
+
 fs.writeFileSync(pdfFilePath, pdfBuffer);
     
         res.setHeader("Content-Length", pdfBuffer.length);

@@ -641,6 +641,7 @@ const shopProduct = async (req,res ,next)=>{
           let arr=[]
           let map = category.map((item)=>{
             let test = {
+              "_id":item._id,
               "name":item.name
             }
             arr.push(test);
