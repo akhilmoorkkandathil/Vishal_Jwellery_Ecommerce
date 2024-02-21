@@ -76,7 +76,7 @@ router.get('/downloadInvoice/:id',orderController.downloadInvoice)
 // Wallet
 router.get('/wallet',userSession.userAuth,walletController.walletPage)
 router.post('/createWallet',userSession.userAuth,walletController.createWallet)
-router.put('/walletTopup',userSession.userAuth,walletController.addToWallet)
+router.post('/walletTopup',userSession.userAuth,walletController.addToWallet)
 router.post('/walletTransaction',userSession.userAuth,walletController.walletTransaction)
 
 // Coupons

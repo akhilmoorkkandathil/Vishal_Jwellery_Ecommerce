@@ -478,11 +478,15 @@ salesReport : async (req,res ,next)=> {
     
         await browser.close();
     
-        const downloadsPath = path.join(os.homedir(), "Downloads");
-        const pdfFilePath = path.join(downloadsPath, "sales.pdf");
-    
-       
-        fs.writeFileSync(pdfFilePath, pdfBuffer);
+        const pdfsDirectory = path.join(__dirname, "pdfs");
+const pdfFilePath = path.join(pdfsDirectory, "order_invoice.pdf");
+
+// Ensure the directory exists, if not create it
+if (!fs.existsSync(pdfsDirectory)) {
+    fs.mkdirSync(pdfsDirectory);
+}
+
+fs.writeFileSync(pdfFilePath, pdfBuffer);
     
         res.setHeader("Content-Length", pdfBuffer.length);
         res.setHeader("Content-Type", "application/pdf");
@@ -616,9 +620,15 @@ salesReport : async (req,res ,next)=> {
     await browser.close();
 
     // Write PDF to file
-    const downloadsPath = path.join(os.homedir(), "Downloads");
-    const pdfFilePath = path.join(downloadsPath, "order_invoice.pdf");
-    fs.writeFileSync(pdfFilePath, pdfBuffer);
+const pdfsDirectory = path.join(__dirname, "pdfs");
+const pdfFilePath = path.join(pdfsDirectory, "order_invoice.pdf");
+
+// Ensure the directory exists, if not create it
+if (!fs.existsSync(pdfsDirectory)) {
+    fs.mkdirSync(pdfsDirectory);
+}
+
+fs.writeFileSync(pdfFilePath, pdfBuffer);
 
     // Set response headers and send PDF as attachment
     res.setHeader("Content-Length", pdfBuffer.length);
