@@ -123,14 +123,15 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="basic-icon-default-message">Add image</label>
+                            <div id="imagePreview" class="mb-3 d-flex">
+        <!-- Image previews will be shown here -->
+    </div>
                             <div class="input-group input-group-merge">
                                 <input type="file" name="image" id="imageInput" multiple>
                             </div>
                             <canvas id="croppedCanvas" style="display: none;"></canvas>
                         </div>
-                        <div id="imagePreview" class="mb-3 d-flex">
-        <!-- Image previews will be shown here -->
-    </div>
+                        
 
                         <button type="submit" class="btn btn-primary">Add Product</button>
                       </form>
@@ -181,7 +182,6 @@
         var files = event.target.files;
         console.log("=========")
         var imagePreview = document.getElementById('imagePreview');
-        var filePreviews = []; // Array to store file previews
 
         imagePreview.innerHTML = ''; // Clear previous previews
 
@@ -196,33 +196,17 @@
                 img.height = 100; // Adjust as needed
                 img.style.marginBottom = '5px'; // Adjust as needed
 
-                var deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
-                deleteButton.classList.add('btn', 'btn-warning'); // Add classes for orange button
-                deleteButton.style.display = 'block'; // Make the button display as block to position it below the image
-                deleteButton.onclick = function() {
-                    // Find the index of the clicked delete button
-                    var index = Array.from(this.parentNode.parentNode.children).indexOf(this.parentNode);
-                    // Remove the corresponding file from the filePreviews array
-                    filePreviews.splice(index, 1);
-                    // Remove the image preview when delete button is clicked
-                    this.parentNode.remove();
-                };
-
                 var container = document.createElement('div');
                 container.classList.add('me-3', 'mb-3');
                 container.appendChild(img);
-                container.appendChild(deleteButton);
                 imagePreview.appendChild(container);
-
-                // Store the file preview in the filePreviews array
-                filePreviews.push({ file: file, container: container });
             };
 
             reader.readAsDataURL(file);
         }
     });
 </script>
+
 
 
 
