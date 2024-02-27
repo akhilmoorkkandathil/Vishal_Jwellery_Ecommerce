@@ -47,8 +47,8 @@
 					{{#each newproducts}}
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
 						
-						<a class="product-item" href="productPage?proId={{this._id}}">
-							<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
+						<a class="product-item" href="productPage?proId={{this._id}}" onclick="redirectWithoutSlash('{{this._id}}')">
+							<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail" >
 							<h3 class="product-title">{{this.name}}</h3>
 							<strong class="product-price">Only {{this.price}}/-</strong>
 						</a>
@@ -106,3 +106,10 @@
 		<!-- Start Dining catagory Section -->
 
 		</section>
+		<script>
+    function redirectWithoutSlash(productId) {
+        var currentURL = window.location.href;
+        var modifiedURL = currentURL.replace(/\/\?/, '?');
+        window.location.href = modifiedURL + productId;
+    }
+</script>

@@ -1,0 +1,119 @@
+<section>
+			<!-- Start Hero Section -->
+			<div class="hero">
+				<div class="container">
+					<div class="row justify-content-between">
+						<div class="col-lg-5">
+							<div class="intro-excerpt">
+								<h1>Wish List</span></h1>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		<!-- End Hero Section -->
+        
+		{{!-- cart section --}}
+			<div class="untree_co-section before-footer-section">
+            <div class="container">
+              {{#if products}}
+               <div class="row mb-5">
+                <form class="col-md-12" method="post">
+                  <div class="site-blocks-table">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="product-thumbnail">Image</th>
+                          <th class="product-name">Product</th>
+                          <th class="product-price">Price</th>
+                          <th class="product-price">Offer Price</th>
+                          <th class="product-remove">Remove</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {{#each products}}
+                        <tr>
+                          <td class="product-thumbnail">
+                            <img src="{{this.images.[0]}}" alt="Image" class="img-fluid">
+                          </td>
+                          <td class="product-name">
+                            <h2 class="h5 text-black">{{this.name}}</h2>
+                          </td>
+                                                    
+                         <td class="current-price">{{this.price}}</td>
+                          <td class="current-price">{{this.offerPrice}}</td>
+                <td><a href="/rfwishlist/{{@index}}" class="btn btn-black btn-sm">X</a></td>
+                 <td><a class="btn" onclick="addToCart(event, '{{this.productId}}')">Add to Cart</a></td>
+                        </tr>
+                        {{/each}}
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </form>
+              </div>
+
+               <div class="row">
+                <div class="col-md-6 d-flex">
+                  <div class="row mb-5">
+                    <div class="col-md-12">
+                     <a href="/shop" class="btn btn-black btn-sm btn-block">Continue Shopping</a>
+                    </div>
+                  </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{else}}
+            <b><i>No Products in wishlist</i></b>
+            {{/if}}
+             
+        
+             
+            </div>
+          </div>
+		
+		</section>
+    		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+     <script>
+        function addToCart(event, productId) {
+    event.preventDefault();
+
+    // Show success message
+    successMessage();
+
+    // Make an asynchronous request to add the product to the cart
+    fetch(`/add-to-cart?proId=${productId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to add product to cart');
+            }
+            // Product added to cart successfully
+            // Optionally, you can handle any additional actions here
+        })
+        .catch(error => {
+            console.error(error);
+            // Handle error if needed
+        });
+}
+
+function successMessage() {
+    Swal.fire({
+        text: 'Product successfully added to cart',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-success',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-success'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+
+    </script>

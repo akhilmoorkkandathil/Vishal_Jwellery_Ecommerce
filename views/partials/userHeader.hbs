@@ -18,7 +18,7 @@
 						<li class="nav-item active">
 							<a class="nav-link" href="/">Home</a>
 						</li>
-						<li><a class="nav-link" href="shop">Shop</a></li>
+						<li><a class="nav-link" href="/shop">Shop</a></li>
 						
 					</ul>
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
@@ -28,17 +28,18 @@
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="profileDropdown">
 								{{#unless login}}
-								<li><a class="dropdown-item" href="login">Login</a></li>
+								<li><a class="dropdown-item" href="/login">Login</a></li>
 								{{else}}
-								<li><a class="dropdown-item" href="address">My Addresses</a></li>
-								<li><a class="dropdown-item" href="orders">My Orders</a></li>
-								<li><a class="dropdown-item" href="wallet">My Wallet</a></li>
+								<li><a class="dropdown-item" href="/address">My Addresses</a></li>
+								<li><a class="dropdown-item" href="/orders">My Orders</a></li>
+								<li><a class="dropdown-item" href="/wallet">My Wallet</a></li>
+								<li><a class="dropdown-item" href="/wishlist">Wishlist</a></li>
 								<li><a class="dropdown-item" href="logout">Logout</a></li>
 
 								{{/unless}}
  							</ul>
 						</li>
-						<li><a class="nav-link" href="cart"><img src="images/cart.svg"></a></li>
+						<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
 					</ul>
 				</div>
 			</div>

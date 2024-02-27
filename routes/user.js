@@ -6,7 +6,8 @@ const session = require('express-session');
 const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
 const coupenCountroller = require('../controller/coupenCountroller');
-const walletController = require('../controller/walletController')
+const walletController = require('../controller/walletController');
+const wishlistController = require('../controller/wishlistController');
 
 // Home
 router.get('/',userController.home);
@@ -54,6 +55,11 @@ router.get('/rfcart/:index',userSession.userAuth,cartController.removeProduct)
 router.put('/update-product',userSession.userAuth,cartController.updateProduct)
 router.post('/updateQuantity',userSession.userAuth,cartController.updateQuantity)
 router.post('/productQuantity',cartController.productQuantity)
+
+// Wishlist add-to-wishlist
+router.get('/wishlist',userSession.userAuth,wishlistController.wishListProduct);
+router.get('/add-to-whishlist',userSession.userAuth,wishlistController.addToWishlist);
+router.get('/rfwishlist/:index',userSession.userAuth,wishlistController.removeProduct)
 
 // Checkout
 router.get('/checkout',userSession.userAuth,userController.checkoutPage)

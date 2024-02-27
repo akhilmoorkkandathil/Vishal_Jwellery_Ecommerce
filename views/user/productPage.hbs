@@ -27,8 +27,8 @@
                     {{/each}}
                 </div>
                 <div class="button-container">
-                    <a href="/add-to-cart?proId={{this._id}}"><button class="add-to-cart" onclick="addToCart(event, '{{this._id}}')">Add to Cart</button></a>
-                    <a href=""><button class="buy-now">Buy Now</button></a>
+                    <a href=""><button class="add-to-cart" onclick="addToCart(event, '{{this._id}}')">Add to Cart</button></a>
+                    <a href=""><button class="btn-warning" onclick="addToWishList(event, '{{this._id}}')">Add to whishlist</button></a>
                 </div>
             </div>
 
@@ -122,6 +122,59 @@
 function successMessage() {
     Swal.fire({
         text: 'Product successfully added to cart',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-success',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-success'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+
+    </script>
+    <script>
+        function addToWishList(event, productId) {
+    event.preventDefault();
+
+
+    // Make an asynchronous request to add the product to the cart
+    fetch(`/add-to-whishlist?proId=${productId}`)
+        .then(response => {
+            if (!response.ok) {
+                Swal.fire({
+    text: 'Product exists in the cart',
+    icon: 'error', // Change to error icon to indicate failure
+    confirmButtonText: 'OK',
+    customClass: {
+        title: 'text-danger',
+        popup: 'swal2-popup-custom',
+        confirmButton: 'btn btn-danger'
+    },
+    showCancelButton: false,
+    showCloseButton: true,
+    showLoaderOnConfirm: false,
+    timer: 3000 
+});
+
+                throw new Error('Failed to add product to cart');
+            }else{
+                successMessage();
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            // Handle error if needed
+        });
+}
+
+function successMessage() {
+    Swal.fire({
+        text: 'Product successfully added to wishList',
         icon: 'success',
         confirmButtonText: 'OK',
         customClass: {

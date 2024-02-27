@@ -1,71 +1,72 @@
 const { resolve } = require("path")
 const cartModel=require("../model/cartSchema")
 const productModel=require("../model/productSchema")
+const wishListModel = require('../model/wishListSchema')
 const objectId = require('mongodb').ObjectId
 
 
 module.exports = {
- cartProducts : async (req,res,next) => {
-  try {
-      const userId = req.session.userId;
-      const sessionId = req.session.id;
-  
-      let cart;
-
-      if (!userId) {
-          cart = await cartModel.findOne({ sessionId: sessionId })
-          .populate({
-              path: 'item.productId',
-              select: 'images name price stock offerPrice',
-          });
-          
-      } else {
-        
-          cart = await cartModel.findOne({ userId: userId }).populate({
-              path: 'item.productId',
-              select: '_id images name price offerPrice',
-          });
-          console.log(cart+"=================");
-      }
-
-      
-      if (!cart || !cart.item) {
-
-          
-            cart = new cartModel({
-              sessionId: req.session.id,
-              item: [],
-              total: 0,
-            });
-      }
-      //console.log(cart.item);
-      req.session.checkout=true
-      let obj=[]
-        let maps =cart.item.map((item)=>{
-            let test={
-                "productId":item.productId._id,
-                "name":item.productId.name,
-                "price":item.productId.price,
-                "images":item.productId.images,
-                "offerPrice":item.productId.offerPrice,
-                "stock":item.stock,
-                "quantity":item.quantity,
-                "userId":item.userId,
-                "cartId":item._id,
-                "total":item.total,
-            }
-            obj.push(test)
-          });
-          console.log(obj);
-          req.session.isAuth=true;
-          res.render('./user/cart', { products:obj , login:req.session.user});
+  cartProducts : async (req,res,next) => {
+    try {
+        const userId = req.session.userId;
+        const sessionId = req.session.id;
     
-  } catch (err) {
-    console.log(err);
-   error.status = 500;
-      next(error);
-}
-},
+        let cart;
+  
+        if (!userId) {
+            cart = await cartModel.findOne({ sessionId: sessionId })
+            .populate({
+                path: 'item.productId',
+                select: 'images name price stock offerPrice',
+            });
+            
+        } else {
+          
+            cart = await cartModel.findOne({ userId: userId }).populate({
+                path: 'item.productId',
+                select: '_id images name price offerPrice',
+            });
+            console.log(cart+"=================");
+        }
+  
+        
+        if (!cart || !cart.item) {
+  
+            
+              cart = new cartModel({
+                sessionId: req.session.id,
+                item: [],
+                total: 0,
+              });
+        }
+        //console.log(cart.item);
+        req.session.checkout=true
+        let obj=[]
+          let maps =cart.item.map((item)=>{
+              let test={
+                  "productId":item.productId._id,
+                  "name":item.productId.name,
+                  "price":item.productId.price,
+                  "images":item.productId.images,
+                  "offerPrice":item.productId.offerPrice,
+                  "stock":item.stock,
+                  "quantity":item.quantity,
+                  "userId":item.userId,
+                  "cartId":item._id,
+                  "total":item.total,
+              }
+              obj.push(test)
+            });
+            console.log(obj);
+            req.session.isAuth=true;
+            res.render('./user/cart', { products:obj , login:req.session.user});
+      
+    } catch (error) {
+      console.log(err);
+     error.status = 500;
+        next(error);
+  }
+  },
    addToCart : async (req,res,next) => {
     try {
       const pid = req.query.proId;
@@ -76,6 +77,20 @@ module.exports = {
       const price = product.offerPrice || product.price;
       const stock = product.stock;
       const quantity = 1;
+
+      if(req.session.wishlist){
+        await wishListModel.findOneAndUpdate(
+          {
+              userId: userid,
+          },
+          {
+              $pull: {
+                  item: { productId: pid }
+              }
+          },
+          { new: true }
+      );
+      }
   
       if (stock==0){
         res.redirect('/cartpage')

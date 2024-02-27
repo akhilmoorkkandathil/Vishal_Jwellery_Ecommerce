@@ -3,7 +3,6 @@ const walletModel = require('../model/walletSchema')
 
 module.exports = {
   walletPage: async (req,res,next) => {
-    console.log("===================");
     const userId = req.session.userId;
     console.log(userId);
     let user= await usersModel.findOne({_id:userId})
@@ -66,8 +65,8 @@ wallet.forEach(item => {
         
         
             res.render("./user/wallet", {  wallet:wallet });
-          } catch (err) {
-            console.log(err);
+          } catch (error) {
+            console.log(error);
            error.status = 500;
       next(error);
           }
@@ -90,8 +89,8 @@ wallet.forEach(item => {
             
         
             res.redirect("/wallet");
-          } catch (err) {
-            console.log(err);
+          } catch (error) {
+            console.log(error);
            error.status = 500;
       next(error);
           }
@@ -124,8 +123,8 @@ wallet.forEach(item => {
          else{
           res.json({success:false,message:"don't have enought money"})
          }
-      }  catch (err) {
-        console.log(err);
+      }  catch (error) {
+        console.log(error);
        error.status = 500;
       next(error);
     }

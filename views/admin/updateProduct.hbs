@@ -49,6 +49,7 @@
             id="price"
             name="price"
             value="{{product.price}}"
+            onchange="priceminimum()"
           />
         </div>
         <div class="mb-3">
@@ -71,7 +72,7 @@
         <div class="mb-3">
           <label class="form-label" for="basic-icon-default-email">Offer Price</label>
           <div class="input-group input-group-merge">
-            <span class="input-group-text"><i class="bx bx-bx bx-dollar"></i></span>
+            <span class="input-group-text"><i > INR</i></span>
             <input
               type="number"
               class="form-control"
@@ -90,9 +91,10 @@
           <input
             type="text"
             class="form-control"
-            id="productStock"
+            id="stock"
             name="stock"
             value="{{product.stock}}"
+            onchange="minimumquantity()"
           />
         </div>
 
@@ -144,6 +146,20 @@
 </div>
 <script defer src="https://cdn.crop.guide/loader/l.js?c=YFFNCN"></script>
 <script>
+  function priceminimum() {
+        const price = parseFloat(document.getElementById('price').value);
+        if (price < 0) {
+            alert("Price should be greater than 0");
+            document.getElementById('price').value = 0;
+        }
+    }
+    function minimumquantity() {
+        const stock = parseFloat(document.getElementById('stock').value);
+        if (stock < 0) {
+            alert("Quantity should greater than 0");
+            document.getElementById('stock').value = 0;
+        }
+    }
 function calculateTotalPrice() {
   const price = parseFloat(document.getElementById('price').value);
   const discount = parseFloat(document.getElementById('discount').value);

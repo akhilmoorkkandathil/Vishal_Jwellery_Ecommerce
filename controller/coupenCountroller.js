@@ -263,8 +263,8 @@ module.exports = {
           
       
         }
-        catch (err) {
-          console.log(err);
+        catch (error) {
+          console.log(error);
           error.status = 500;
       next(error);
       }

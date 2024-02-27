@@ -179,7 +179,9 @@
 <script>
     document.getElementById('imageInput').addEventListener('change', function(event) {
         var files = event.target.files;
+        console.log("=========")
         var imagePreview = document.getElementById('imagePreview');
+        var filePreviews = []; // Array to store file previews
 
         imagePreview.innerHTML = ''; // Clear previous previews
 
@@ -199,8 +201,12 @@
                 deleteButton.classList.add('btn', 'btn-warning'); // Add classes for orange button
                 deleteButton.style.display = 'block'; // Make the button display as block to position it below the image
                 deleteButton.onclick = function() {
-                    this.parentNode.remove(); // Remove the image preview when delete button is clicked
-                    document.getElementById('imageInput').value = ''; // Clear the file input value
+                    // Find the index of the clicked delete button
+                    var index = Array.from(this.parentNode.parentNode.children).indexOf(this.parentNode);
+                    // Remove the corresponding file from the filePreviews array
+                    filePreviews.splice(index, 1);
+                    // Remove the image preview when delete button is clicked
+                    this.parentNode.remove();
                 };
 
                 var container = document.createElement('div');
@@ -208,11 +214,15 @@
                 container.appendChild(img);
                 container.appendChild(deleteButton);
                 imagePreview.appendChild(container);
+
+                // Store the file preview in the filePreviews array
+                filePreviews.push({ file: file, container: container });
             };
 
             reader.readAsDataURL(file);
         }
     });
 </script>
+
 
 

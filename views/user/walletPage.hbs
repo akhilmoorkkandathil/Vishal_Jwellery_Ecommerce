@@ -1,175 +1,175 @@
-<Section>
-    <section>
-    <div class="container">
-  <div class="row m-5 p-3">
-    <div class="col-md-3">
-      <!-- Left Side Box -->
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Menu</h5>
-          <ul class="list-group">
-            <li class="list-group-item"><a href="address">My Address</a></li>
-            <li class="list-group-item"><a href="orders">My Orders</a></li>
-            <li class="list-group-item"><a href="wallet">My Wallet</a></li>
-            <li class="list-group-item"><a href="logout">Logout</a></li>
-          </ul>
+  <Section>
+      <section>
+      <div class="container">
+    <div class="row m-5 p-3">
+      <div class="col-md-3">
+        <!-- Left Side Box -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Menu</h5>
+            <ul class="list-group">
+              <li class="list-group-item"><a href="address">My Address</a></li>
+              <li class="list-group-item"><a href="orders">My Orders</a></li>
+              <li class="list-group-item"><a href="wallet">My Wallet</a></li>
+              <li class="list-group-item"><a href="logout">Logout</a></li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-9">
-  <!-- Right Side Box -->
-  <div class="card">
-    <div class="card-body">
-        <h5 class="card-title">My Wallet</h5>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <!-- Display wallet amount -->
-                    <p>Total Amount in Wallet: <span id="totalAmount"><strong>{{wallet.wallet}}/-</strong> INR</span></p>
-                    {{#if user}}
-                    <h5>Referral Code: <strong>{{user.referelCode}}</strong></h5>
-                    <p>Description: Refer and earn 200 INR</p>
-                    {{/if}}
-                </div>
-                <form id="orderForm" style="font-family: 'Arial', sans-serif;">
-                    <input type="number" id="Amount" name="Amount" placeholder="Enter Amount .." style="border: 1px solid #ccc; padding: 8px; font-weight: bold; margin-right: 10px;">
-                    <button onclick="RazorpayWallet(event)" style="background-color: #fff; color: #333; border: 1px solid #ccc; padding: 10px; font-weight: bold; cursor: pointer;">Add To Wallet</button>
-                </form>
-            </div>
-            <div class="d-flex justify-content-center">
-    <h1>Wallet history</h1><br>
-</div>
+      <div class="col-md-9">
+    <!-- Right Side Box -->
+    <div class="card">
+      <div class="card-body">
+          <h5 class="card-title">My Wallet</h5>
+          <div class="container">
+              <div class="row">
+                  <div class="col-md-6">
+                      <!-- Display wallet amount -->
+                      <p>Total Amount in Wallet: <span id="totalAmount"><strong>{{wallet.wallet}}/-</strong> INR</span></p>
+                      {{#if user}}
+                      <h5>Referral Code: <strong>{{user.referelCode}}</strong></h5>
+                      <p>Description: Refer and earn 200 INR</p>
+                      {{/if}}
+                  </div>
+                  <form id="orderForm" style="font-family: 'Arial', sans-serif;">
+                      <input type="number" id="Amount" name="Amount" placeholder="Enter Amount .." style="border: 1px solid #ccc; padding: 8px; font-weight: bold; margin-right: 10px;">
+                      <button onclick="RazorpayWallet(event)" style="background-color: #fff; color: #333; border: 1px solid #ccc; padding: 10px; font-weight: bold; cursor: pointer;">Add To Wallet</button>
+                  </form>
+              </div>
+              <div class="d-flex justify-content-center">
+      <h1>Wallet history</h1><br>
+  </div>
 
-<section class="user-details-section mt-4 section-container">
-    <div class="d-flex justify-content-center">
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th style="text-align: center;">Date</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each walletHistory}}
-                <tr>
-                    <td>{{this.date}}</td>
-                    <td>{{this.type}}</td>
-                    <td>{{this.amount}}</td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </div>
-</section>
+  <section class="user-details-section mt-4 section-container">
+      <div class="d-flex justify-content-center">
+          <table class="table table-striped table-bordered">
+              <thead class="thead-dark">
+                  <tr>
+                      <th style="text-align: center;">Date</th>
+                      <th>Type</th>
+                      <th>Amount</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {{#each walletHistory}}
+                  <tr>
+                      <td>{{this.date}}</td>
+                      <td>{{this.type}}</td>
+                      <td>{{this.amount}}</td>
+                  </tr>
+                  {{/each}}
+              </tbody>
+          </table>
+      </div>
+  </section>
 
 
-        </div>
+          </div>
 
-</div>
+  </div>
 
-</div>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  </div>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-  <script src="js/bootstrap.bundle.min.js"></script>
-  <script src="js/tiny-slider.js"></script>
-  <script src="js/custom.js"></script>
-  <script>
-    async function  RazorpayWallet()
-	{
-    event.preventDefault()
-    console.log("ivide function");
-		let amountToPay=document.getElementById('Amount').value
-    console.log(amountToPay);
-		if(!amountToPay){
-			Swal.fire({
-    text: 'please enter an amount',
-    icon: 'error',
-  confirmButtonText: 'OK',
-  customClass: {
-    title: 'text-danger',
-    popup: 'swal2-popup-custom',
-    confirmButton: 'btn btn-danger'
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/tiny-slider.js"></script>
+    <script src="js/custom.js"></script>
+    <script>
+      async function  RazorpayWallet()
+    {
+      event.preventDefault()
+      console.log("ivide function");
+      let amountToPay=document.getElementById('Amount').value
+      console.log(amountToPay);
+      if(!amountToPay){
+        Swal.fire({
+      text: 'please enter an amount',
+      icon: 'error',
+    confirmButtonText: 'OK',
+    customClass: {
+      title: 'text-danger',
+      popup: 'swal2-popup-custom',
+      confirmButton: 'btn btn-danger'
+    },
+    showCancelButton: false,
+    showCloseButton: true,
+    showLoaderOnConfirm: false,
+    timer: 3000 
+  });
+
+      }
+      
+      
+      
+      else {
+  console.log("upi total","ppppppp");
+
+  var options = {
+  "key": 'rzp_test_tY3tynQ51qUYZR', // Enter the Key ID generated from the Dashboard
+  "amount":  amountToPay*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+  "currency": "INR",
+  "name": "Furnify",
+  "description": "Test Transaction",
+  "image": "Urban Sole",
+  "order_id": orderId, //This is a sample Order ID. Pass the id obtained in the response of Step 1
+  "handler": function (response){
+  alert(response.razorpay_payment_id);
+  document.getElementById('orderForm').action = '/walletTopup';
+  document.getElementById('orderForm').method = 'post'; // Replace with your actual URL
+
+  // Submit the form
+  document.getElementById('orderForm').submit();
+
   },
-  showCancelButton: false,
-  showCloseButton: true,
-  showLoaderOnConfirm: false,
-  timer: 3000 
-});
-
-		}
-		
-		
-		
-		else {
-console.log("upi total","ppppppp");
-
-var options = {
-"key": 'rzp_test_tY3tynQ51qUYZR', // Enter the Key ID generated from the Dashboard
-"amount":  amountToPay*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-"currency": "INR",
-"name": "Furnify",
-"description": "Test Transaction",
-"image": "Urban Sole",
-"order_id": orderId, //This is a sample Order ID. Pass the id obtained in the response of Step 1
-"handler": function (response){
-alert(response.razorpay_payment_id);
-document.getElementById('orderForm').action = '/walletTopup';
-document.getElementById('orderForm').method = 'post'; // Replace with your actual URL
-
-// Submit the form
-document.getElementById('orderForm').submit();
-
-},
 
 
-"theme": {
-"color": "orange"
-},
-};
-var rzp1 = new Razorpay(options);
-rzp1.on('payment.failed', function (response){
-        alert(response.error.code);
-        alert(response.error.description);
-        alert(response.error.source);
-        alert(response.error.step);
-        alert(response.error.reason);
-        alert(response.error.metadata.order_id);
-        alert(response.error.metadata.payment_id);
-});
-    rzp1.open();
-
-
-    e.preventDefault();
-
-
-                var orderId ;
-$(document).ready(function(){
-    var settings = {
-  "url": "/walletcreate/orderId",
-  "method": "POST",
-  "timeout": 0,
-  "headers": {
-    "Content-Type": "application/json"
+  "theme": {
+  "color": "orange"
   },
-  "data": JSON.stringify({
-    "amount": amountToPay*100
-  }),
-};
+  };
+  var rzp1 = new Razorpay(options);
+  rzp1.on('payment.failed', function (response){
+          alert(response.error.code);
+          alert(response.error.description);
+          alert(response.error.source);
+          alert(response.error.step);
+          alert(response.error.reason);
+          alert(response.error.metadata.order_id);
+          alert(response.error.metadata.payment_id);
+  });
+      rzp1.open();
 
 
-$.ajax(settings).done(function (response) {
+      e.preventDefault();
 
-  orderId=response.orderId;
-  console.log(orderId);
-  $("button").show();
-});
-});
 
-            }
-		
-		}
+                  var orderId ;
+  $(document).ready(function(){
+      var settings = {
+    "url": "/walletcreate/orderId",
+    "method": "POST",
+    "timeout": 0,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "data": JSON.stringify({
+      "amount": amountToPay*100
+    }),
+  };
 
-  </script>
+
+  $.ajax(settings).done(function (response) {
+
+    orderId=response.orderId;
+    console.log(orderId);
+    $("button").show();
+  });
+  });
+
+              }
+      
+      }
+
+    </script>

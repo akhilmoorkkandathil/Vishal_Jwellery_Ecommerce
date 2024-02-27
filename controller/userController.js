@@ -431,8 +431,8 @@ const registerUser = async (req,res,next) => {
           await sendOTP(phone, otp);
           res.redirect("/verifyotp");
         } 
-      }catch (err) {
-        console.error("Error:", err);
+      }catch (error) {
+        console.error("Error:", error);
        error.status = 500;
       next(error);
       }
@@ -706,14 +706,14 @@ const productPage =async (req,res ,next)=>{
                     "stock":item.stock,
                     "status":item.status,
                     "description":item.description,
-                    "offerPrice":item.offerPrice
+                    "offerPrice":item.offerPrice,
                 }
                 obj.push(test)
             })
             //console.log(obj);
             const availableCoupons = await coupenModel.find().lean();
             console.log(availableCoupons);
-    await res.render('./user/productPage',{products:obj,availableCoupons:availableCoupons})
+    await res.render('./user/productPage',{products:obj,availableCoupons:availableCoupons,login:req.session.user})
   } catch (error) {
     console.log(error);
    error.status = 500;
@@ -969,8 +969,8 @@ const searchProducts = async (req,res,next) => {
 
     // If neither product nor category found, redirect to home
     res.redirect("/");
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
    error.status = 500;
       next(error);;
   }
