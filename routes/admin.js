@@ -14,6 +14,7 @@ router.post("/login",adminController.adminLogined);
 
 router.get("/dashboard",Session.adisAuth,adminController.dashboard);
 
+
 //product routers
 router.get("/products",Session.adisAuth,productController.productList);
 router.get("/addproductpage",Session.adisAuth,productController.addProduct);
@@ -65,6 +66,8 @@ router.get('/deleteBanner/:id',Session.adisAuth,bannerController.deleteBanner)
 
 //logout
 router.get("/logout",Session.adisAuth,adminController.logOut);
+
+
 
 router.get("/error",adminController.errorPage);
 

@@ -37,7 +37,7 @@ router.get('/addAddress',userSession.userAuth,userController.addAddress);
 router.post('/addAddress',userSession.userAuth,userController.toAddAddress);
 router.get('/editAddress/:index',userSession.userAuth, userController.editPage);
 router.put('/editAddress/updateAddress/:index',userSession.userAuth,userController.updateAddress);
-router.delete('/deleteAddress/:index',userSession.userAuth,userController.deleteAddress)
+router.get('/deleteAddress/:index',userSession.userAuth,userController.deleteAddress)
 
 // User Details
 router.get('/editUserDetails',userSession.userAuth,userController.editUserDetails);
@@ -45,11 +45,11 @@ router.put('/updateUserAddress',userSession.userAuth,userController.updateUserAd
 
 // Shop and Product Pages
 router.get('/shop',userController.shopProduct);
-router.get('/productPage/:id',userController.productPage);
+router.get('/productPage',userController.productPage);
 
 // Cart
-router.get('/cart',cartController.cartProducts);
-router.get('/add-to-cart/:id',userSession.userAuth,cartController.addToCart);
+router.get('/cart',userSession.userAuth,cartController.cartProducts);
+router.get('/add-to-cart',userSession.userAuth,cartController.addToCart);
 router.get('/rfcart/:index',userSession.userAuth,cartController.removeProduct)
 router.put('/update-product',userSession.userAuth,cartController.updateProduct)
 router.post('/updateQuantity',userSession.userAuth,cartController.updateQuantity)

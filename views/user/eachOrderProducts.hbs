@@ -1,49 +1,56 @@
 <section>
-   
     <div class="container mt-5">
-      <h2 class="mb-4">Order Details</h2>
-      <div class="row">
-            <div class="col-md-6">
-                <p>Order ID:<strong> {{orderedProducts.[0].orderId}}</strong></p>
-                <p>Order Date:<strong>{{orderedProducts.[0].purchaseDate}}</strong></p>
-                <p>Price:<strong> {{orderedProducts.[0].price}}</strong></p>
-                <p>Offer Price:<strong> {{orderedProducts.[0].totalPrice}}</strong></p>
-                <!-- Add more order details here as needed -->
+        
+        <h2 class="mb-4">Ordered Products</h2>
+        <div class="col-md-6">
+                <p>Order ID: <strong>{{orderedProducts.[0].orderId}}</strong></p>                
             </div>
-  <div class="row">
-    
-   
-  </div>
-  <h2 class="mb-4">Ordered Products</h2>
-  
-  <div class="row">
-    <table class="table" id="table" style="background-color: white;">
-                   
-                    <tbody class="table-border-bottom-0">
-                      {{#each orderedProducts}}
-                      <tr class="d-flex align-items-center justify-content-around">
+        <div class="row">
+            <table class="table table-hover align-middle" id="table" style="background-color: white; ">
+                <thead>
+        <tr>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Purchase Date</th>
+            <th>Shipping Address</th>
+            <th>Status</th>
+            {{#if reason}}
+            <th>Reason</th>
+            {{/if}}
+        </tr>
+    </thead>
+                <tbody class="table-border-bottom-0">
+                    {{#each orderedProducts}}
+                    <tr>
                         <td>
-                              <img style="border-radius: 0; width: 200px; height: 200px;" src="{{image}}" alt="Product Image">
+                            <img style="border-radius: 0; width: 200px; height: 200px;" src="{{image}}" alt="Product Image">
                         </td>
                         <td class="my-auto"> <strong>{{productName}}</strong></td>
                         <td>Q: {{quantity}}</td>
-                        {{#if totalPrice}}
-                        <td>{{totalPrice}}/-</td>
-                        {{else}}
-                        <td>{{price}}/-</td>
-                        {{/if}}
                         
+                        <td>{{price}}/-</td>
+                       <td>{{totalPrice}}/-</td>
                         <td>{{purchaseDate}}</td>
+                        
+                        <td>
+                          {{shippingAddress.fname}} {{shippingAddress.lname}}<br>
+                          {{shippingAddress.locality}}, {{shippingAddress.city}}<br>
+                          Phone: {{shippingAddress.phone}},<br> 
+                          Alt Phone: {{shippingAddress.altphone}}<br>
+                          Pincode: {{shippingAddress.pincode}}, <br>
+                          Landmark: {{shippingAddress.landmark}}
+                        </td>
                         <td>{{status}}</td>
                         {{#if reason}}
                         <td>{{reason}}</td>
                         {{/if}}
-                      </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-   
-  </div>
-
-</div>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>

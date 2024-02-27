@@ -104,6 +104,7 @@ const home = async(req,res ,next)=>{
         {
           $project: {
             category: "$_id",
+            _id:1,
             categoryName: 1,
             products: {
               $map: {
@@ -121,10 +122,11 @@ const home = async(req,res ,next)=>{
           }
         }
       ]);
-      console.log(products);
+      //console.log(products);
       let obj = [];
       products.map((iteam)=>{
         let test={
+          "_id":iteam._id,
           "category":iteam.categoryName,
           "products":iteam.products,
           
@@ -142,10 +144,10 @@ const home = async(req,res ,next)=>{
            }
            obj2.push(y)
          })
-         console.log(banners);
+         //console.log(banners);
       if(req.session.isAuth || req.session.signup){
      
-       res.render('./user/home',{login:true,newproducts:newobj,categories:arr,products:obj,image:obj2[0].images})
+       res.render('./user/home',{login:req.session.user,newproducts:newobj,categories:arr,products:obj,image:obj2[0].images})
        req.session.signup=false;
       }else{
        res.render('./user/home',{newproducts:newobj,categories:arr,products:obj,image:obj2[0].images})
@@ -164,7 +166,6 @@ const home = async(req,res ,next)=>{
 //@acess public
 const login = async(req,res ,next)=>{
     try {
-     
       await res.render('./user/login',{Single:true})
     } catch (error) {
      error.status = 500;
@@ -527,18 +528,18 @@ const loginUser = async (req, res , next) => {
 
       if (!email || !password) {
           req.flash("error", "Enter Email & Password");
-          return res.status(400)
+          return res.redirect('/login')
       }
 
       if (!user) {
-          req.flash("error", "Invalid username or Password");
-          return res.status(401)
+          req.flash("error", "User with this email not exist");
+          return res.redirect('/login')
       }
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
           req.flash("error", "Invalid username or Password");
-          return res.status(401)
+          return res.redirect('/login')
       }
 
       req.session.isAuth = true;
@@ -580,7 +581,7 @@ const loginHome= async (req,res,next) => {
           })
           req.session.isAuth = true;
         
-        await res.render('./user/home',{login:true,newproducts:newobj})
+        await res.render('./user/home',{login:req.session.user,newproducts:newobj})
     } catch (error) {
      error.status = 500;
       next(error);
@@ -609,7 +610,6 @@ const shopProduct = async (req,res ,next)=>{
         $or: [
           { name: { $regex: new RegExp(req.query.search, 'i') } },
           { description: { $regex: new RegExp(req.query.search, 'i') } },
-          {category: { $regex: new RegExp(req.query.search, 'i')}},
         ],
       };
     }
@@ -691,10 +691,10 @@ const catProduct = async (req,res ,next)=>{
 
 const productPage =async (req,res ,next)=>{
   try {
-    const id = req.params.id;
-  const user = req.session.user
+    const id = req.query.proId || req.session.proId;
+    req.session.proId=id;
   const products = await productModel.find({ _id: id})
-   console.log(products);
+   //console.log(products);
         let obj=[]
             let maps =products.map((item)=>{
                 let test={
@@ -710,8 +710,10 @@ const productPage =async (req,res ,next)=>{
                 }
                 obj.push(test)
             })
-            console.log(obj);
-  await res.render('./user/productPage',{products:obj})
+            //console.log(obj);
+            const availableCoupons = await coupenModel.find().lean();
+            console.log(availableCoupons);
+    await res.render('./user/productPage',{products:obj,availableCoupons:availableCoupons})
   } catch (error) {
     console.log(error);
    error.status = 500;

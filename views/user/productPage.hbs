@@ -27,7 +27,7 @@
                     {{/each}}
                 </div>
                 <div class="button-container">
-                    <a href="/add-to-cart/{{this._id}}"><button class="add-to-cart">Add to Cart</button></a>
+                    <a href="/add-to-cart?proId={{this._id}}"><button class="add-to-cart" onclick="addToCart(event, '{{this._id}}')">Add to Cart</button></a>
                     <a href=""><button class="buy-now">Buy Now</button></a>
                 </div>
             </div>
@@ -43,19 +43,36 @@
             {{else}}
             <p class="product-price">Price: {{this.price}}/- Only</p>
             {{/if}}
-                    <div class="coupon-offers">
-                        <h4>Available Coupons</h4>
+                    <div class="coupon-offers mt-3">
+                        <h5>Available Offeres <small>(Price inclussive of offer)</small></h5>
                         <ul>
                             <li>Coupon 1: 10% off</li>
                             <li>Coupon 2: Free shipping</li>
                             <!-- Add more offers if needed -->
                         </ul>
                     </div>
+                    {{#if coupens}}
+                    <div class="coupon-offers mt-3">
+                        <h5>Available Coupons</h5>
+                        <ul>
+                            {{#each coupens}}
+                            
+                                    {{#if (eq this.type 'flatDiscount')}}
+                                        {{this.discount}}% off on Rs.{{this.minimumPrice}} purchase (Maximum Redeemable: {{this.maxRedeem}})
+                                    {{else }}
+                                        Flat Rs. {{this.discount}} off on {{this.minimumPrice}} purchase
+                                    {{/if}}
+                            
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
             {{/each}}
         </div>
     </div>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
         // Get all thumbnail images and main product image
@@ -79,5 +96,45 @@
         };
 
         new ImageZoom(imgContainer, options);
+    </script>
+    <script>
+        function addToCart(event, productId) {
+    event.preventDefault();
+
+    // Show success message
+    successMessage();
+
+    // Make an asynchronous request to add the product to the cart
+    fetch(`/add-to-cart?proId=${productId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to add product to cart');
+            }
+            // Product added to cart successfully
+            // Optionally, you can handle any additional actions here
+        })
+        .catch(error => {
+            console.error(error);
+            // Handle error if needed
+        });
+}
+
+function successMessage() {
+    Swal.fire({
+        text: 'Product successfully added to cart',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-success',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-success'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+
     </script>
 </section>

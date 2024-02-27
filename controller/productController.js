@@ -53,7 +53,7 @@ const productAdded = async (req,res,next) => {
     const categoryDoc = await categoryModel.findById(category);
     console.log(categoryDoc);
 
-    let finalOfferPrice
+    let finalOfferPrice=0;
     if(offerPrice){
        finalOfferPrice = offerPrice; // Initialize finalOfferPrice with the provided offerPrice
     }else if (categoryDoc && categoryDoc.discount) {
@@ -184,6 +184,7 @@ const unlistProduct = async (req,res,next) => {
       const id = req.query.id || req.session.proId;
       req.session.proId=id
       const product = await productModel.findById(id);
+      console.log(product+"=============");
       const pr=[product]
       req.session.prodId = id
       req.session.uploadedImages=product.images;

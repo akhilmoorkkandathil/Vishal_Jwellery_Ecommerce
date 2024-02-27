@@ -124,6 +124,7 @@ delAdress: async (req,res ,next) => {
 },
 cacelOrder: async (req,res ,next) => {
     try {
+      const userId = req.session.userId;
         const orderId = req.params.orderId;
         const reason = req.query.reason; 
         console.log(orderId,reason);
@@ -137,6 +138,26 @@ cacelOrder: async (req,res ,next) => {
           status: "Cancelled",
           reason: req.query.reason 
       };
+      const user = await walletModel.findOne({ userId: userId });
+  
+      const refund = orders[0].totalPrice;
+      console.log("refundAmount", refund);
+  
+      const currentWallet = user.wallet;
+      const newWallet = currentWallet + refund;
+      const amountUpdate = await walletModel.updateOne(
+        { userId: userId },
+        {
+          $set: { wallet: newWallet },
+          $push: {
+            walletTransactions: {
+              date: new Date(),
+              type: "Credited",
+              amount: refund,
+            },
+          },
+        }
+      );
         await orderModel.updateOne(filter, { $set: update });
         await res.redirect('/orders')
     }else if(orders[0].status==="Delivered"){
@@ -209,10 +230,7 @@ viewOrderdProducts: async (req,res ,next) => {
 myOrders: async (req, res,next) => {
     try {
       const orderId = req.params.id;
-      console.log(typeof(orderId));
-      console.log("============");
-      const order1 = await orderModel.find(); 
-      console.log(order1[0].items[0]);
+      
       const result = await orderModel.aggregate([
         {
           $match: {
@@ -240,6 +258,7 @@ myOrders: async (req, res,next) => {
             price:1,
             totalPrice:1,
             userName: 1,
+            shippingAddress:1,
             productName: "$productDetails.name",
             images:"$productDetails.images",
             price: "$productDetails.price",
@@ -250,6 +269,8 @@ myOrders: async (req, res,next) => {
           },
         },
       ]);
+
+
       console.log(result);
       let obj=[]
       let maps =result.map((item)=>{
@@ -257,6 +278,7 @@ myOrders: async (req, res,next) => {
           "orderId":item.orderId,
           "price":item.price,
           "totalPrice":item.totalPrice,
+          "shippingAddress":item.shippingAddress,
             "productName":item.productName,
             "price":item.price,
             "status":item.status,
@@ -266,7 +288,7 @@ myOrders: async (req, res,next) => {
             "reason":item.reason
         }
         obj.push(test)
-        console.log(obj);
+        //console.log(obj);
     })
     if(req.session.user){
         res.render('./user/eachOrderProducts',{orderedProducts:obj,login:req.session.user}); // Corrected typo in the redirect URL
@@ -469,28 +491,21 @@ salesReport : async (req,res ,next)=> {
                 </html>
             `;
     
-        const browser = await puppeteer.launch({
-          executablePath: '/usr/bin/chromium-browser',
-          headless: 'new',
-        });
-        const page = await browser.newPage();
-        await page.setContent(htmlContent);
-    
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            await page.setContent(htmlContent);
         
-        const pdfBuffer = await page.pdf();
-    
-        await browser.close();
-    
-        const pdfsDirectory = path.join(__dirname, "pdfs");
-const pdfFilePath = path.join(pdfsDirectory, "order_invoice.pdf");
-
-// Ensure the directory exists, if not create it
-if (!fs.existsSync(pdfsDirectory)) {
-    fs.mkdirSync(pdfsDirectory);
-}
-
-
-fs.writeFileSync(pdfFilePath, pdfBuffer);
+            // Generate PDF
+            const pdfBuffer = await page.pdf();
+        
+            await browser.close();
+        
+            // Write PDF to file
+        const downloadsPath = path.join(os.homedir(), 'Downloads');
+              const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
+        
+        // Save the PDF file locally
+        fs.writeFileSync(pdfFilePath, pdfBuffer);
     
         res.setHeader("Content-Length", pdfBuffer.length);
         res.setHeader("Content-Type", "application/pdf");
@@ -616,22 +631,20 @@ fs.writeFileSync(pdfFilePath, pdfBuffer);
       </html>
     `;
 
-    // Launch Puppeteer and generate PDF
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(htmlContent);
+
+    // Generate PDF
     const pdfBuffer = await page.pdf();
+
     await browser.close();
 
     // Write PDF to file
-const pdfsDirectory = path.join(__dirname, "pdfs");
-const pdfFilePath = path.join(pdfsDirectory, "order_invoice.pdf");
+const downloadsPath = path.join(os.homedir(), 'Downloads');
+      const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
 
-// Ensure the directory exists, if not create it
-if (!fs.existsSync(pdfsDirectory)) {
-    fs.mkdirSync(pdfsDirectory);
-}
-
+// Save the PDF file locally
 fs.writeFileSync(pdfFilePath, pdfBuffer);
 
     // Set response headers and send PDF as attachment

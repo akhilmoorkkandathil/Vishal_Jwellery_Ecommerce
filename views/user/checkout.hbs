@@ -35,6 +35,7 @@
 				<span class="form-check-label">
 					{{#if @first}}
 						<strong>Delivery Address</strong><br>
+						<input id="address" type="text" hidden value="10">
 					{{/if}}
 					{{address.fname}} {{address.lname}}<br>
 					{{address.address}}, {{address.locality}}, {{address.pincode}}, {{address.city}}, {{address.state}}, {{address.country}}<br>
@@ -287,6 +288,7 @@
 		var pay=document.querySelector('input[name="paymentOption"]:checked');
 		var quantity=document.getElementById('proQunatity').innerText;
 		let proId = document.getElementById('proId').innerText;
+		let address = document.getElementById('address');
 		console.log("Quantity:"+quantity+" "+proId)
 		console.log("======sfsf========"+amountToPay)
 
@@ -309,7 +311,22 @@
       .then(data => {
 		const stockQuantity = data.product.stock;
   console.log("Stock Quantity:", stockQuantity);
-        if(stockQuantity==0){
+  if(!address){
+			Swal.fire({
+			text: 'Please Add delivery address',
+			icon: 'error',
+			confirmButtonText: 'OK',
+			customClass: {
+				title: 'text-danger',
+				popup: 'swal2-popup-custom',
+				confirmButton: 'btn btn-danger'
+			},
+			showCancelButton: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: false,
+			timer: 3000 
+			});
+		}else if(stockQuantity==0){
 			Swal.fire({
 			text: 'This product is not available',
 			icon: 'error',
@@ -415,7 +432,6 @@
 		"image": "https://example.com/your_logo",
 		"order_id": orderId, 
 		"handler": function (response){
-		alert(response.razorpay_payment_id);
 		document.getElementById('orderForm').action = '/placeOrder';
 		document.getElementById('orderForm').method = 'post'; 
 
@@ -566,7 +582,6 @@ function couponApply() {
     })
     .catch(error => {
         console.error('Error applying coupon:', error);
-        alert('An error occurred while applying the coupon. Please try again.');
     });
 }
 
@@ -613,7 +628,6 @@ function couponApply() {
     })
     .catch(error => {
         console.error('Error applying coupon:', error);
-        alert('An error occurred while applying the coupon. Please try again.');
     });
     }
 

@@ -119,6 +119,7 @@
           </div>
 		
 		</section>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
    function updateProductQuantity(productId, cartId, newQuantity,total) {
@@ -136,6 +137,20 @@
       })
       .then(response => {
          if (!response.ok) {
+          Swal.fire({
+			text: 'No more stocks are available',
+			icon: 'error',
+			confirmButtonText: 'OK',
+			customClass: {
+				title: 'text-danger',
+				popup: 'swal2-popup-custom',
+				confirmButton: 'btn btn-danger'
+			},
+			showCancelButton: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: false,
+			timer: 3000 
+			});
             throw new Error('Network response was not ok');
          }
          return response.json();

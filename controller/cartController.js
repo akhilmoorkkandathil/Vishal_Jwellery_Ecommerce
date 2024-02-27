@@ -68,7 +68,7 @@ module.exports = {
 },
    addToCart : async (req,res,next) => {
     try {
-      const pid = req.params.id;
+      const pid = req.query.proId;
       const product = await productModel.findOne({ _id: pid });
       console.log(product);
       const userid = req.session.userId;
@@ -114,7 +114,6 @@ module.exports = {
       cart.total = cart.item.reduce((acc, item) => acc + item.total, 0);
       await cart.save();
       req.session.isAuth=true;
-      res.redirect("/cart");
     }
     } catch (error) {
       console.log(error);

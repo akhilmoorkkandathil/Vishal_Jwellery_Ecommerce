@@ -106,12 +106,28 @@
           >{{product.description}}</textarea>
         </div>
 
-{{#each product.images as |image index|}}
+
             <div class="mb-3">
-              <img src="{{image}}" alt="" style="width: 100px; height: auto">
-              <a href="/admin/deleteImage?index={{index}}&_method=DELETE" class="btn btn-danger">Delete</a>
-            </div>
-          {{/each}}
+    <div class="d-flex flex-wrap">
+        {{#each product.images as |image index|}}
+        <div class="me-3 mb-3">
+    <div class="row">
+        <div class="col">
+            <img src="{{image}}" alt="" style="width: 100px; height: auto">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a href="/admin/deleteImage?index={{index}}&_method=DELETE" class="btn btn-danger mt-2">Delete</a>
+        </div>
+    </div>
+</div>
+
+        {{/each}}
+    </div>
+</div>
+
+          
         <div class="mb-3">
           <div class="mb-3">
                           <label class="form-label" for="basic-icon-default-message">Add image</label>
@@ -126,6 +142,7 @@
     </div>
   </div>
 </div>
+<script defer src="https://cdn.crop.guide/loader/l.js?c=YFFNCN"></script>
 <script>
 function calculateTotalPrice() {
   const price = parseFloat(document.getElementById('price').value);

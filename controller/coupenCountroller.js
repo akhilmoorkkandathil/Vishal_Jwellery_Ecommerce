@@ -233,10 +233,8 @@ module.exports = {
         try{
       
           const { couponCode, subtotal } = req.body;
-          console.log(subtotal,typeof(subtotal));
           const userId=req.session.userId
           const coupon = await coupenModel.findOne({ couponCode: couponCode });
-          console.log(coupon);
           
           if (coupon) {
       
@@ -245,11 +243,9 @@ module.exports = {
              
               if (coupon.expiry > new Date() && coupon.minimumPrice <= subtotal) {
                   console.log("Coupon is valid");
-                  const dprice = (subtotal * coupon.discount) / 100;
-                  const dicprice = 0;
-      
-                  const price = subtotal + dicprice;
-                  console.log(price);
+                  const dicprice=coupon.discount;
+                  const price = subtotal;
+                  
       
                   await userModel.findByIdAndUpdate(
                     userId,
