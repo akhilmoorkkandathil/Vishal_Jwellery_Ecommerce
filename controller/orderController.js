@@ -491,11 +491,11 @@ salesReport : async (req,res ,next)=> {
                 </html>
             `;
     
-            console.log("its okay till now================1");
+            console.log("its okay till now================");
     const browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium-browser'
     });
-    console.log("its okay till now================");
+    console.log("its okay till now================1");
 
     const page = await browser.newPage();
     console.log("its okay till now================2");
@@ -506,22 +506,19 @@ salesReport : async (req,res ,next)=> {
 
     // Generate PDF
     const pdfBuffer = await page.pdf();
+    console.log("its okay till now================4 ");
 
     await browser.close();
-    console.log("its okay till now================4");
 
-    // Write PDF to file
-const downloadsPath = path.join(os.homedir(), 'Downloads');
-      const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
-      console.log("its okay till now================5");
 
-// Save the PDF file locally
-fs.writeFileSync(pdfFilePath, pdfBuffer);
 console.log("its okay till now================6");
-        res.setHeader("Content-Length", pdfBuffer.length);
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", "attachment; filename=sales.pdf");
-        res.status(200).end(pdfBuffer);
+        // Set response headers
+res.setHeader("Content-Length", pdfBuffer.length);
+res.setHeader("Content-Type", "application/pdf");
+res.setHeader("Content-Disposition", "attachment; filename=sales.pdf");
+
+// Send the PDF buffer as the response
+res.status(200).send(pdfBuffer);
       } catch (error) {
         console.log(error);
         error.status = 500;
@@ -654,26 +651,21 @@ console.log("its okay till now================6");
     console.log("its okay till now================3");
 
 
-    // Generate PDF
-    const pdfBuffer = await page.pdf();
-
-    await browser.close();
-    console.log("its okay till now================4");
-
-    // Write PDF to file
-const downloadsPath = path.join(os.homedir(), 'Downloads');
-      const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
-      console.log("its okay till now================5");
-
-// Save the PDF file locally
-fs.writeFileSync(pdfFilePath, pdfBuffer);
-console.log("its okay till now================6");
-
-    // Set response headers and send PDF as attachment
-    res.setHeader("Content-Length", pdfBuffer.length);
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=order_invoice.pdf");
-    res.status(200).end(pdfBuffer);
+     // Generate PDF
+     const pdfBuffer = await page.pdf();
+     console.log("its okay till now================4 ");
+ 
+     await browser.close();
+ 
+ 
+ console.log("its okay till now================6");
+         // Set response headers
+ res.setHeader("Content-Length", pdfBuffer.length);
+ res.setHeader("Content-Type", "application/pdf");
+ res.setHeader("Content-Disposition", "attachment; filename=sales.pdf");
+ 
+ // Send the PDF buffer as the response
+ res.status(200).send(pdfBuffer);
   } catch (error) {
     console.log(error);
     error.status = 500;
