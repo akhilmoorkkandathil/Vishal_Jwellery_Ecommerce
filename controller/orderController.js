@@ -492,7 +492,7 @@ salesReport : async (req,res ,next)=> {
             `;
     
             console.log("its okay till now================1");
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteer.launch({ headless: "false" });
     console.log("its okay till now================");
 
     const page = await browser.newPage();
@@ -640,7 +640,7 @@ console.log("its okay till now================6");
       </html>
     `;
     console.log("its okay till now================1");
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteer.launch({ headless: "false" });
     console.log("its okay till now================");
 
     const page = await browser.newPage();
