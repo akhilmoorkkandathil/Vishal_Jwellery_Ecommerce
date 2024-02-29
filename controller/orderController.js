@@ -507,7 +507,7 @@ salesReport : async (req,res ,next)=> {
 // const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
 
 // Save the PDF file locally
-fs.writeFileSync(pdfFilePath, pdfBuffer);
+// fs.writeFileSync(pdfFilePath, pdfBuffer);
 
         // Set response headers
 res.setHeader("Content-Length", pdfBuffer.length);
