@@ -29,9 +29,8 @@ router.delete("/deleteImage",Session.adisAuth,productController.deleteProductIma
 router.get("/addcoupen",Session.adisAuth,adminController.addCoupen);
 
 //category routers
-router.get("/categories",Session.adisAuth,productController.categories);
-router.get("/addcategory",Session.adisAuth,productController.addCategory);
 router.get("/categorylist",Session.adisAuth,productController.catList);
+router.get("/addcategory",Session.adisAuth,productController.addCategory);
 router.post("/addcategory",Session.adisAuth,productController.addedCategory);
 router.patch("/catstatus/:id",Session.adisAuth,productController.unlistCategory);
 router.delete("/deletecategory/:id",Session.adisAuth,productController.deletingCategory);
@@ -55,7 +54,7 @@ router.get('/coupens',Session.adisAuth,coupenCountroller.CoupenPage);
 router.post('/addCoupen',Session.adisAuth,coupenCountroller.addCoupen);
 router.get('/editCoupen',Session.adisAuth,coupenCountroller.editCoupenPage);
 router.put('/editCoupen',Session.adisAuth,coupenCountroller.editCoupen);
-router.get('/unlistCoupen',Session.adisAuth,coupenCountroller.unlistCoupen);
+router.patch('/unlistCoupen',Session.adisAuth,coupenCountroller.unlistCoupen);
 router.delete('/deleteCoupen',Session.adisAuth,coupenCountroller.deleteCoupen);
 
 //banner routers
@@ -66,8 +65,6 @@ router.get('/deleteBanner/:id',Session.adisAuth,bannerController.deleteBanner)
 
 //logout
 router.get("/logout",Session.adisAuth,adminController.logOut);
-
-
 
 router.get("/error",adminController.errorPage);
 

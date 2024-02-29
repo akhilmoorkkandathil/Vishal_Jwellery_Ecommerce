@@ -300,9 +300,7 @@ const updateProduct = async (req,res,next) => {
   }
 };
 
-const categories = async (req,res ,next)=>{
-    await res.render('./admin/categoryList',{Admin:true})
-}
+
 const addCategory = async (req,res ,next)=>{
     await res.render('./admin/addCategory',{Admin:true})
 }
@@ -482,4 +480,4 @@ const updateCategory = async (req,res,next) => {
 };
 
 
-module.exports ={addProduct,productList,categories,addCategory,productAdded,unlistProduct,deleteProduct,editProduct,addedCategory,catList,unlistCategory,deletingCategory,updatecat,updateCategory,updateProduct,deleteProductImage}
+module.exports ={addProduct,productList,addCategory,productAdded,unlistProduct,deleteProduct,editProduct,addedCategory,catList,unlistCategory,deletingCategory,updatecat,updateCategory,updateProduct,deleteProductImage}

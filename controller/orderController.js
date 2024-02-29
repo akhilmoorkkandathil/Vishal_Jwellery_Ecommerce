@@ -491,27 +491,24 @@ salesReport : async (req,res ,next)=> {
                 </html>
             `;
     
-            console.log("its okay till now================");
     const browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium-browser'
-    });
-    console.log("its okay till now================1");
-
+    })
     const page = await browser.newPage();
-    console.log("its okay till now================2");
 
     await page.setContent(htmlContent);
-    console.log("its okay till now================3");
-
 
     // Generate PDF
     const pdfBuffer = await page.pdf();
-    console.log("its okay till now================4 ");
 
     await browser.close();
+        // Write PDF to file
+// const downloadsPath = path.join(os.homedir(), 'Downloads');
+// const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
 
+// Save the PDF file locally
+fs.writeFileSync(pdfFilePath, pdfBuffer);
 
-console.log("its okay till now================6");
         // Set response headers
 res.setHeader("Content-Length", pdfBuffer.length);
 res.setHeader("Content-Type", "application/pdf");
@@ -638,33 +635,27 @@ res.status(200).send(pdfBuffer);
       </body>
       </html>
     `;
-    console.log("its okay till now================1");
     const browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium-browser'
-    });
-    console.log("its okay till now================");
+    })
 
     const page = await browser.newPage();
-    console.log("its okay till now================2");
 
     await page.setContent(htmlContent);
-    console.log("its okay till now================3");
 
 
     // Generate PDF
     const pdfBuffer = await page.pdf();
 
     await browser.close();
-    console.log("its okay till now================4");
 
 //     // Write PDF to file
 // const downloadsPath = path.join(os.homedir(), 'Downloads');
 //       const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
 //       console.log("its okay till now================5");
 
-// // Save the PDF file locally
+// Save the PDF file locally
 // fs.writeFileSync(pdfFilePath, pdfBuffer);
-// console.log("its okay till now================6");
 
     // Set response headers and send PDF as attachment
     res.setHeader("Content-Length", pdfBuffer.length);
