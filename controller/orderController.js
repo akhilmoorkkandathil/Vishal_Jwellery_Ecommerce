@@ -491,9 +491,7 @@ salesReport : async (req,res ,next)=> {
                 </html>
             `;
     
-    const browser = await puppeteer.launch({
-      executablePath: '/usr/bin/chromium-browser'
-    })
+    const browser = await puppeteer.launch()
     const page = await browser.newPage();
 
     await page.setContent(htmlContent);
@@ -503,11 +501,11 @@ salesReport : async (req,res ,next)=> {
 
     await browser.close();
         // Write PDF to file
-// const downloadsPath = path.join(os.homedir(), 'Downloads');
-// const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
+const downloadsPath = path.join(os.homedir(), 'Downloads');
+const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
 
 // Save the PDF file locally
-// fs.writeFileSync(pdfFilePath, pdfBuffer);
+ fs.writeFileSync(pdfFilePath, pdfBuffer);
 
         // Set response headers
 res.setHeader("Content-Length", pdfBuffer.length);
@@ -635,9 +633,7 @@ res.status(200).send(pdfBuffer);
       </body>
       </html>
     `;
-    const browser = await puppeteer.launch({
-      executablePath: '/usr/bin/chromium-browser'
-    })
+    const browser = await puppeteer.launch()
 
     const page = await browser.newPage();
 
@@ -649,13 +645,12 @@ res.status(200).send(pdfBuffer);
 
     await browser.close();
 
-//     // Write PDF to file
-// const downloadsPath = path.join(os.homedir(), 'Downloads');
-//       const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
-//       console.log("its okay till now================5");
+    // Write PDF to file
+const downloadsPath = path.join(os.homedir(), 'Downloads');
+      const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
 
 // Save the PDF file locally
-// fs.writeFileSync(pdfFilePath, pdfBuffer);
+fs.writeFileSync(pdfFilePath, pdfBuffer);
 
     // Set response headers and send PDF as attachment
     res.setHeader("Content-Length", pdfBuffer.length);
