@@ -230,6 +230,7 @@ viewOrderdProducts: async (req,res ,next) => {
 myOrders: async (req, res,next) => {
     try {
       const orderId = req.params.id;
+      const order = await orderModel.findOne({orderId:orderId}).lean();
       
       const result = await orderModel.aggregate([
         {
@@ -291,7 +292,7 @@ myOrders: async (req, res,next) => {
         //console.log(obj);
     })
     if(req.session.user){
-        res.render('./user/eachOrderProducts',{orderedProducts:obj,login:req.session.user}); // Corrected typo in the redirect URL
+        res.render('./user/eachOrderProducts',{orderedProducts:obj,login:req.session.user,order:order}); // Corrected typo in the redirect URL
     }else{
         res.render('./admin/eachOrderProducts',{orderedProducts:obj,Admin:true}); // Corrected typo in the redirect URL
     }
@@ -651,21 +652,26 @@ res.status(200).send(pdfBuffer);
     console.log("its okay till now================3");
 
 
-     // Generate PDF
-     const pdfBuffer = await page.pdf();
-     console.log("its okay till now================4 ");
- 
-     await browser.close();
- 
- 
- console.log("its okay till now================6");
-         // Set response headers
- res.setHeader("Content-Length", pdfBuffer.length);
- res.setHeader("Content-Type", "application/pdf");
- res.setHeader("Content-Disposition", "attachment; filename=sales.pdf");
- 
- // Send the PDF buffer as the response
- res.status(200).send(pdfBuffer);
+    // Generate PDF
+    const pdfBuffer = await page.pdf();
+
+    await browser.close();
+    console.log("its okay till now================4");
+
+    // Write PDF to file
+const downloadsPath = path.join(os.homedir(), 'Downloads');
+      const pdfFilePath = path.join(downloadsPath, 'sales.pdf');
+      console.log("its okay till now================5");
+
+// Save the PDF file locally
+fs.writeFileSync(pdfFilePath, pdfBuffer);
+console.log("its okay till now================6");
+
+    // Set response headers and send PDF as attachment
+    res.setHeader("Content-Length", pdfBuffer.length);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=order_invoice.pdf");
+    res.status(200).end(pdfBuffer);
   } catch (error) {
     console.log(error);
     error.status = 500;

@@ -13,11 +13,11 @@
             <th>Product Name</th>
             <th>Quantity</th>
             <th>Price</th>
-            <th>Total</th>
+            
             <th>Purchase Date</th>
             <th>Shipping Address</th>
             <th>Status</th>
-            {{#if reason}}
+            {{#if orderedProducts.0.reason}}
             <th>Reason</th>
             {{/if}}
         </tr>
@@ -32,7 +32,6 @@
                         <td>Q: {{quantity}}</td>
                         
                         <td>{{price}}/-</td>
-                       <td>{{totalPrice}}/-</td>
                         <td>{{purchaseDate}}</td>
                         
                         <td>

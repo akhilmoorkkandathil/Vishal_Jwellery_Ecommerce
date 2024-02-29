@@ -1,81 +1,79 @@
   <Section>
-      <section>
-      <div class="container">
-    <div class="row m-5 p-3">
-      <div class="col-md-3">
-        <!-- Left Side Box -->
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Menu</h5>
-            <ul class="list-group">
-              <li class="list-group-item"><a href="address">My Address</a></li>
-              <li class="list-group-item"><a href="orders">My Orders</a></li>
-              <li class="list-group-item"><a href="wallet">My Wallet</a></li>
-              <li class="list-group-item"><a href="logout">Logout</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+  <section>
+  <div class="container">
+  <div class="row m-5 p-3">
+  <div class="col-md-3">
+  <!-- Left Side Box -->
+  <div class="card">
+  <div class="card-body">
+  <h5 class="card-title">Menu</h5>
+  <ul class="list-group">
+  <li class="list-group-item"><a href="address">My Address</a></li>
+  <li class="list-group-item"><a href="orders">My Orders</a></li>
+  <li class="list-group-item"><a href="wallet">My Wallet</a></li>
+  <li class="list-group-item"><a href="logout">Logout</a></li>
+  </ul>
+  </div>
+  </div>
+  </div>
 
-      <div class="col-md-9">
-    <!-- Right Side Box -->
-    <div class="card">
-      <div class="card-body">
-          <h5 class="card-title">My Wallet</h5>
-          <div class="container">
-              <div class="row">
-                  <div class="col-md-6">
-                      <!-- Display wallet amount -->
-                      <p>Total Amount in Wallet: <span id="totalAmount"><strong>{{wallet.wallet}}/-</strong> INR</span></p>
-                      {{#if user}}
-                      <h5>Referral Code: <strong>{{user.referelCode}}</strong></h5>
-                      <p>Description: Refer and earn 200 INR</p>
-                      {{/if}}
-                  </div>
-                  <form id="orderForm" style="font-family: 'Arial', sans-serif;">
-                      <input type="number" id="Amount" name="Amount" placeholder="Enter Amount .." style="border: 1px solid #ccc; padding: 8px; font-weight: bold; margin-right: 10px;">
-                      <button onclick="RazorpayWallet(event)" style="background-color: #fff; color: #333; border: 1px solid #ccc; padding: 10px; font-weight: bold; cursor: pointer;">Add To Wallet</button>
-                  </form>
-              </div>
-              <div class="d-flex justify-content-center">
-      <h1>Wallet history</h1><br>
+  <div class="col-md-9">
+  <!-- Right Side Box -->
+  <div class="card">
+  <div class="card-body">
+  <h5 class="card-title">My Wallet</h5>
+  <div class="container">
+  <div class="row">
+      <div class="col-md-6">
+          <!-- Display wallet amount -->
+          <p>Total Amount in Wallet: <span id="totalAmount"><strong>{{wallet.wallet}}/-</strong> INR</span></p>
+          {{#if user}}
+          <h5>Referral Code: <strong>{{user.referelCode}}</strong></h5>
+          <p>Description: Refer and earn 200 INR</p>
+          {{/if}}
+      </div>
+      <form id="orderForm" style="font-family: 'Arial', sans-serif;">
+          <input type="number" id="Amount" name="Amount" placeholder="Enter Amount .." style="border: 1px solid #ccc; padding: 8px; font-weight: bold; margin-right: 10px;">
+          <button onclick="RazorpayWallet(event)" style="background-color: #fff; color: #333; border: 1px solid #ccc; padding: 10px; font-weight: bold; cursor: pointer;">Add To Wallet</button>
+      </form>
+  </div>
+  <div class="d-flex justify-content-center">
+  <h1>Wallet history</h1><br>
   </div>
 
   <section class="user-details-section mt-4 section-container">
-      <div class="d-flex justify-content-center">
-          <table class="table table-striped table-bordered">
-              <thead class="thead-dark">
-                  <tr>
-                      <th style="text-align: center;">Date</th>
-                      <th>Type</th>
-                      <th>Amount</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {{#each walletHistory}}
-                  <tr>
-                      <td>{{this.date}}</td>
-                      <td>{{this.type}}</td>
-                      <td>{{this.amount}}</td>
-                  </tr>
-                  {{/each}}
-              </tbody>
-          </table>
-      </div>
+  <div class="d-flex justify-content-center">
+  <table class="table table-striped table-bordered">
+  <thead class="thead-dark">
+      <tr>
+          <th style="text-align: center;">Date</th>
+          <th>Type</th>
+          <th>Amount</th>
+      </tr>
+  </thead>
+  <tbody>
+      {{#each walletHistory}}
+      <tr>
+          <td>{{this.date}}</td>
+          <td>{{this.type}}</td>
+          <td>{{this.amount}}</td>
+      </tr>
+      {{/each}}
+  </tbody>
+  </table>
+  </div>
   </section>
 
 
-          </div>
-
   </div>
 
   </div>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/tiny-slider.js"></script>
-    <script src="js/custom.js"></script>
+   
     <script>
       async function  RazorpayWallet()
     {

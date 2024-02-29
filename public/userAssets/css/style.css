@@ -298,11 +298,11 @@ a {
     -webkit-box-shadow: none;
     box-shadow: none; }
   .btn.btn-primary {
-    background: #3b5d50;
-    border-color: #3b5d50; }
+    background: #696cff;
+    border-color: #696cff; }
     .btn.btn-primary:hover {
-      background: #314d43;
-      border-color: #314d43; }
+      background: #5457ff;
+      border-color: #5457ff; }
   .btn.btn-secondary {
     color: #2f2f2f;
     background: #f9bf29;
