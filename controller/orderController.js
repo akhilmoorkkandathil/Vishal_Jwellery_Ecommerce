@@ -43,7 +43,8 @@ orderPage: async(req,res ,next)=>{
         }
         obj.push(test)
     })
-    const length = await orderModel.find({userId:userId}).count()
+    const data = await orderModel.find({userId:userId});
+    const length = data.length
     let i=1
     let pages=[]
     while(i<=(Math.ceil(length)/limit)){

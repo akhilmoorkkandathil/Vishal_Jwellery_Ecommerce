@@ -125,7 +125,8 @@ const productList = async (req,res,next) => {
     
        
        console.log(products);
-       const length = await productModel.find().count()
+       const data = await productModel.find()
+       const length = data.length;
       
     let i=1
     let pages=[]

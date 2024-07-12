@@ -635,7 +635,8 @@ const shopProduct = async (req,res ,next)=>{
                 }
                 obj.push(test)
             })
-            const length = await productModel.find({status:true, ...filterOption, ...searchQuery }).count()
+            const data = await productModel.find({status:true, ...filterOption, ...searchQuery })
+            const length = data.length
             
           const category = await categoryModel.find()
           let arr=[]

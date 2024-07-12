@@ -10,7 +10,8 @@ const dashboard = async(req,res,next)=> {
     const admin = await adminModel.find({})
   let adminName = admin[0].name;
   console.log(adminName);
-        const ordersCount = await orderModel.find({}).count();
+        const data = await orderModel.find();
+        const ordersCount = data.length
         console.log(ordersCount);
 
         const payments = await orderModel.aggregate([
@@ -174,7 +175,8 @@ const userList = async(req,res ,next)=>{
         console.log(obj);
        
         req.session.isadAuth = true;
-        const length = await userModel.find().count()
+        const data = await userModel.find();
+        const length = data.length
         page>1?prev=page-1:prev=1
         page<Math.ceil(length/limit)?next=page+2:next=Math.ceil(length/limit)
     let i=1
@@ -248,7 +250,8 @@ const orders = async(req,res ,next)=>{
             }
             obj.push(test)
         })
-        const length = await orderModel.find().count()
+        const data = await orderModel.find();
+        const length = data.length;
   let i=1
     let pages=[]
     while(i<=(Math.ceil(length/limit))){
