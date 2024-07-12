@@ -2,7 +2,6 @@ const fs=require('fs')
 const path=require('path')
 const productModel = require('../model/productSchema')
 const categoryModel=require('../model/categorySchema')
-const sharp = require('sharp')
 
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
@@ -43,9 +42,6 @@ const productAdded = async (req,res,next) => {
     const files = req.files;
     const uploadedImages = [];
     for (const file of files) {
-      const resizedImageBuffer = await sharp(file.path)
-          .resize({ width: 300, height: 300 }) // Set your desired dimensions
-          .toFile(file.path+"a")
       const result = await cloudinary.uploader.upload(file.path+"a");
       uploadedImages.push(result.url); // Store the secure URL of the uploaded image
     }

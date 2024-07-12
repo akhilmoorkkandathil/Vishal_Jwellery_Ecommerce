@@ -1,5 +1,4 @@
 const bannerModel =  require('../model/bannerModel')
-const sharp = require('sharp')
 
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();

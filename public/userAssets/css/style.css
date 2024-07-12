@@ -155,7 +155,7 @@ a {
 
 
 .custom-navbar {
-  background: #3b5d50 !important;
+  background: #000000 !important;
   padding-top: 20px;
   padding-bottom: 20px; }
   .custom-navbar .navbar-brand {
@@ -220,8 +220,9 @@ a {
         margin-right: 20px; }
 
 .hero {
-  background: #3b5d50;
-  padding: calc(4rem - 30px) 0 0rem 0; }
+  background: #000000;
+  padding: calc(4rem - 30px) 0 0rem 0; 
+}
   @media (min-width: 768px) {
     .hero {
       padding: calc(4rem - 30px) 0 4rem 0; } }

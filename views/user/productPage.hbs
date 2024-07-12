@@ -75,29 +75,6 @@
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
-        // Get all thumbnail images and main product image
-        const thumbnails = document.querySelectorAll('.thumbnail');
-        const mainImage = document.getElementById('mainImage');
-        const imgContainer = document.querySelector('.img-container');
-
-        // Function to handle image click
-        thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener('click', function() {
-                const imageURL = this.src; // Get the clicked thumbnail image URL
-                mainImage.src = imageURL; // Set the main product image to the clicked thumbnail image
-            });
-        });
-
-        var options = {
-            width: 500,
-            zoomWidth: 500,
-            offset: { vertical: 100, horizontal: 300 },
-            scale: 0.4
-        };
-
-        new ImageZoom(imgContainer, options);
-    </script>
-    <script>
         function addToCart(event, productId) {
     event.preventDefault();
 
@@ -191,3 +168,6 @@ function successMessage() {
 
     </script>
 </section>
+
+    <script src="/js/magicZoom.js"></script>
+
