@@ -105,3 +105,10 @@
   text-align: center;
   margin-top: 1rem;
 }
+
+.btn.btn-primary {
+  background: #000000;
+  border-color: #000000; }
+  .btn.btn-primary:hover {
+    background: #565656;
+    border-color: #232323; }

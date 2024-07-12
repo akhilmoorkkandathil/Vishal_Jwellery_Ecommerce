@@ -209,14 +209,13 @@ const sendOTP = async (phoneNumber, otp) => {
     try {
         const message = await twilioClient.messages.create({
             body: `Your OTP for verification is: ${otp}`,
-            from: '+16592448308',
+            from: '+15075640392',
             to: "+918590948623",
         });
         console.log("sended"+message.sid); // Log the message SID upon successful sending
     } catch (error) {
         console.error("==================="+error+"==================="); // Handle error if message sending fails
        error.status = 500;
-      next(error);
     }
 };
 

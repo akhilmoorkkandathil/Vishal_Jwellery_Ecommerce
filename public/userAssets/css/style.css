@@ -435,15 +435,16 @@ a {
     font-size: 14px;
     line-height: 22px;
     color: #6a6a6a; }
-
+/* 27===============================removed */
 .we-help-section {
   padding: 7rem 0; }
   .we-help-section .imgs-grid {
     display: -ms-grid;
     display: grid;
-    -ms-grid-columns: (1fr)[27];
+    -ms-grid-columns: (1fr)[];
     grid-template-columns: repeat(27, 1fr);
-    position: relative; }
+    position: relative; 
+  }
     .we-help-section .imgs-grid:before {
       position: absolute;
       content: "";
