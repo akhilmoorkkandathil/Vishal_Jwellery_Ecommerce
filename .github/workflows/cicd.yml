@@ -45,4 +45,4 @@ jobs:
         run: sudo docker rm -f angular-app-container  
 
       - name: Run Docker container
-        run: sudo docker run -d -p 3000:80 --name angular-app-container akhilmoorkkandathil/vishaljewellery
+        run: sudo docker run -d -p 3000:3000 --name angular-app-container akhilmoorkkandathil/vishaljewellery
