@@ -11,18 +11,18 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-       - name: Create .env file
-        run: |
-          echo "PORT=${{ secrets.PORT }}"" >> .env
-          echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> .env
-          echo "CONNECTION_STRING=${{ secrets.CONNECTION_STRING }}" >> .env
-          echo "TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
-          echo "TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
-          echo "RZP_KEY_ID=${{ secrets.RZP_KEY_ID }}" >> .env
-          echo "RZP_KEY_SECRET=${{ secrets.RZP_KEY_SECRET }}" >> .env
-          echo "CLOUDNAME=${{ secrets.CLOUDNAME }}" >> .env
-          echo "CLOUDAPIKEY=${{ secrets.CLOUDAPIKEY }}" >> .env
-          echo "CLOUDINARYSECRET=${{ secrets.CLOUDINARYSECRET }}" >> .env
+      - name: Create .env file
+      run: |
+        echo "PORT=${{ secrets.PORT }}"" >> .env
+        echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> .env
+        echo "CONNECTION_STRING=${{ secrets.CONNECTION_STRING }}" >> .env
+        echo "TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
+        echo "TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
+        echo "RZP_KEY_ID=${{ secrets.RZP_KEY_ID }}" >> .env
+        echo "RZP_KEY_SECRET=${{ secrets.RZP_KEY_SECRET }}" >> .env
+        echo "CLOUDNAME=${{ secrets.CLOUDNAME }}" >> .env
+        echo "CLOUDAPIKEY=${{ secrets.CLOUDAPIKEY }}" >> .env
+        echo "CLOUDINARYSECRET=${{ secrets.CLOUDINARYSECRET }}" >> .env
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}       
       - name: Build docker image
