@@ -18,7 +18,8 @@
             {{#each products}}
             <div class="col-lg-6">
                 <div class="img-container">
-                    <img class="product-image" id="mainImage" src="{{this.images.[0]}}" alt="Product Image">
+                    <div class="item"><a class="MagicZoom" id="Mag" href=""> <img class="product-image" id="mainImage" src="{{this.images.[0]}}" alt="Product Image"></a></div>
+                   
                 </div>
 
                 <div class="thumbnail-container">
@@ -73,6 +74,7 @@
         </div>
     </div>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+         <script src="/userAsseets/js/magicZoom.js"></script>
 
     <script>
         function addToCart(event, productId) {
@@ -168,6 +170,3 @@ function successMessage() {
 
     </script>
 </section>
-
-    <script src="/js/magicZoom.js"></script>
-
