@@ -3,10 +3,11 @@ require('dotenv').config();
 
 const connectDb = async ()=>{
     try{
-        const mongoUri = `mongodb+srv://akhildasxyz:${process.env.MONGO_PASSWORD}@akhil.bmpur2y.mongodb.net/EcommerceDb?retryWrites=true&w=majority`;
+    const mongoUri =`mongodb+srv://akhildasxyz:${process.env.MONGO_PASSWORD}@akhil.bmpur2y.mongodb.net/EcommerceDb?retryWrites=true&w=majority&appName=akhil`;
+         //`mongodb+srv://akhildasxyz:${process.env.MONGO_PASSWORD}@akhil.bmpur2y.mongodb.net/EcommerceDb?retryWrites=true&w=majority`;
 
-        const connect = await mongoose.connect(mongoUri)
-        console.log("Database connected:",connect.connection.host,connect.connection.name);
+        await mongoose.connect(mongoUri)
+        console.log("Database connected");
 
     } catch(err){
         console.log(err);
