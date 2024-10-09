@@ -48,7 +48,7 @@
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
 						
 						<a class="product-item" href="productPage?proId={{this._id}}" onclick="redirectWithoutSlash('{{this._id}}')">
-							<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail" >
+							<img style="width: 260px; border-radius:7px" src="{{this.images.[0]}}" class="img-fluid product-thumbnail" >
 							<h3 class="product-title">{{this.name}}</h3>
 							<strong class="product-price">Only {{this.price}}/-</strong>
 						</a>
@@ -82,7 +82,7 @@
 				<div class="col-12 col-md-4 col-lg-3 mb-5">
 					<a href="/productPage?proId={{this._id}}" class="product-link">
 					<div class="product-item">
-						<img src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
+						<img style="width: 250px; border-radius:5px" src="{{this.images.[0]}}" class="img-fluid product-thumbnail">
 						<h3 class="product-title">{{this.name}}</h3>
 						{{#if this.offerPrice}}
             <strong class="product-price"> Only {{this.offerPrice}}/-</strong>

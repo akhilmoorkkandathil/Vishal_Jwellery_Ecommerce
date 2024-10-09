@@ -42,7 +42,7 @@ const productAdded = async (req,res,next) => {
     const files = req.files;
     const uploadedImages = [];
     for (const file of files) {
-      const result = await cloudinary.uploader.upload(file.path+"a");
+      const result = await cloudinary.uploader.upload(file.path);
       uploadedImages.push(result.url); // Store the secure URL of the uploaded image
     }
     const { product, category, price, stock, description, offerPrice ,discount} = req.body;
