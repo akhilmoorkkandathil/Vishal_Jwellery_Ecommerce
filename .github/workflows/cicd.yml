@@ -38,8 +38,6 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Clean npm cache
-        run: npm cache clean --force
       - name: Pull image from Docker Hub
         run: sudo docker pull akhilmoorkkandathil/vishaljewellery:latest
 
